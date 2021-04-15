@@ -17,6 +17,7 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.processing.Generated;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.processing.Generated;
 import java.util.Objects;
 
 /**
