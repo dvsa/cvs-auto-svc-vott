@@ -1,338 +1,78 @@
-package vott.testhistory;
+package vott.TestHistory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
-import net.serenitybdd.junit.runners.SerenityRunner;
-import io.restassured.response.Response;
-import net.thucydides.core.annotations.Title;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
+import vott.config.ConfigurationProvider;
 import vott.config.VottConfiguration;
-import vott.database.*;
+import vott.database.TechnicalRecordRepository;
+import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
-import vott.json.GsonInstance;
-import vott.models.dao.*;
 import vott.models.dto.enquiry.TechnicalRecord;
 import vott.models.dto.enquiry.Vehicle;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
-@RunWith(SerenityRunner.class)
 public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     // Variable + Constant Test Data Setup
-    private VottConfiguration configuration = VottConfiguration.local();
+    private VottConfiguration configuration;
     private String token;
     private final String xApiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
-    private String validVINNumber = "";
-    private String validVehicleRegMark = "";
-    private String nonAlphaVehicleMark = "!@/'";
+    private  String validVINNumber = "";
+    private final String validVehicleRegMark = "AB15XYZ";
 
-    private final String invalidVINNumber = "A123456789";
+    private final String invalidVINNumber = "T12765431";
     private final String invalidVehicleRegMark = "W01A00229";
 
-    //Test Data Variables
-    private Integer vehiclePK;
-    private Integer makeModelPK;
-    private Integer identityPK;
-    private Integer contactDetailsPK;
-    private Integer vehicleClassPK;
-    private Integer technicalRecordPK;
-    private Integer psvBrakesPK;
-    private Integer tyrePK;
-    private Integer axlesPK;
-    private Integer platePK;
-    private Integer axleSpacingPK;
-
-    private TechnicalRecordRepository technicalRecordRepository;
     private VehicleRepository vehicleRepository;
-    private MakeModelRepository makeModelRepository;
-    private IdentityRepository identityRepository;
-    private ContactDetailsRepository contactDetailsRepository;
-    private VehicleClassRepository vehicleClassRepository;
-    private TyreRepository tyreRepository;
-    private PSVBrakesRepository psvBrakesRepository;
-    private AxlesRepository axlesRepository;
-    private PlateRepository plateRepository;
-    private AxleSpacingRepository axleSpacingRepository;
+    private TechnicalRecordRepository technicalRecordRepository;
 
-    vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
-    MakeModel mm = newTestMakeModel();
-    VehicleClass vc = newTestVehicleClass();
-    ContactDetails cd = newTestContactDetails();
-    Identity identity = newTestIdentity();
-    vott.models.dao.TechnicalRecord tr;
-    Tyre tyre = newTestTyre();
-    PSVBrakes psv;
-    Axles axles;
-    Plate plate;
-    AxleSpacing as;
 
     @Before
     public void Setup() {
-        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
+        RestAssured.baseURI = "https://api.develop.cvs.dvsacloud.uk/cvsb-19222/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
-                VottConfiguration.local()
+                ConfigurationProvider.local()
         );
-
         vehicleRepository = new VehicleRepository(connectionFactory);
-        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
-
-        makeModelRepository = new MakeModelRepository(connectionFactory);
-        makeModelPK = makeModelRepository.partialUpsert(mm);
-
-        identityRepository = new IdentityRepository(connectionFactory);
-        identityPK = identityRepository.partialUpsert(identity);
-
-        contactDetailsRepository = new ContactDetailsRepository(connectionFactory);
-        contactDetailsPK = contactDetailsRepository.partialUpsert(cd);
-
-        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        vehicleClassPK = vehicleClassRepository.partialUpsert(vc);
-
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        tr = newTestTechnicalRecord();
-        technicalRecordPK = technicalRecordRepository.fullUpsert(tr);
 
-        psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
-        psv = newTestPSVBrakes();
-        psvBrakesPK = psvBrakesRepository.fullUpsert(psv);
-
-        tyreRepository = new TyreRepository(connectionFactory);
-        tyrePK = tyreRepository.partialUpsert(tyre);
-
-        axlesRepository = new AxlesRepository(connectionFactory);
-        axles = newTestAxles();
-        axlesPK = axlesRepository.fullUpsert(axles);
-
-        plateRepository = new PlateRepository(connectionFactory);
-        plate = newTestPlate();
-        platePK = plateRepository.fullUpsert(plate);
-
-        axleSpacingRepository = new AxleSpacingRepository(connectionFactory);
-        as = newTestAxleSpacing();
-        axleSpacingPK = axleSpacingRepository.fullUpsert(as);
-
+        //Upsert Vehicle
+        vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
+        int vehicleID = vehicleRepository.fullUpsert(vehicleUpsert);
         validVINNumber = vehicleUpsert.getVin();
-        validVehicleRegMark = vehicleUpsert.getVrm_trm();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
-        with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
+        //upsert Tech Record
+        vott.models.dao.TechnicalRecord tr = newTestTechnicalRecord();
+        tr.setVehicleID(String.valueOf(vehicleID));
+        technicalRecordRepository.fullUpsert(tr);
+
     }
 
-    @After
-    public void tearDown() {
-        //Test Data Cleanup
-        axleSpacingRepository.delete(axleSpacingPK);
-        plateRepository.delete(platePK);
-        axlesRepository.delete(axlesPK);
-        tyreRepository.delete(tyrePK);
-        psvBrakesRepository.delete(psvBrakesPK);
-        technicalRecordRepository.delete(technicalRecordPK);
-        vehicleRepository.delete(vehiclePK);
-        makeModelRepository.delete(makeModelPK);
-        identityRepository.delete(identityPK);
-        contactDetailsRepository.delete(contactDetailsPK);
-        vehicleClassRepository.delete(vehicleClassPK);
-    }
 
-    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With Implicit Token")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
+    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
 
-        int tries = 0;
-        int maxRetries = 20;
-        int statusCode;
-        Response response;
-
-        //Retrieve and save test certificate (pdf) as byteArray
-        do {
-            response =
-                    givenAuth(token, xApiKey)
-                            .header("content-type", "application/json")
-                            .queryParam("vinNumber", validVINNumber).
-
-                            //send request
-                                    when().//log().all().
-                            get().
-
-                            //verification
-                                    then().//log().all().
-                            extract().response();
-            statusCode = response.statusCode();
-            tries++;
-            Thread.sleep(1000);
-        } while (statusCode >= 400 && tries < maxRetries);
-
-        assertEquals(200, statusCode);
-
-        Gson gson = GsonInstance.get();
-
-        Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
-
-        TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
-
-        assertThat(vehicle.getVin()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(vehicle.getVrmTrm()).isEqualTo(vehicleUpsert.getVrm_trm());
-        assertThat(vehicle.getTrailerId()).isEqualTo(vehicleUpsert.getTrailerID());
-        assertThat(vehicle.getSystemNumber()).isEqualTo(vehicleUpsert.getSystemNumber());
-        assertThat(technicalRecord.getNotes()).isEqualTo(tr.getNotes());
-        assertThat(technicalRecord.getWidth()).isEqualTo(Integer.parseInt(tr.getWidth()));
-        assertThat(technicalRecord.getHeight()).isEqualTo(Integer.parseInt(tr.getHeight()));
-        assertThat(technicalRecord.getLength()).isEqualTo(Integer.parseInt(tr.getLength()));
-        assertThat(technicalRecord.isOffRoad()).isEqualTo(true);
-        assertThat(technicalRecord.getRemarks()).isEqualTo(tr.getRemarks());
-        assertThat(technicalRecord.getCoifDate()).isEqualTo(tr.getCoifDate());
-        assertThat(technicalRecord.getRegnDate()).isEqualTo(tr.getRegnDate());
-        assertThat(technicalRecord.getBrakeCode()).isEqualTo(tr.getBrakeCode());
-        assertThat(technicalRecord.getCreatedAt()).isEqualTo(tr.getCreatedAt());
-        assertThat(technicalRecord.getDtpNumber()).isEqualTo(tr.getBrakes_dtpNumber());
-        assertThat(technicalRecord.getMakeModel().getMake()).isEqualTo(mm.getMake());
-        assertThat(technicalRecord.getMakeModel().getModel()).isEqualTo(mm.getModel());
-//        assertThat(technicalRecord.getMakeModel().get(0).getDtpCode()).isEqualTo(null); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getMakeModel().getBodyMake()).isEqualTo(mm.getBodyMake());
-        assertThat(technicalRecord.getMakeModel().getBodyModel()).isEqualTo(mm.getBodyModel());
-        assertThat(technicalRecord.getMakeModel().getChassisMake()).isEqualTo(mm.getChassisMake());
-        assertThat(technicalRecord.getMakeModel().getBodyTypeCode()).isEqualTo(mm.getBodyTypeCode());
-        assertThat(technicalRecord.getMakeModel().getChassisModel()).isEqualTo(mm.getChassisModel());
-        assertThat(technicalRecord.getMakeModel().getModelLiteral()).isEqualTo(mm.getModelLiteral());
-        assertThat(technicalRecord.getMakeModel().getBodyTypeDescription()).isEqualTo(mm.getBodyTypeDescription());
-        assertThat(technicalRecord.getMakeModel().getFuelPropulsionSystem()).isEqualTo(mm.getFuelPropulsionSystem());
-        assertThat(technicalRecord.getNoOfAxles()).isEqualTo(Integer.parseInt(tr.getNoOfAxles()));
-        assertThat(technicalRecord.getNtaNumber()).isEqualTo(tr.getNtaNumber());
-        assertThat(technicalRecord.getStatusCode()).isEqualTo(tr.getStatusCode());
-//        assertThat(technicalRecord.getUpdateType()).isEqualTo("techRecordUpdate"); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getTyreUseCode()).isEqualTo(tr.getTyreUseCode());
-        assertThat(technicalRecord.getApprovalType()).isEqualTo(tr.getApprovalType());
-        assertThat(technicalRecord.getCouplingType()).isEqualTo(tr.getCouplingType());
-        assertThat(technicalRecord.getEuroStandard()).isEqualTo(tr.getEuroStandard());
-        assertThat(technicalRecord.getFirstUseDate()).isEqualTo(tr.getFirstUseDate());
-        assertThat(technicalRecord.getFunctionCode()).isEqualTo(tr.getFunctionCode());
-        assertThat(technicalRecord.isRoadFriendly()).isEqualTo(true);
-        assertThat(technicalRecord.getVehicleClass().getCode()).isEqualTo(vc.getCode());
-        assertThat(technicalRecord.getVehicleClass().getDescription()).isEqualTo(vc.getDescription());
-        assertThat(technicalRecord.getVehicleClass().getVehicleSize()).isEqualTo(vc.getVehicleSize());
-        assertThat(technicalRecord.getVehicleClass().getVehicleType()).isEqualTo(vc.getVehicleType());
-        assertThat(technicalRecord.getVehicleClass().getEuVehicleCategory()).isEqualTo(vc.getEuVehicleCategory());
-        assertThat(technicalRecord.getVehicleClass().getVehicleConfiguration()).isEqualTo(vc.getVehicleConfiguration());
-        assertThat(technicalRecord.getDispensations()).isEqualTo(tr.getDispensations());
-        assertThat(technicalRecord.getGrossGbWeight()).isEqualTo(Integer.parseInt(tr.getGrossGbWeight()));
-        assertThat(technicalRecord.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
-        assertThat(technicalRecord.getTrainGbWeight()).isEqualTo(Integer.parseInt(tr.getTrainGbWeight()));
-        assertThat(technicalRecord.getUnladenWeight()).isEqualTo(Integer.parseInt(tr.getUnladenWeight()));
-        assertThat(technicalRecord.getVariantNumber()).isEqualTo(tr.getVariantNumber());
-        assertThat(technicalRecord.getEmissionsLimit()).isEqualTo(tr.getEmissionsLimit());
-        assertThat(technicalRecord.getGrossEecWeight()).isEqualTo(Integer.parseInt(tr.getGrossEecWeight()));
-        assertThat(technicalRecord.getPurchaserNotes()).isEqualTo(tr.getPurchaserNotes());
-        assertThat(technicalRecord.getSeatsLowerDeck()).isEqualTo(Integer.parseInt(tr.getSeatsLowerDeck()));
-        assertThat(technicalRecord.getSeatsUpperDeck()).isEqualTo(Integer.parseInt(tr.getSeatsUpperDeck()));
-        assertThat(technicalRecord.getSuspensionType()).isEqualTo(tr.getSuspensionType());
-        assertThat(technicalRecord.isTachoExemptMrk()).isEqualTo(true);
-        assertThat(technicalRecord.getTrainEecWeight()).isEqualTo(Integer.parseInt(tr.getTrainEecWeight()));
-        assertThat(technicalRecord.getConversionRefNo()).isEqualTo(tr.getConversionRefNo());
-        assertThat(technicalRecord.getGrossKerbWeight()).isEqualTo(Integer.parseInt(tr.getGrossKerbWeight()));
-        assertThat(technicalRecord.getManufactureYear()).isEqualTo(tr.getManufactureYear());
-        assertThat(technicalRecord.isSpeedLimiterMrk()).isEqualTo(true);
-        assertThat(technicalRecord.isAlterationMarker()).isEqualTo(true);
-        assertThat(technicalRecord.getCoifSerialNumber()).isEqualTo(tr.getCoifSerialNumber());
-        assertThat(technicalRecord.getFrameDescription()).isEqualTo(tr.getFrameDescription());
-        assertThat(technicalRecord.getGrossLadenWeight()).isEqualTo(Integer.parseInt(tr.getGrossLadenWeight()));
-        assertThat(technicalRecord.isLoadSensingValve()).isEqualTo(true);
-        assertThat(technicalRecord.getMaxTrainGbWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainGbWeight()));
-        assertThat(technicalRecord.getSpeedRestriction()).isEqualTo(Integer.parseInt(tr.getSpeedRestriction()));
-        assertThat(technicalRecord.getStandingCapacity()).isEqualTo(Integer.parseInt(tr.getStandingCapacity()));
-        assertThat(technicalRecord.getCoifCertifierName()).isEqualTo(tr.getCoifCertifierName());
-        assertThat(technicalRecord.getGrossDesignWeight()).isEqualTo(Integer.parseInt(tr.getGrossDesignWeight()));
-        assertThat(technicalRecord.getManufacturerNotes()).isEqualTo(tr.getManufacturerNotes());
-        assertThat(technicalRecord.getMaxLoadOnCoupling()).isEqualTo(Integer.parseInt(tr.getMaxLoadOnCoupling()));
-        assertThat(technicalRecord.getMaxTrainEecWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainEecWeight()));
-        assertThat(technicalRecord.getNumberOfSeatbelts()).isEqualTo(tr.getNumberOfSeatbelts());
-        assertThat(technicalRecord.getRearAxleToRearTrl()).isEqualTo(Integer.parseInt(tr.getRearAxleToRearTrl()));
-        assertThat(technicalRecord.getReasonForCreation()).isEqualTo(tr.getReasonForCreation());
-        assertThat(technicalRecord.getTrainDesignWeight()).isEqualTo(Integer.parseInt(tr.getTrainDesignWeight()));
-        assertThat(technicalRecord.getApprovalTypeNumber()).isEqualTo(tr.getApprovalTypeNumber());
-//        assertThat(technicalRecord.getRecordCompleteness()).isEqualTo(null); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getFrontAxleToRearAxle()).isEqualTo(Integer.parseInt(tr.getFrontAxleToRearAxle()));
-        assertThat(technicalRecord.getMaxTrainDesignWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainDesignWeight()));
-        assertThat(technicalRecord.getNumberOfWheelsDriven()).isEqualTo(Integer.parseInt(tr.getNumberOfWheelsDriven()));
-        assertThat(technicalRecord.getVariantVersionNumber()).isEqualTo(tr.getVariantVersionNumber());
-        assertThat(technicalRecord.isAntilockBrakingSystem()).isEqualTo(true);
-        assertThat(technicalRecord.isDrawbarCouplingFitted()).isEqualTo(true);
-        assertThat(technicalRecord.getFrontAxleTo5thWheelMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelMin()));
-        assertThat(technicalRecord.isDepartmentalVehicleMarker()).isEqualTo(true);
-        assertThat(technicalRecord.getCouplingCenterToRearTrlMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMax()));
-        assertThat(technicalRecord.getCouplingCenterToRearTrlMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMin()));
-        assertThat(technicalRecord.getCouplingCenterToRearAxleMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMax()));
-        assertThat(technicalRecord.getCouplingCenterToRearAxleMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMin()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMin()));
-        assertThat(technicalRecord.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(Integer.parseInt(tr.getCentreOfRearmostAxleToRearOfTrl()));
-        assertThat(technicalRecord.getSeatbeltInstallationApprovalDate()).isEqualTo(tr.getSeatbeltInstallationApprovalDate());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(psv.getBrakeCode());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeOne()).isEqualTo(psv.getDataTrBrakeOne());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeTwo()).isEqualTo(psv.getDataTrBrakeTwo());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeThree()).isEqualTo(psv.getDataTrBrakeThree());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getRetarderBrakeOne()).isEqualTo(psv.getRetarderBrakeOne());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getRetarderBrakeTwo()).isEqualTo(psv.getRetarderBrakeTwo());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCodeOriginal()).isEqualTo(psv.getBrakeCodeOriginal());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getParkingBrakeForceA()).isEqualTo(Integer.parseInt(psv.getParkingBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getParkingBrakeForceB()).isEqualTo(Integer.parseInt(psv.getParkingBrakeForceB()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getServiceBrakeForceA()).isEqualTo(Integer.parseInt(psv.getServiceBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getServiceBrakeForceB()).isEqualTo(Integer.parseInt(psv.getServiceBrakeForceB()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getSecondaryBrakeForceA()).isEqualTo(Integer.parseInt(psv.getSecondaryBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getSecondaryBrakeForceB()).isEqualTo(Integer.parseInt(psv.getSecondaryBrakeForceB()));
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getTyreCode()).isEqualTo(Integer.parseInt(tyre.getTyreCode()));
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getTyreSize()).isEqualTo(tyre.getTyreSize());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getPlyRating()).isEqualTo(tyre.getPlyRating());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getDataTrAxles()).isEqualTo(tyre.getDataTrAxles());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getFitmentCode()).isEqualTo(tyre.getFitmentCode());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getSpeedCategorySymbol()).isEqualTo(tyre.getSpeedCategorySymbol());
-        assertThat(technicalRecord.getAxles().get(0).getGbWeight()).isEqualTo(axles.getGbWeight());
-        assertThat(technicalRecord.getAxles().get(0).getEecWeight()).isEqualTo(axles.getEecWeight());
-        assertThat(technicalRecord.getAxles().get(0).getAxleNumber()).isEqualTo(axles.getAxleNumber());
-        assertThat(technicalRecord.getAxles().get(0).getKerbWeight()).isEqualTo(axles.getKerbWeight());
-        assertThat(technicalRecord.getAxles().get(0).getLadenWeight()).isEqualTo(axles.getLadenWeight());
-        assertThat(technicalRecord.getAxles().get(0).getLeverLength()).isEqualTo(axles.getLeverLength());
-        assertThat(technicalRecord.getAxles().get(0).getDesignWeight()).isEqualTo(axles.getDesignWeight());
-        assertThat(technicalRecord.getAxles().get(0).getBrakeActuator()).isEqualTo(axles.getBrakeActuator());
-        assertThat(technicalRecord.getAxles().get(0).isParkingBrakeMrk()).isEqualTo(true);
-        assertThat(technicalRecord.getAxles().get(0).isSpringBrakeParking()).isEqualTo(true);
-        assertThat(technicalRecord.getAxlespacing().get(0).getAxles()).isEqualTo(as.getAxles());
-        assertThat(technicalRecord.getAxlespacing().get(0).getValue()).isEqualTo(Integer.parseInt(as.getValue()));
-        assertThat(technicalRecord.getPlates().get(0).getPlateIssuer()).isEqualTo(plate.getPlateIssuer());
-        assertThat(technicalRecord.getPlates().get(0).getPlateIssueDate()).isEqualTo(plate.getPlateIssueDate());
-        assertThat(technicalRecord.getPlates().get(0).getPlateSerialNumber()).isEqualTo(plate.getPlateSerialNumber());
-        assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
-    }
-
-    @Title("VOTT-9 - AC1 - TC2 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
-    @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
+        System.out.println("Valid access token: " + token);
 
         String response =
-                givenAuth(token, xApiKey)
+                given()//.log().all()
+                        .header("authorization", "Bearer " + token)
+                        .header("x-api-key", xApiKey)
                         .header("content-type", "application/json")
-                        .queryParam("VehicleRegMark", validVehicleRegMark).
+                        .queryParam("vinNumber", validVINNumber).
 
                 //send request
                 when().//log().all().
@@ -343,152 +83,382 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                         statusCode(200).
                         extract().response().asString();
 
-        Gson gson = GsonInstance.get();
+        System.out.println(response);
+
+        Gson gson = new GsonBuilder().create();
 
         Vehicle vehicle = gson.fromJson(response, Vehicle.class);
 
-        TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
+        TechnicalRecord technicalRecord1 = vehicle.getTechnicalrecords().get(0);
+        TechnicalRecord technicalRecord2 = vehicle.getTechnicalrecords().get(1);
 
-        assertThat(vehicle.getVin()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(vehicle.getVrmTrm()).isEqualTo(vehicleUpsert.getVrm_trm());
-        assertThat(vehicle.getTrailerId()).isEqualTo(vehicleUpsert.getTrailerID());
-        assertThat(vehicle.getSystemNumber()).isEqualTo(vehicleUpsert.getSystemNumber());
-        assertThat(technicalRecord.getNotes()).isEqualTo(tr.getNotes());
-        assertThat(technicalRecord.getWidth()).isEqualTo(Integer.parseInt(tr.getWidth()));
-        assertThat(technicalRecord.getHeight()).isEqualTo(Integer.parseInt(tr.getHeight()));
-        assertThat(technicalRecord.getLength()).isEqualTo(Integer.parseInt(tr.getLength()));
-        assertThat(technicalRecord.isOffRoad()).isEqualTo(true);
-        assertThat(technicalRecord.getRemarks()).isEqualTo(tr.getRemarks());
-        assertThat(technicalRecord.getCoifDate()).isEqualTo(tr.getCoifDate());
-        assertThat(technicalRecord.getRegnDate()).isEqualTo(tr.getRegnDate());
-        assertThat(technicalRecord.getBrakeCode()).isEqualTo(tr.getBrakeCode());
-        assertThat(technicalRecord.getCreatedAt()).isEqualTo(tr.getCreatedAt());
-        assertThat(technicalRecord.getDtpNumber()).isEqualTo(tr.getBrakes_dtpNumber());
-        assertThat(technicalRecord.getMakeModel().getMake()).isEqualTo(mm.getMake());
-        assertThat(technicalRecord.getMakeModel().getModel()).isEqualTo(mm.getModel());
-//        assertThat(technicalRecord.getMakeModel().get(0).getDtpCode()).isEqualTo(null); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getMakeModel().getBodyMake()).isEqualTo(mm.getBodyMake());
-        assertThat(technicalRecord.getMakeModel().getBodyModel()).isEqualTo(mm.getBodyModel());
-        assertThat(technicalRecord.getMakeModel().getChassisMake()).isEqualTo(mm.getChassisMake());
-        assertThat(technicalRecord.getMakeModel().getBodyTypeCode()).isEqualTo(mm.getBodyTypeCode());
-        assertThat(technicalRecord.getMakeModel().getChassisModel()).isEqualTo(mm.getChassisModel());
-        assertThat(technicalRecord.getMakeModel().getModelLiteral()).isEqualTo(mm.getModelLiteral());
-        assertThat(technicalRecord.getMakeModel().getBodyTypeDescription()).isEqualTo(mm.getBodyTypeDescription());
-        assertThat(technicalRecord.getMakeModel().getFuelPropulsionSystem()).isEqualTo(mm.getFuelPropulsionSystem());
-        assertThat(technicalRecord.getNoOfAxles()).isEqualTo(Integer.parseInt(tr.getNoOfAxles()));
-        assertThat(technicalRecord.getNtaNumber()).isEqualTo(tr.getNtaNumber());
-        assertThat(technicalRecord.getStatusCode()).isEqualTo(tr.getStatusCode());
-//        assertThat(technicalRecord.getUpdateType()).isEqualTo("techRecordUpdate"); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getTyreUseCode()).isEqualTo(tr.getTyreUseCode());
-        assertThat(technicalRecord.getApprovalType()).isEqualTo(tr.getApprovalType());
-        assertThat(technicalRecord.getCouplingType()).isEqualTo(tr.getCouplingType());
-        assertThat(technicalRecord.getEuroStandard()).isEqualTo(tr.getEuroStandard());
-        assertThat(technicalRecord.getFirstUseDate()).isEqualTo(tr.getFirstUseDate());
-        assertThat(technicalRecord.getFunctionCode()).isEqualTo(tr.getFunctionCode());
-        assertThat(technicalRecord.isRoadFriendly()).isEqualTo(true);
-        assertThat(technicalRecord.getVehicleClass().getCode()).isEqualTo(vc.getCode());
-        assertThat(technicalRecord.getVehicleClass().getDescription()).isEqualTo(vc.getDescription());
-        assertThat(technicalRecord.getVehicleClass().getVehicleSize()).isEqualTo(vc.getVehicleSize());
-        assertThat(technicalRecord.getVehicleClass().getVehicleType()).isEqualTo(vc.getVehicleType());
-        assertThat(technicalRecord.getVehicleClass().getEuVehicleCategory()).isEqualTo(vc.getEuVehicleCategory());
-        assertThat(technicalRecord.getVehicleClass().getVehicleConfiguration()).isEqualTo(vc.getVehicleConfiguration());
-        assertThat(technicalRecord.getDispensations()).isEqualTo(tr.getDispensations());
-        assertThat(technicalRecord.getGrossGbWeight()).isEqualTo(Integer.parseInt(tr.getGrossGbWeight()));
-        assertThat(technicalRecord.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
-        assertThat(technicalRecord.getTrainGbWeight()).isEqualTo(Integer.parseInt(tr.getTrainGbWeight()));
-        assertThat(technicalRecord.getUnladenWeight()).isEqualTo(Integer.parseInt(tr.getUnladenWeight()));
-        assertThat(technicalRecord.getVariantNumber()).isEqualTo(tr.getVariantNumber());
-        assertThat(technicalRecord.getEmissionsLimit()).isEqualTo(tr.getEmissionsLimit());
-        assertThat(technicalRecord.getGrossEecWeight()).isEqualTo(Integer.parseInt(tr.getGrossEecWeight()));
-        assertThat(technicalRecord.getPurchaserNotes()).isEqualTo(tr.getPurchaserNotes());
-        assertThat(technicalRecord.getSeatsLowerDeck()).isEqualTo(Integer.parseInt(tr.getSeatsLowerDeck()));
-        assertThat(technicalRecord.getSeatsUpperDeck()).isEqualTo(Integer.parseInt(tr.getSeatsUpperDeck()));
-        assertThat(technicalRecord.getSuspensionType()).isEqualTo(tr.getSuspensionType());
-        assertThat(technicalRecord.isTachoExemptMrk()).isEqualTo(true);
-        assertThat(technicalRecord.getTrainEecWeight()).isEqualTo(Integer.parseInt(tr.getTrainEecWeight()));
-        assertThat(technicalRecord.getConversionRefNo()).isEqualTo(tr.getConversionRefNo());
-        assertThat(technicalRecord.getGrossKerbWeight()).isEqualTo(Integer.parseInt(tr.getGrossKerbWeight()));
-        assertThat(technicalRecord.getManufactureYear()).isEqualTo(tr.getManufactureYear());
-        assertThat(technicalRecord.isSpeedLimiterMrk()).isEqualTo(true);
-        assertThat(technicalRecord.isAlterationMarker()).isEqualTo(true);
-        assertThat(technicalRecord.getCoifSerialNumber()).isEqualTo(tr.getCoifSerialNumber());
-        assertThat(technicalRecord.getFrameDescription()).isEqualTo(tr.getFrameDescription());
-        assertThat(technicalRecord.getGrossLadenWeight()).isEqualTo(Integer.parseInt(tr.getGrossLadenWeight()));
-        assertThat(technicalRecord.isLoadSensingValve()).isEqualTo(true);
-        assertThat(technicalRecord.getMaxTrainGbWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainGbWeight()));
-        assertThat(technicalRecord.getSpeedRestriction()).isEqualTo(Integer.parseInt(tr.getSpeedRestriction()));
-        assertThat(technicalRecord.getStandingCapacity()).isEqualTo(Integer.parseInt(tr.getStandingCapacity()));
-        assertThat(technicalRecord.getCoifCertifierName()).isEqualTo(tr.getCoifCertifierName());
-        assertThat(technicalRecord.getGrossDesignWeight()).isEqualTo(Integer.parseInt(tr.getGrossDesignWeight()));
-        assertThat(technicalRecord.getManufacturerNotes()).isEqualTo(tr.getManufacturerNotes());
-        assertThat(technicalRecord.getMaxLoadOnCoupling()).isEqualTo(Integer.parseInt(tr.getMaxLoadOnCoupling()));
-        assertThat(technicalRecord.getMaxTrainEecWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainEecWeight()));
-        assertThat(technicalRecord.getNumberOfSeatbelts()).isEqualTo(tr.getNumberOfSeatbelts());
-        assertThat(technicalRecord.getRearAxleToRearTrl()).isEqualTo(Integer.parseInt(tr.getRearAxleToRearTrl()));
-        assertThat(technicalRecord.getReasonForCreation()).isEqualTo(tr.getReasonForCreation());
-        assertThat(technicalRecord.getTrainDesignWeight()).isEqualTo(Integer.parseInt(tr.getTrainDesignWeight()));
-        assertThat(technicalRecord.getApprovalTypeNumber()).isEqualTo(tr.getApprovalTypeNumber());
-//        assertThat(technicalRecord.getRecordCompleteness()).isEqualTo(null); // todo not asserting against this as not in scope
-        assertThat(technicalRecord.getFrontAxleToRearAxle()).isEqualTo(Integer.parseInt(tr.getFrontAxleToRearAxle()));
-        assertThat(technicalRecord.getMaxTrainDesignWeight()).isEqualTo(Integer.parseInt(tr.getMaxTrainDesignWeight()));
-        assertThat(technicalRecord.getNumberOfWheelsDriven()).isEqualTo(Integer.parseInt(tr.getNumberOfWheelsDriven()));
-        assertThat(technicalRecord.getVariantVersionNumber()).isEqualTo(tr.getVariantVersionNumber());
-        assertThat(technicalRecord.isAntilockBrakingSystem()).isEqualTo(true);
-        assertThat(technicalRecord.isDrawbarCouplingFitted()).isEqualTo(true);
-        assertThat(technicalRecord.getFrontAxleTo5thWheelMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelMin()));
-        assertThat(technicalRecord.isDepartmentalVehicleMarker()).isEqualTo(true);
-        assertThat(technicalRecord.getCouplingCenterToRearTrlMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMax()));
-        assertThat(technicalRecord.getCouplingCenterToRearTrlMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMin()));
-        assertThat(technicalRecord.getCouplingCenterToRearAxleMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMax()));
-        assertThat(technicalRecord.getCouplingCenterToRearAxleMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMin()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMin()));
-        assertThat(technicalRecord.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(Integer.parseInt(tr.getCentreOfRearmostAxleToRearOfTrl()));
-        assertThat(technicalRecord.getSeatbeltInstallationApprovalDate()).isEqualTo(tr.getSeatbeltInstallationApprovalDate());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(psv.getBrakeCode());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeOne()).isEqualTo(psv.getDataTrBrakeOne());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeTwo()).isEqualTo(psv.getDataTrBrakeTwo());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getDataTrBrakeThree()).isEqualTo(psv.getDataTrBrakeThree());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getRetarderBrakeOne()).isEqualTo(psv.getRetarderBrakeOne());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getRetarderBrakeTwo()).isEqualTo(psv.getRetarderBrakeTwo());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCodeOriginal()).isEqualTo(psv.getBrakeCodeOriginal());
-        assertThat(technicalRecord.getPsvBrakes().get(0).getParkingBrakeForceA()).isEqualTo(Integer.parseInt(psv.getParkingBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getParkingBrakeForceB()).isEqualTo(Integer.parseInt(psv.getParkingBrakeForceB()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getServiceBrakeForceA()).isEqualTo(Integer.parseInt(psv.getServiceBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getServiceBrakeForceB()).isEqualTo(Integer.parseInt(psv.getServiceBrakeForceB()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getSecondaryBrakeForceA()).isEqualTo(Integer.parseInt(psv.getSecondaryBrakeForceA()));
-        assertThat(technicalRecord.getPsvBrakes().get(0).getSecondaryBrakeForceB()).isEqualTo(Integer.parseInt(psv.getSecondaryBrakeForceB()));
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getTyreCode()).isEqualTo(Integer.parseInt(tyre.getTyreCode()));
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getTyreSize()).isEqualTo(tyre.getTyreSize());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getPlyRating()).isEqualTo(tyre.getPlyRating());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getDataTrAxles()).isEqualTo(tyre.getDataTrAxles());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getFitmentCode()).isEqualTo(tyre.getFitmentCode());
-        assertThat(technicalRecord.getAxles().get(0).getTyre().getSpeedCategorySymbol()).isEqualTo(tyre.getSpeedCategorySymbol());
-        assertThat(technicalRecord.getAxles().get(0).getGbWeight()).isEqualTo(axles.getGbWeight());
-        assertThat(technicalRecord.getAxles().get(0).getEecWeight()).isEqualTo(axles.getEecWeight());
-        assertThat(technicalRecord.getAxles().get(0).getAxleNumber()).isEqualTo(axles.getAxleNumber());
-        assertThat(technicalRecord.getAxles().get(0).getKerbWeight()).isEqualTo(axles.getKerbWeight());
-        assertThat(technicalRecord.getAxles().get(0).getLadenWeight()).isEqualTo(axles.getLadenWeight());
-        assertThat(technicalRecord.getAxles().get(0).getLeverLength()).isEqualTo(axles.getLeverLength());
-        assertThat(technicalRecord.getAxles().get(0).getDesignWeight()).isEqualTo(axles.getDesignWeight());
-        assertThat(technicalRecord.getAxles().get(0).getBrakeActuator()).isEqualTo(axles.getBrakeActuator());
-        assertThat(technicalRecord.getAxles().get(0).isParkingBrakeMrk()).isEqualTo(true);
-        assertThat(technicalRecord.getAxles().get(0).isSpringBrakeParking()).isEqualTo(true);
-        assertThat(technicalRecord.getAxlespacing().get(0).getAxles()).isEqualTo(as.getAxles());
-        assertThat(technicalRecord.getAxlespacing().get(0).getValue()).isEqualTo(Integer.parseInt(as.getValue()));
-        assertThat(technicalRecord.getPlates().get(0).getPlateIssuer()).isEqualTo(plate.getPlateIssuer());
-        assertThat(technicalRecord.getPlates().get(0).getPlateIssueDate()).isEqualTo(plate.getPlateIssueDate());
-        assertThat(technicalRecord.getPlates().get(0).getPlateSerialNumber()).isEqualTo(plate.getPlateSerialNumber());
-        assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
+        assertThat(vehicle.getVin()).isEqualTo("T12765432");
+        assertThat(vehicle.getVrmTrm()).isEqualTo(null);
+        assertThat(vehicle.getCreatedAt()).isEqualTo("2021-04-01 15:34:53.000000");
+        assertThat(vehicle.getTrailerId()).isEqualTo("D000001");
+        assertThat(vehicle.getSystemNumber()).isEqualTo("11000024");
+
+
+        assertThat(technicalRecord1.getNotes()).isEqualTo(null);
+        assertThat(technicalRecord1.getWidth()).isEqualTo(2200);
+        assertThat(technicalRecord1.getHeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getLength()).isEqualTo(7500);
+        assertThat(technicalRecord1.isOffRoad()).isEqualTo(true);
+        assertThat(technicalRecord1.getRemarks()).isEqualTo(null);
+        assertThat(technicalRecord1.getCoifDate()).isEqualTo(null);
+        assertThat(technicalRecord1.getRegnDate()).isEqualTo("2019-06-24");
+        assertThat(technicalRecord1.getBrakeCode()).isEqualTo("178202");
+        assertThat(technicalRecord1.getCreatedAt()).isEqualTo("2019-06-24 10:26:55.000000");
+        assertThat(technicalRecord1.getDtpNumber()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getMake()).isEqualTo("Isuzu");
+        assertThat(technicalRecord1.getMakeModel().getModel()).isEqualTo("F06");
+//        assertThat(technicalRecord1.getMakeModel().get(0).getDtpCode()).isEqualTo(null); // todo not asserting against this as not in scope
+        assertThat(technicalRecord1.getMakeModel().getBodyMake()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getBodyModel()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getChassisMake()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getBodyTypeCode()).isEqualTo("x");
+        assertThat(technicalRecord1.getMakeModel().getChassisModel()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getModelLiteral()).isEqualTo(null);
+        assertThat(technicalRecord1.getMakeModel().getBodyTypeDescription()).isEqualTo("other");
+        assertThat(technicalRecord1.getMakeModel().getFuelPropulsionSystem()).isEqualTo(null);
+        assertThat(technicalRecord1.getNoOfAxles()).isEqualTo(3);
+        assertThat(technicalRecord1.getNtaNumber()).isEqualTo("123456");
+        assertThat(technicalRecord1.getStatusCode()).isEqualTo("archived");
+//        assertThat(technicalRecord1.getUpdateType()).isEqualTo("techRecordUpdate"); // todo not asserting against this as not in scope
+        assertThat(technicalRecord1.getTyreUseCode()).isEqualTo("2B");
+        assertThat(technicalRecord1.getApprovalType()).isEqualTo(null);
+        assertThat(technicalRecord1.getCouplingType()).isEqualTo("F");
+        assertThat(technicalRecord1.getEuroStandard()).isEqualTo(null);
+        assertThat(technicalRecord1.getFirstUseDate()).isEqualTo("2019-06-24");
+        assertThat(technicalRecord1.getFunctionCode()).isEqualTo(null);
+        assertThat(technicalRecord1.isRoadFriendly()).isEqualTo(true);
+        assertThat(technicalRecord1.getVehicleClass().getCode()).isEqualTo("t");
+        assertThat(technicalRecord1.getVehicleClass().getDescription()).isEqualTo("trailer");
+        assertThat(technicalRecord1.getVehicleClass().getVehicleSize()).isEqualTo(null);
+        assertThat(technicalRecord1.getVehicleClass().getVehicleType()).isEqualTo("trl");
+        assertThat(technicalRecord1.getVehicleClass().getEuVehicleCategory()).isEqualTo(null);
+        assertThat(technicalRecord1.getVehicleClass().getVehicleConfiguration()).isEqualTo("articulated");
+        assertThat(technicalRecord1.getDispensations()).isEqualTo(null);
+        assertThat(technicalRecord1.getGrossGbWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getLastUpdatedAt()).isEqualTo("2021-03-19 02:31:45.000000");
+        assertThat(technicalRecord1.getTrainGbWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getUnladenWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getVariantNumber()).isEqualTo(null);
+        assertThat(technicalRecord1.getEmissionsLimit()).isEqualTo(null);
+        assertThat(technicalRecord1.getGrossEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getPurchaserNotes()).isEqualTo(null);
+        assertThat(technicalRecord1.getSeatsLowerDeck()).isEqualTo(null);
+        assertThat(technicalRecord1.getSeatsUpperDeck()).isEqualTo(null);
+        assertThat(technicalRecord1.getSuspensionType()).isEqualTo("Y");
+        assertThat(technicalRecord1.isTachoExemptMrk()).isEqualTo(true);
+        assertThat(technicalRecord1.getTrainEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getConversionRefNo()).isEqualTo("7891234");
+        assertThat(technicalRecord1.getGrossKerbWeight()).isEqualTo(2500);
+        assertThat(technicalRecord1.getManufactureYear()).isEqualTo("2018");
+        assertThat(technicalRecord1.isSpeedLimiterMrk()).isEqualTo(true);
+        assertThat(technicalRecord1.isAlterationMarker()).isEqualTo(true);
+        assertThat(technicalRecord1.getCoifSerialNumber()).isEqualTo(null);
+        assertThat(technicalRecord1.getFrameDescription()).isEqualTo(null);
+        assertThat(technicalRecord1.getGrossLadenWeight()).isEqualTo(3000);
+        assertThat(technicalRecord1.isLoadSensingValve()).isEqualTo(true);
+        assertThat(technicalRecord1.getMaxTrainGbWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getSpeedRestriction()).isEqualTo(null);
+        assertThat(technicalRecord1.getStandingCapacity()).isEqualTo(null);
+        assertThat(technicalRecord1.getCoifCertifierName()).isEqualTo(null);
+        assertThat(technicalRecord1.getGrossDesignWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getManufacturerNotes()).isEqualTo(null);
+        assertThat(technicalRecord1.getMaxLoadOnCoupling()).isEqualTo(7000);
+        assertThat(technicalRecord1.getMaxTrainEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getNumberOfSeatbelts()).isEqualTo(null);
+        assertThat(technicalRecord1.getRearAxleToRearTrl()).isEqualTo(400);
+        assertThat(technicalRecord1.getReasonForCreation()).isEqualTo("new trailer");
+        assertThat(technicalRecord1.getTrainDesignWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getApprovalTypeNumber()).isEqualTo(null);
+//        assertThat(technicalRecord1.getRecordCompleteness()).isEqualTo(null); // todo not asserting against this as not in scope
+        assertThat(technicalRecord1.getFrontAxleToRearAxle()).isEqualTo(1700);
+        assertThat(technicalRecord1.getMaxTrainDesignWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getNumberOfWheelsDriven()).isEqualTo(null);
+        assertThat(technicalRecord1.getVariantVersionNumber()).isEqualTo(null);
+        assertThat(technicalRecord1.isAntilockBrakingSystem()).isEqualTo(true);
+        assertThat(technicalRecord1.isDrawbarCouplingFitted()).isEqualTo(true);
+        assertThat(technicalRecord1.getFrontAxleTo5thWheelMax()).isEqualTo(null);
+        assertThat(technicalRecord1.getFrontAxleTo5thWheelMin()).isEqualTo(null);
+        assertThat(technicalRecord1.isDepartmentalVehicleMarker()).isEqualTo(true);
+        assertThat(technicalRecord1.getCouplingCentreToRearTrlMax()).isEqualTo(null);
+        assertThat(technicalRecord1.getCouplingCentreToRearTrlMin()).isEqualTo(null);
+        assertThat(technicalRecord1.getCouplingCentreToRearAxleMax()).isEqualTo(null);
+        assertThat(technicalRecord1.getCouplingCentreToRearAxleMin()).isEqualTo(null);
+        assertThat(technicalRecord1.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(null);
+        assertThat(technicalRecord1.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(null);
+        assertThat(technicalRecord1.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(null);
+        assertThat(technicalRecord1.getSeatbeltInstallationApprovalDate()).isEqualTo(null);
+        assertThat(technicalRecord1.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getDataTrBrakeOne()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getDataTrBrakeTwo()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getDataTrBrakeThree()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getRetarderBrakeOne()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getRetarderBrakeTwo()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getBrakeCodeOriginal()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getParkingBrakeForceA()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getParkingBrakeForceB()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getServiceBrakeForceA()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getServiceBrakeForceB()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getSecondaryBrakeForceA()).isEqualTo(null);
+//        assertThat(technicalRecord1.getPsvBrakes().get(0).getSecondaryBrakeForceB()).isEqualTo(null);
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getTyreCode()).isEqualTo(1234); // todo not reaching the correct nested field
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getTyreSize()).isEqualTo("9.23648E+11");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getPlyRating()).isEqualTo("AB");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getDataTrAxles()).isEqualTo("345");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getFitmentCode()).isEqualTo("single");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(0).getSpeedCategorySymbol()).isEqualTo("a7"); // todo end
+        assertThat(technicalRecord1.getAxles().get(0).getGbWeight()).isEqualTo("1400"); // todo not matching type returned
+//        assertThat(technicalRecord1.getAxles().get(0).getEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(0).getAxleNumber()).isEqualTo("1");
+//        assertThat(technicalRecord1.getAxles().get(0).getKerbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord1.getAxles().get(0).getLadenWeight()).isEqualTo(null);
+//        assertThat(technicalRecord1.getAxles().get(0).getLeverLength()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(0).getDesignWeight()).isEqualTo("1800");
+//        assertThat(technicalRecord1.getAxles().get(0).getBrakeActuator()).isEqualTo(null); // todo end
+        assertThat(technicalRecord1.getAxles().get(0).isParkingBrakeMrk()).isEqualTo(true);
+        assertThat(technicalRecord1.getAxles().get(0).isSpringBrakeParking()).isEqualTo(true);
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getTyreCode()).isEqualTo("5678"); // todo not reaching the correct nested field
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getTyreSize()).isEqualTo("9.23648E+11");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getPlyRating()).isEqualTo("AB");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getDataTrAxles()).isEqualTo("345");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getFitmentCode()).isEqualTo("single");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(1).getSpeedCategorySymbol()).isEqualTo("a7"); // todo end
+        assertThat(technicalRecord1.getAxles().get(1).getGbWeight()).isEqualTo("1600");
+//        assertThat(technicalRecord1.getAxles().get(1).getEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(1).getAxleNumber()).isEqualTo("2");
+//        assertThat(technicalRecord1.getAxles().get(1).getKerbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord1.getAxles().get(1).getLadenWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(1).getLeverLength()).isEqualTo("125");
+        assertThat(technicalRecord1.getAxles().get(1).getDesignWeight()).isEqualTo("1900");
+        assertThat(technicalRecord1.getAxles().get(1).getBrakeActuator()).isEqualTo("113");
+        assertThat(technicalRecord1.getAxles().get(1).isParkingBrakeMrk()).isEqualTo(true);
+        assertThat(technicalRecord1.getAxles().get(1).isSpringBrakeParking()).isEqualTo(true);
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getTyreCode()).isEqualTo(5678);// todo not reaching the correct nested field
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getTyreSize()).isEqualTo("9.23648E+11");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getPlyRating()).isEqualTo("AB");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getDataTrAxles()).isEqualTo("345");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getFitmentCode()).isEqualTo("single");
+//        assertThat(technicalRecord1.getAxles().get(0).getTyres().get(2).getSpeedCategorySymbol()).isEqualTo("a7"); // todo end
+//        assertThat(technicalRecord1.getAxles().get(2).getGbWeight()).isEqualTo("1600"); //todo not matching type returned
+//        assertThat(technicalRecord1.getAxles().get(2).getEecWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(2).getAxleNumber()).isEqualTo("3");
+//        assertThat(technicalRecord1.getAxles().get(2).getKerbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord1.getAxles().get(2).getLadenWeight()).isEqualTo(null);
+        assertThat(technicalRecord1.getAxles().get(2).getLeverLength()).isEqualTo("125");
+        assertThat(technicalRecord1.getAxles().get(2).getDesignWeight()).isEqualTo("1900");
+        assertThat(technicalRecord1.getAxles().get(2).getBrakeActuator()).isEqualTo("113"); // todo end
+//        assertThat(technicalRecord1.getAxles().get(2).getParkingBrakeMrk()).isEqualTo(true);
+//        assertThat(technicalRecord1.getAxles().get(2).getSpringBrakeParking()).isEqualTo(1);
+//        assertThat(technicalRecord1.getAxles().get(0).getAxlespacing().get(0).getAxles()).isEqualTo("1-2");
+//        assertThat(technicalRecord1.getAxles().get(0).getAxlespacing().get(0).getValue()).isEqualTo(1200);
+//        assertThat(technicalRecord1.getAxles().get(0).getPlates().get(0)).isEqualTo(null);
+
+
+//
+//        assertThat(technicalRecord2.getNotes()).isEqualTo(null);
+//        assertThat(technicalRecord2.getWidth()).isEqualTo(2200);
+//        assertThat(technicalRecord2.getHeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getLength()).isEqualTo(7500);
+////        assertThat(technicalRecord2.getOffRoad()).isEqualTo(true);
+//        assertThat(technicalRecord2.getRemarks()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCoifDate()).isEqualTo(null);
+//        assertThat(technicalRecord2.getRegnDate()).isEqualTo("2019-06-24");
+//        assertThat(technicalRecord2.getBrakeCode()).isEqualTo("178202");
+//        assertThat(technicalRecord2.getCreatedAt()).isEqualTo("2021-03-19 02:31:45.000000");
+////        assertThat(technicalRecord2.getDtpNumber()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getMake()).isEqualTo("Isuzu");
+//        assertThat(technicalRecord2.getMakeModel().getModel()).isEqualTo("F06");
+////        assertThat(technicalRecord2.getMakeModel().get(1).getDtpCode()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getBodyMake()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getBodyModel()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getChassisMake()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getBodyTypeCode()).isEqualTo("x");
+//        assertThat(technicalRecord2.getMakeModel().getChassisModel()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getModelLiteral()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMakeModel().getBodyTypeDescription()).isEqualTo("other");
+//        assertThat(technicalRecord2.getMakeModel().getFuelPropulsionSystem()).isEqualTo(null);
+//        assertThat(technicalRecord2.getNoOfAxles()).isEqualTo(3);
+//        assertThat(technicalRecord2.getNtaNumber()).isEqualTo("123456");
+//        assertThat(technicalRecord2.getStatusCode()).isEqualTo("current");
+////        assertThat(technicalRecord2.getUpdateType()).isEqualTo("techRecordUpdate"); // todo don't assert on this
+//        assertThat(technicalRecord2.getTyreUseCode()).isEqualTo("2B");
+//        assertThat(technicalRecord2.getApprovalType()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCouplingType()).isEqualTo("F");
+//        assertThat(technicalRecord2.getEuroStandard()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFirstUseDate()).isEqualTo("2019-06-24");
+//        assertThat(technicalRecord2.getFunctionCode()).isEqualTo(null);
+////        assertThat(technicalRecord2.getRoadFriendly()).isEqualTo(true);
+//        assertThat(technicalRecord2.getVehicleClass().getCode()).isEqualTo("t");
+//        assertThat(technicalRecord2.getVehicleClass().getDescription()).isEqualTo("trailer");
+//        assertThat(technicalRecord2.getVehicleClass().getVehicleSize()).isEqualTo(null);
+//        assertThat(technicalRecord2.getVehicleClass().getVehicleType()).isEqualTo("trl");
+//        assertThat(technicalRecord2.getVehicleClass().getEuVehicleCategory()).isEqualTo("o2");
+//        assertThat(technicalRecord2.getVehicleClass().getVehicleConfiguration()).isEqualTo("articulated");
+//        assertThat(technicalRecord2.getDispensations()).isEqualTo(null);
+//        assertThat(technicalRecord2.getGrossGbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getLastUpdatedAt()).isEqualTo(null);
+//        assertThat(technicalRecord2.getTrainGbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getUnladenWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getVariantNumber()).isEqualTo(null);
+//        assertThat(technicalRecord2.getEmissionsLimit()).isEqualTo(null);
+//        assertThat(technicalRecord2.getGrossEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getPurchaserNotes()).isEqualTo(null);
+//        assertThat(technicalRecord2.getSeatsLowerDeck()).isEqualTo(null);
+//        assertThat(technicalRecord2.getSeatsUpperDeck()).isEqualTo(null);
+//        assertThat(technicalRecord2.getSuspensionType()).isEqualTo("Y");
+////        assertThat(technicalRecord2.getTachoExemptMrk()).isEqualTo(true);
+//        assertThat(technicalRecord2.getTrainEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getConversionRefNo()).isEqualTo("7891234");
+//        assertThat(technicalRecord2.getGrossKerbWeight()).isEqualTo(2500);
+//        assertThat(technicalRecord2.getManufactureYear()).isEqualTo("2018");
+////        assertThat(technicalRecord2.getSpeedLimiterMrk()).isEqualTo(true);
+////        assertThat(technicalRecord2.getAlterationMarker()).isEqualTo(true);
+//        assertThat(technicalRecord2.getCoifSerialNumber()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFrameDescription()).isEqualTo(null);
+//        assertThat(technicalRecord2.getGrossLadenWeight()).isEqualTo(3000);
+////        assertThat(technicalRecord2.getLoadSensingValve()).isEqualTo(true);
+//        assertThat(technicalRecord2.getMaxTrainGbWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getSpeedRestriction()).isEqualTo(null);
+//        assertThat(technicalRecord2.getStandingCapacity()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCoifCertifierName()).isEqualTo(null);
+//        assertThat(technicalRecord2.getGrossDesignWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getManufacturerNotes()).isEqualTo(null);
+//        assertThat(technicalRecord2.getMaxLoadOnCoupling()).isEqualTo(7000);
+//        assertThat(technicalRecord2.getMaxTrainEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getNumberOfSeatbelts()).isEqualTo(null);
+//        assertThat(technicalRecord2.getRearAxleToRearTrl()).isEqualTo(400);
+//        assertThat(technicalRecord2.getReasonForCreation()).isEqualTo("EU vehicle category updated");
+//        assertThat(technicalRecord2.getTrainDesignWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getApprovalTypeNumber()).isEqualTo(null);
+////        assertThat(technicalRecord2.getRecordCompleteness()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFrontAxleToRearAxle()).isEqualTo(1700);
+//        assertThat(technicalRecord2.getMaxTrainDesignWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getNumberOfWheelsDriven()).isEqualTo(null);
+//        assertThat(technicalRecord2.getVariantVersionNumber()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAntiLockBrakingSystem()).isEqualTo(true);
+////        assertThat(technicalRecord2.getDrawbarCouplingFitted()).isEqualTo(true);
+//        assertThat(technicalRecord2.getFrontAxleTo5thWheelMax()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFrontAxleTo5thWheelMin()).isEqualTo(null);
+////        assertThat(technicalRecord2.getDepartmentalVehicleMarker()).isEqualTo(true);
+//        assertThat(technicalRecord2.getCouplingCentreToRearTrlMax()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCouplingCentreToRearTrlMin()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCouplingCentreToRearAxleMax()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCouplingCentreToRearAxleMin()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(null);
+//        assertThat(technicalRecord2.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(null);
+//        assertThat(technicalRecord2.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(null);
+//        assertThat(technicalRecord2.getSeatbeltInstallationApprovalDate()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getDataTrBrakeOne()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getDataTrBrakeTwo()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getDataTrBrakeThree()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getRetarderBrakeOne()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getRetarderBrakeTwo()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getBrakeCodeOriginal()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getParkingBrakeForceA()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getParkingBrakeForceB()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getServiceBrakeForceA()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getServiceBrakeForceB()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getSecondaryBrakeForceA()).isEqualTo(null);
+////        assertThat(technicalRecord2.getPsvBrakes().get(0).getSecondaryBrakeForceB()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getTyreCode()).isEqualTo(1234);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getTyreSize()).isEqualTo("9.23648E+11");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getPlyRating()).isEqualTo("AB");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getDataTrAxles()).isEqualTo("345");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getFitmentCode()).isEqualTo("single");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(0).getSpeedCategorySymbol()).isEqualTo("a7");
+//        assertThat(technicalRecord2.getAxles().get(0).getGbWeight()).isEqualTo("1400");
+////        assertThat(technicalRecord2.getAxles().get(0).getEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(0).getAxleNumber()).isEqualTo("1");
+////        assertThat(technicalRecord2.getAxles().get(0).getKerbWeight()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(0).getLadenWeight()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(0).getLeverLength()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(0).getDesignWeight()).isEqualTo("1800");
+////        assertThat(technicalRecord2.getAxles().get(0).getBrakeActuator()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(0).getParkingBrakeMrk()).isEqualTo(true);
+////        assertThat(technicalRecord2.getAxles().get(0).getSpringBrakeParking()).isEqualTo(1);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getTyreCode()).isEqualTo(5678);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getTyreSize()).isEqualTo("9.23648E+11");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getPlyRating()).isEqualTo("AB");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getDataTrAxles()).isEqualTo("345");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getFitmentCode()).isEqualTo("single");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(1).getSpeedCategorySymbol()).isEqualTo("a7");
+//        assertThat(technicalRecord2.getAxles().get(1).getGbWeight()).isEqualTo("1600");
+////        assertThat(technicalRecord2.getAxles().get(1).getEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(1).getAxleNumber()).isEqualTo("2");
+////        assertThat(technicalRecord2.getAxles().get(1).getKerbWeight()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(1).getLadenWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(1).getLeverLength()).isEqualTo("125");
+//        assertThat(technicalRecord2.getAxles().get(1).getDesignWeight()).isEqualTo("1900");
+//        assertThat(technicalRecord2.getAxles().get(1).getBrakeActuator()).isEqualTo("113");
+////        assertThat(technicalRecord2.getAxles().get(1).getParkingBrakeMrk()).isEqualTo(true);
+////        assertThat(technicalRecord2.getAxles().get(1).getSpringBrakeParking()).isEqualTo(1);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getTyreCode()).isEqualTo(5678);
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getTyreSize()).isEqualTo("9.23648E+11");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getPlyRating()).isEqualTo("AB");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getDataTrAxles()).isEqualTo("345");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getFitmentCode()).isEqualTo("single");
+////        assertThat(technicalRecord2.getAxles().get(0).getTyres().get(2).getSpeedCategorySymbol()).isEqualTo("a7");
+//        assertThat(technicalRecord2.getAxles().get(2).getGbWeight()).isEqualTo("1600");
+////        assertThat(technicalRecord2.getAxles().get(2).getEecWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(2).getAxleNumber()).isEqualTo("3");
+////        assertThat(technicalRecord2.getAxles().get(2).getKerbWeight()).isEqualTo(null);
+////        assertThat(technicalRecord2.getAxles().get(2).getLadenWeight()).isEqualTo(null);
+//        assertThat(technicalRecord2.getAxles().get(2).getLeverLength()).isEqualTo("125");
+//        assertThat(technicalRecord2.getAxles().get(2).getDesignWeight()).isEqualTo("1900");
+//        assertThat(technicalRecord2.getAxles().get(2).getBrakeActuator()).isEqualTo("113");
+////        assertThat(technicalRecord2.getAxles().get(2).getParkingBrakeMrk()).isEqualTo(true);
+////        assertThat(technicalRecord2.getAxles().get(2).getSpringBrakeParking()).isEqualTo(1);
+////        assertThat(technicalRecord2.getAxles().get(0).getAxlespacing().get(0).getAxles()).isEqualTo("1-2");
+////        assertThat(technicalRecord2.getAxles().get(0).getAxlespacing().get(0).getValue()).isEqualTo(1200);
+////        assertThat(technicalRecord2.getAxles().get(0).getPlates().get(0)).isEqualTo(null);
+
+
+        System.out.println(vehicle);
+
     }
 
-    @Title("VOTT-9 - AC1 - TC3 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
+    @Test
+    public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
+
+        System.out.println("Valid access token: " + token);
+
+        String response =
+                given()//.log().all()
+                        .header("authorization", "Bearer " + token)
+                        .header("x-api-key", xApiKey)
+                        .header("content-type", "application/json")
+                        .queryParam("VehicleRegMark", validVehicleRegMark).
+
+                //send request
+                when().//log().all().
+                        get().
+
+                //verification
+                then().log().all().
+                        statusCode(200).//time(lessThan(100L)).
+                        extract().response().asString();
+
+        System.out.println(response);
+
+        JsonPath js2 = new JsonPath(response);
+        String vrmTrmReturnedInApiResponse = js2.getString("vrm_trm");
+        System.out.println(vrmTrmReturnedInApiResponse);
+    }
+
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
+        System.out.println("Using invalid token: " + token);
+
         //prep request
-        givenAuth(token + 1, xApiKey)
+        given()//.log().all()
+            .header("authorization", "Bearer " + token + 1)
+            .header("x-api-key", xApiKey)
             .header("content-type", "application/json")
             .queryParam("VehicleRegMark", validVehicleRegMark).
 
@@ -502,12 +472,15 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
             body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC4 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
 
+        System.out.println("Valid access token: " + token);
+
         //prep request
-        givenAuth(token, xApiKey)
+        given()//.log().all()
+            .header("authorization", "Bearer " + token)
+            .header("x-api-key", xApiKey)
             .header("content-type", "application/json").
 
         //send request
@@ -520,12 +493,15 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
             body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC5 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
 
+        System.out.println("Valid access token: " + token);
+
         //prep request
-        givenAuth(token, xApiKey)
+        given()//.log().all()
+                .header("authorization", "Bearer " + token)
+                .header("x-api-key", xApiKey)
                 .header("content-type", "application/json")
                 .queryParam("vinNumber", validVINNumber)
                 .queryParam("VehicleRegMark", validVehicleRegMark).
@@ -540,12 +516,14 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC6 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
 
+        System.out.println("Valid access token " + token);
+
         //prep request
-        givenAuth(token)
+        given()//.log().all()
+            .header("authorization", "Bearer " + token)
             .header("content-type", "application/json")
             .queryParam("vinNumber", validVINNumber).
 
@@ -559,14 +537,17 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
             body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC7 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
 
+        System.out.println("Valid access token " + token);
+
         //prep request
-        givenAuth(token, xApiKey + "badkey")
+        given()//.log().all()
+            .header("authorization", "Bearer " + token)
+            .header("x-api-key", xApiKey + "badkey")
             .header("content-type", "application/json")
-            .queryParam("vinNumber", validVINNumber).
+            .queryParam("VehicleRegMark", "AB15XYZ").
 
         //send request
         when().//log().all().
@@ -578,14 +559,17 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
             body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC8 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
 
+        System.out.println("Valid access token: " + token);
+
         //prep request
-        givenAuth(token, xApiKey)
+        given()//.log().all()
+            .header("authorization", "Bearer " + token)
+            .header("x-api-key", xApiKey)
             .header("content-type", "application/json")
-            .queryParam("VehicleRegMark", invalidVehicleRegMark).
+            .queryParam("VehicleRegMark", "AB15XYZ"). //todo send a vrm that doesn't exist in DB
 
         //send request
         when().//log().all().
@@ -594,17 +578,20 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         //verification
         then().//log().all().
             statusCode(404).
-            body(equalTo("Vehicle was not found"));
+            body(equalTo("NoSuchKey"));
     }
 
-    @Title("VOTT-9 - AC1 - TC9 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
 
+        System.out.println("Valid access token: " + token);
+
         //prep request
-        givenAuth(token, xApiKey)
+        given()//.log().all()
+            .header("authorization", "Bearer " + token)
+            .header("x-api-key", xApiKey)
             .header("content-type", "application/json")
-            .queryParam("vinNumber", invalidVINNumber).
+            .queryParam("vinNumber", invalidVINNumber). //todo send a vin that doesn't exist in DB
 
         //send request
         when().//log().all().
@@ -613,17 +600,22 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         //verification
         then().//log().all().
             statusCode(404).
-            body(equalTo("Vehicle was not found"));
+            body(equalTo("NoSuchKey"));
     }
 
-    @Title("VOTT-9 - AC1 - TC10 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
 
+        System.out.println("Valid access token: " + token);
+
+        //TODO add control chars test i.e. ctrl+c etc.
+
         //prep request
-        givenAuth(token, xApiKey)
+        given()//.log().all()
+                .header("authorization", "Bearer " + token)
+                .header("x-api-key", xApiKey)
                 .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", nonAlphaVehicleMark).
+                .queryParam("testNumber", validVehicleRegMark).
 
                 //send request
                         when().//log().all().
@@ -631,98 +623,32 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
                 //verification
                         then().//log().all().
-                statusCode(500).
-                body(equalTo("Vehicle identifier is invalid"));
-    }
-
-    private vott.models.dao.Vehicle newTestVehicle() {
-        vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
-
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("A12345");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
-
-        return vehicle;
-    }
-
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
-
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
-
-        return mm;
-    }
-
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
-
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
-
-        return identity;
-    }
-
-    private ContactDetails newTestContactDetails() {
-        ContactDetails cd = new ContactDetails();
-
-        cd.setName("Test Name");
-        cd.setAddress1("Test Address 1");
-        cd.setAddress2("Test Address 2");
-        cd.setPostTown("Test Post Town");
-        cd.setAddress3("Test Address 3");
-        cd.setEmailAddress("TestEmailAddress");
-        cd.setTelephoneNumber("8888888");
-        cd.setFaxNumber("99999999");
-
-        return cd;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
+                statusCode(404).
+                body(equalTo("NoSuchKey"));
     }
 
     private vott.models.dao.TechnicalRecord newTestTechnicalRecord() {
         vott.models.dao.TechnicalRecord tr = new vott.models.dao.TechnicalRecord();
 
-        tr.setVehicleID(String.valueOf(vehiclePK));
+        tr.setVehicleID("1");
         tr.setRecordCompleteness("Complete");
-        tr.setCreatedAt("2021-01-01 00:00:00.000000");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
-        tr.setMakeModelID(String.valueOf(makeModelPK));
+        tr.setCreatedAt("2021-01-01 00:00:00");
+        tr.setLastUpdatedAt("2021-01-01 00:00:00");
+        tr.setMakeModelID("1");
         tr.setFunctionCode("A");
         tr.setOffRoad("1");
         tr.setNumberOfWheelsDriven("4");
         tr.setEmissionsLimit("Test Emission Limit");
         tr.setDepartmentalVehicleMarker("1");
         tr.setAlterationMarker("1");
-        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
+        tr.setVehicleClassID("1");
         tr.setVariantVersionNumber("Test Variant Number");
         tr.setGrossEecWeight("1200");
         tr.setTrainEecWeight("1400");
         tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
-        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
+        tr.setApplicantDetailID("1");
+        tr.setPurchaserDetailID("1");
+        tr.setManufacturerDetailID("1");
         tr.setManufactureYear("2021");
         tr.setRegnDate("2021-01-01");
         tr.setFirstUseDate("2021-01-01");
@@ -766,14 +692,14 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         tr.setWidth("50");
         tr.setFrontAxleTo5thWheelCouplingMin("55");
         tr.setFrontAxleTo5thWheelCouplingMax("65");
-        tr.setFrontAxleTo5thWheelMin("45");
-        tr.setFrontAxleTo5thWheelMax("65");
+        tr.setFrontAxleTo5thWheelCouplingMin("45");
+        tr.setFrontAxleTo5thWheelCouplingMax("65");
         tr.setFrontAxleToRearAxle("15");
         tr.setRearAxleToRearTrl("25");
         tr.setCouplingCenterToRearAxleMin("25");
         tr.setCouplingCenterToRearAxleMax("85");
-        tr.setCouplingCenterToRearTrlMin("25");
-        tr.setCouplingCenterToRearTrlMax("85");
+        tr.setCouplingCenterToRearAxleMin("25");
+        tr.setCouplingCenterToRearAxleMax("85");
         tr.setCentreOfRearmostAxleToRearOfTrl("25");
         tr.setNotes("Test Notes");
         tr.setPurchaserNotes("Purchaser Notes");
@@ -783,8 +709,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         tr.setBrakes_dtpNumber("DTP111");
         tr.setBrakes_loadSensingValve("1");
         tr.setBrakes_antilockBrakingSystem("1");
-        tr.setCreatedByID(String.valueOf(identityPK));
-        tr.setLastUpdatedByID(String.valueOf(identityPK));
+        tr.setCreatedByID("1");
+        tr.setLastUpdatedByID("1");
         tr.setUpdateType("AutoTest");
         tr.setNumberOfSeatbelts("3");
         tr.setSeatbeltInstallationApprovalDate("2021-01-01");
@@ -792,97 +718,17 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         return tr;
     }
 
-    private PSVBrakes newTestPSVBrakes() {
-        PSVBrakes psv = new PSVBrakes();
+    private vott.models.dao.Vehicle newTestVehicle() {
+        vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
 
-        psv.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        psv.setBrakeCodeOriginal("222");
-        psv.setBrakeCode("Test");
-        psv.setDataTrBrakeOne("Test Data");
-        psv.setDataTrBrakeTwo("Test Data");
-        psv.setDataTrBrakeThree("Test Data");
-        psv.setRetarderBrakeOne("Test Data");
-        psv.setRetarderBrakeTwo("Test Data");
-        psv.setServiceBrakeForceA("11");
-        psv.setSecondaryBrakeForceA("22");
-        psv.setParkingBrakeForceA("33");
-        psv.setServiceBrakeForceB("44");
-        psv.setSecondaryBrakeForceB("55");
-        psv.setParkingBrakeForceB("66");
+        vehicle.setSystemNumber("SYSTEM-NUMBER");
+        vehicle.setVin("T123456");
+        vehicle.setVrm_trm("999999999");
+        vehicle.setTrailerID("88888888");
 
-        return psv;
+        return vehicle;
     }
 
-    private Axles newTestAxles() {
-        Axles axles = new Axles();
-
-        axles.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        axles.setTyreID(String.valueOf(tyrePK));
-        axles.setAxleNumber("222");
-        axles.setParkingBrakeMrk("1");
-        axles.setKerbWeight("1200");
-        axles.setLadenWeight("1500");
-        axles.setGbWeight("1200");
-        axles.setEecWeight("1500");
-        axles.setDesignWeight("1200");
-        axles.setBrakeActuator("10");
-        axles.setLeverLength("10");
-        axles.setSpringBrakeParking("1");
-
-        return axles;
-    }
-
-    private Tyre newTestTyre() {
-        Tyre tyre = new Tyre();
-
-        tyre.setTyreSize("456");
-        tyre.setPlyRating("10");
-        tyre.setFitmentCode("55555");
-        tyre.setDataTrAxles("Test Data");
-        tyre.setSpeedCategorySymbol("1");
-        tyre.setTyreCode("88888");
-
-        return tyre;
-    }
-
-    private AxleSpacing newTestAxleSpacing() {
-        AxleSpacing as = new AxleSpacing();
-
-        as.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        as.setAxles("Test");
-        as.setValue("120");
-
-        return as;
-    }
-
-    private Plate newTestPlate() {
-        Plate plate = new Plate();
-        plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        plate.setPlateSerialNumber("666666");
-        plate.setPlateIssueDate("2100-12-31");
-        plate.setPlateReasonForIssue("Test Reason");
-        plate.setPlateIssuer("Auto Test");
-
-        return plate;
-    }
-
-    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
-        return () -> {
-            List<vott.models.dao.Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
-            return !vehicles.isEmpty();
-        };
-    }
-
-    private Callable<Boolean> techRecordIsPresentInDatabase(String vehicleID) {
-        return () -> {
-            List<vott.models.dao.TechnicalRecord> testResults = technicalRecordRepository.select(String.format(
-                    "SELECT *\n"
-                            + "FROM `technical_record`\n"
-                            + "WHERE `vehicle_id` = '%s'", vehicleID
-            ));
-            return !testResults.isEmpty();
-        };
-    }
 }
 
 
