@@ -11,12 +11,9 @@ import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.config.ConfigurationProvider;
 import vott.config.VottConfiguration;
-import vott.database.*;
+import vott.database.TechnicalRecordRepository;
+import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.Axles;
-import vott.models.dao.MakeModel;
-import vott.models.dao.PSVBrakes;
-import vott.models.dao.VehicleClass;
 import vott.models.dto.enquiry.TechnicalRecord;
 import vott.models.dto.enquiry.Vehicle;
 
@@ -38,17 +35,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     private VehicleRepository vehicleRepository;
     private TechnicalRecordRepository technicalRecordRepository;
-    private MakeModelRepository makeModelRepository;
-    private VehicleClassRepository vehicleClassRepository;
-    private PSVBrakesRepository psvBrakesRepository;
-    private AxlesRepository axlesRepository;
 
-    vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
-    MakeModel mm = newTestMakeModel();
-    VehicleClass vc = newTestVehicleClass();
-    vott.models.dao.TechnicalRecord tr = newTestTechnicalRecord();
-    PSVBrakes psv = newTestPSVBrakes();
-    Axles axles = newTestAxles();
 
     @Before
     public void Setup() {
@@ -59,37 +46,19 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         ConnectionFactory connectionFactory = new ConnectionFactory(
                 ConfigurationProvider.local()
         );
-
         vehicleRepository = new VehicleRepository(connectionFactory);
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        makeModelRepository = new MakeModelRepository(connectionFactory);
-        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
-        axlesRepository = new AxlesRepository(connectionFactory);
 
         //Upsert Vehicle
+        vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
         int vehicleID = vehicleRepository.fullUpsert(vehicleUpsert);
         validVINNumber = vehicleUpsert.getVin();
 
-        //Upsert MakeModel
-        int mmId = makeModelRepository.partialUpsert(mm);
-
-        //Upsert Vehicle Class
-        int vcId = vehicleClassRepository.partialUpsert(vc);
-
         //upsert Tech Record
+        vott.models.dao.TechnicalRecord tr = newTestTechnicalRecord();
         tr.setVehicleID(String.valueOf(vehicleID));
-        tr.setMakeModelID(String.valueOf(mmId));
-        tr.setVehicleClassID(String.valueOf(vcId));
-        int trId = technicalRecordRepository.fullUpsert(tr);
+        technicalRecordRepository.fullUpsert(tr);
 
-        //PSV Brakes
-        psv.setTechnicalRecordID(String.valueOf(trId));
-        psvBrakesRepository.fullUpsert(psv);
-
-        //Upsert Axles
-        axles.setTechnicalRecordID(String.valueOf(trId));
-        axlesRepository.fullUpsert(axles);
     }
 
 
@@ -758,77 +727,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         vehicle.setTrailerID("88888888");
 
         return vehicle;
-    }
-
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
-
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
-
-        return mm;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
-    }
-
-    private PSVBrakes newTestPSVBrakes() {
-        PSVBrakes psv = new PSVBrakes();
-
-        psv.setTechnicalRecordID("1");
-        psv.setBrakeCodeOriginal("222");
-        psv.setBrakeCode("Test");
-        psv.setDataTrBrakeOne("Test Data");
-        psv.setDataTrBrakeTwo("Test Data");
-        psv.setDataTrBrakeThree("Test Data");
-        psv.setRetarderBrakeOne("Test Data");
-        psv.setRetarderBrakeTwo("Test Data");
-        psv.setServiceBrakeForceA("11");
-        psv.setSecondaryBrakeForceA("22");
-        psv.setParkingBrakeForceA("33");
-        psv.setServiceBrakeForceB("44");
-        psv.setSecondaryBrakeForceB("55");
-        psv.setParkingBrakeForceB("66");
-
-        return psv;
-    }
-
-    private Axles newTestAxles() {
-        Axles axles = new Axles();
-
-        axles.setTechnicalRecordID("1");
-        axles.setTyreID("1");
-        axles.setAxleNumber("222");
-        axles.setParkingBrakeMrk("5");
-        axles.setKerbWeight("1200");
-        axles.setLadenWeight("1500");
-        axles.setGbWeight("1200");
-        axles.setEecWeight("1500");
-        axles.setDesignWeight("1200");
-        axles.setBrakeActuator("10");
-        axles.setLeverLength("10");
-        axles.setSpringBrakeParking("123");
-
-        return axles;
     }
 
 }
