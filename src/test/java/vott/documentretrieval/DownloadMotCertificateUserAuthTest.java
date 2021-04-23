@@ -9,24 +9,23 @@ import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.config.VottConfiguration;
-import vott.database.TestResultRepository;
-import vott.database.TestTypeRepository;
-import vott.database.VehicleRepository;
+import vott.database.*;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.TestResult;
-import vott.models.dao.TestType;
-import vott.models.dao.Vehicle;
+import vott.models.dao.*;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
@@ -34,15 +33,6 @@ public class DownloadMotCertificateUserAuthTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
-
-    private VehicleRepository vehicleRepository;
-    private TestResultRepository testResultRepository;
-    private TestTypeRepository testTypeRepository;
-
-    private List<Integer> deleteVehicleOnExit = new ArrayList<>();
-    private List<Integer> deleteTestResultOnExit = new ArrayList<>();
-    private List<Integer> deleteTestTypeOnExit = new ArrayList<>();
-
     private String token;
     private final String xApiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
 
@@ -51,6 +41,27 @@ public class DownloadMotCertificateUserAuthTest {
     private String invalidVINNumber = "T123456789";
     private String invalidTestNumber = "A0A00000";
 
+    //Test Data
+    private Integer vehiclePK;
+    private Integer testResultPK;
+    private Integer fuelEmissionPK;
+    private Integer testStationPK;
+    private Integer testerPK;
+    private Integer vehicleClassPK;
+    private Integer testTypePK;
+    private Integer preparerPK;
+    private Integer identityPK;
+
+    private TestResultRepository testResultRepository;
+    private VehicleRepository vehicleRepository;
+    private FuelEmissionRepository fuelEmissionRepository;
+    private TestStationRepository testStationRepository;
+    private TesterRepository testerRepository;
+    private VehicleClassRepository vehicleClassRepository;
+    private TestTypeRepository testTypeRepository;
+    private PreparerRepository preparerRepository;
+    private IdentityRepository identityRepository;
+
     @Before
     public void Setup() {
 
@@ -58,25 +69,35 @@ public class DownloadMotCertificateUserAuthTest {
                 VottConfiguration.local()
         );
 
-        //Upsert Test Type
-        testTypeRepository = new TestTypeRepository(connectionFactory);
-        TestType tt = newTestTestType();
-        int ttID = testTypeRepository.partialUpsert(tt);
-        deleteTestTypeOnExit.add(ttID);
-
-        //Upsert Vehicle
+        //Test Data Upserts
         vehicleRepository = new VehicleRepository(connectionFactory);
         Vehicle vehicle = newTestVehicle();
-        int vehicleID = vehicleRepository.fullUpsert(vehicle);
-        deleteVehicleOnExit.add(vehicleID);
+        vehiclePK = vehicleRepository.fullUpsert(vehicle);
 
-        //Upsert Test Result
+        fuelEmissionRepository = new FuelEmissionRepository(connectionFactory);
+        fuelEmissionPK = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
+
+        testStationRepository = new TestStationRepository(connectionFactory);
+        testStationPK = testStationRepository.partialUpsert(newTestTestStation());
+
+        testerRepository = new TesterRepository(connectionFactory);
+        testerPK = testerRepository.partialUpsert(newTestTester());
+
+        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
+        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+
+        testTypeRepository = new TestTypeRepository(connectionFactory);
+        testTypePK = testTypeRepository.partialUpsert(newTestTestType());
+
+        preparerRepository = new PreparerRepository(connectionFactory);
+        preparerPK = preparerRepository.partialUpsert(newTestPreparer());
+
+        identityRepository = new IdentityRepository(connectionFactory);
+        identityPK = identityRepository.partialUpsert(newTestIdentity());
+
         testResultRepository = new TestResultRepository(connectionFactory);
         TestResult tr = newTestTestResult();
-        tr.setVehicleID(String.valueOf(vehicleID));
-        tr.setTestTypeID(String.valueOf(ttID));
-        int trID = testResultRepository.fullUpsert(tr);
-        deleteTestResultOnExit.add(trID);
+        testResultPK = testResultRepository.fullUpsert(tr);
 
         validVINNumber = vehicle.getVin();
         validTestNumber= tr.getTestNumber();
@@ -87,15 +108,15 @@ public class DownloadMotCertificateUserAuthTest {
 
     @After
     public void tearDown() {
-        for (int primaryKey : deleteTestResultOnExit) {
-            testResultRepository.delete(primaryKey);
-        }
-        for (int primaryKey : deleteTestTypeOnExit) {
-            testTypeRepository.delete(primaryKey);
-        }
-        for (int primaryKey : deleteVehicleOnExit) {
-            vehicleRepository.delete(primaryKey);
-        }
+        testResultRepository.delete(testResultPK);
+        vehicleRepository.delete(vehiclePK);
+        fuelEmissionRepository.delete(fuelEmissionPK);
+        testStationRepository.delete(testStationPK);
+        testerRepository.delete(testerPK);
+        vehicleClassRepository.delete(vehicleClassPK);
+        testTypeRepository.delete(testTypePK);
+        preparerRepository.delete(preparerPK);
+        identityRepository.delete(identityPK);
     }
 
     @Title("CVSB-19156 - AC1 - TC1 - Happy Path - DownloadTestCertificateTest")
@@ -484,7 +505,8 @@ public class DownloadMotCertificateUserAuthTest {
                 statusCode(405);
     }
 
-    //Test Vehicle Data Setup
+
+    //Test Data Setup
     private Vehicle newTestVehicle() {
         Vehicle vehicle = new Vehicle();
 
@@ -496,17 +518,87 @@ public class DownloadMotCertificateUserAuthTest {
         return vehicle;
     }
 
-    //Test Test Result Data Setup
+    private FuelEmission newTestFuelEmission() {
+        FuelEmission fe = new FuelEmission();
+
+        fe.setModTypeCode("a");
+        fe.setDescription("Test Description");
+        fe.setEmissionStandard("Test Standard");
+        fe.setFuelType("Petrol");
+
+        return fe;
+    }
+
+    private TestStation newTestTestStation() {
+        TestStation ts = new TestStation();
+
+        ts.setPNumber("987654321");
+        ts.setName("Test Test Station");
+        ts.setType("Test");
+
+        return ts;
+    }
+
+    private Tester newTestTester() {
+        Tester tester = new Tester();
+
+        tester.setStaffID("1");
+        tester.setName("Auto Test");
+        tester.setEmailAddress("auto@test.com");
+
+        return tester;
+    }
+
+    private VehicleClass newTestVehicleClass() {
+        VehicleClass vc = new VehicleClass();
+
+        vc.setCode("1");
+        vc.setDescription("Test Description");
+        vc.setVehicleType("Test Type");
+        vc.setVehicleSize("55555");
+        vc.setVehicleConfiguration("Test Configuration");
+        vc.setEuVehicleCategory("ABC");
+
+        return vc;
+    }
+
+    private TestType newTestTestType() {
+        TestType tt = new TestType();
+
+        tt.setTestTypeClassification("Test Test Type");
+        tt.setTestTypeName("Test Name");
+
+        return tt;
+    }
+
+    private Preparer newTestPreparer() {
+        Preparer preparer = new Preparer();
+
+        preparer.setPreparerID("1");
+        preparer.setName("Test Name");
+
+        return preparer;
+    }
+
+    private Identity newTestIdentity() {
+        Identity identity = new Identity();
+
+        identity.setIdentityID("55555");
+        identity.setName("Test Name");
+
+        return identity;
+    }
+
     private TestResult newTestTestResult() {
         TestResult tr = new TestResult();
 
-        tr.setVehicleID("1");
-        tr.setFuelEmissionID("1");
-        tr.setTestStationID("1");
-        tr.setTesterID("1");
-        tr.setPreparerID("1");
-        tr.setVehicleClassID("1");
-        tr.setTestTypeID("1");
+        tr.setVehicleID(String.valueOf(vehiclePK));
+        tr.setFuelEmissionID(String.valueOf(fuelEmissionPK));
+        tr.setTestStationID(String.valueOf(testStationPK));
+        tr.setTesterID(String.valueOf(testerPK));
+        tr.setPreparerID(String.valueOf(preparerPK));
+        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
+        tr.setTestTypeID(String.valueOf(testTypePK));
         tr.setTestStatus("Test Pass");
         tr.setReasonForCancellation("Automation Test Run");
         tr.setNumberOfSeats("3");
@@ -537,20 +629,10 @@ public class DownloadMotCertificateUserAuthTest {
         tr.setParticulateTrapSerialNumber("ABC123");
         tr.setModificationTypeUsed("Test Modification");
         tr.setSmokeTestKLimitApplied("Smoke Test");
-        tr.setCreatedByID("1");
-        tr.setLastUpdatedByID("1");
+        tr.setCreatedByID(String.valueOf(identityPK));
+        tr.setLastUpdatedByID(String.valueOf(identityPK));
 
         return tr;
-    }
-
-    //Test Test Type Data Setup
-    private TestType newTestTestType() {
-        TestType tt = new TestType();
-
-        tt.setTestTypeClassification("Test Test Type");
-        tt.setTestTypeName("Test Name");
-
-        return tt;
     }
 }
 
