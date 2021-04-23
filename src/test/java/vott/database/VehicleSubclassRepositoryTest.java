@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.models.dao.VehicleClass;
 import vott.models.dao.VehicleSubclass;
 
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import static org.junit.Assert.assertNotEquals;
 public class VehicleSubclassRepositoryTest {
 
     private List<Integer> deleteOnExit;
+    private Integer vehicleClassPK;
 
     private VehicleSubclassRepository vehicleSubclassRepository;
+    private VehicleClassRepository vehicleClassRepository;
 
     @Before
     public void setUp() {
@@ -27,6 +30,9 @@ public class VehicleSubclassRepositoryTest {
 
         vehicleSubclassRepository = new VehicleSubclassRepository(connectionFactory);
 
+        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
+        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+
         deleteOnExit = new ArrayList<>();
     }
 
@@ -35,6 +41,8 @@ public class VehicleSubclassRepositoryTest {
         for (int primaryKey : deleteOnExit) {
             vehicleSubclassRepository.delete(primaryKey);
         }
+
+        vehicleClassRepository.delete(vehicleClassPK);
     }
 
     @Test
@@ -67,9 +75,22 @@ public class VehicleSubclassRepositoryTest {
     private VehicleSubclass newTestVehicleSubclass() {
         VehicleSubclass vs = new VehicleSubclass();
 
-        vs.setVehicleClassID("1");
+        vs.setVehicleClassID(String.valueOf(vehicleClassPK));
         vs.setSubclass("z");
 
         return vs;
+    }
+
+    private VehicleClass newTestVehicleClass() {
+        VehicleClass vc = new VehicleClass();
+
+        vc.setCode("1");
+        vc.setDescription("Test Description");
+        vc.setVehicleType("Test Type");
+        vc.setVehicleSize("55555");
+        vc.setVehicleConfiguration("Test Configuration");
+        vc.setEuVehicleCategory("ABC");
+
+        return vc;
     }
 }

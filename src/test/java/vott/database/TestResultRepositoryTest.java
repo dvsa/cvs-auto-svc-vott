@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.TestResult;
-import vott.models.dao.TestType;
+import vott.models.dao.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,26 @@ import static org.junit.Assert.assertNotEquals;
 public class TestResultRepositoryTest {
 
     private List<Integer> deleteOnExit;
+    private Integer vehiclePK;
+    private Integer vehicle2PK;
+    private Integer fuelEmissionPK;
+    private Integer testStationPK;
+    private Integer testerPK;
+    private Integer vehicleClassPK;
+    private Integer testTypePK;
+    private Integer testType2PK;
+    private Integer preparerPK;
+    private Integer identityPK;
 
     private TestResultRepository testResultRepository;
+    private VehicleRepository vehicleRepository;
+    private FuelEmissionRepository fuelEmissionRepository;
+    private TestStationRepository testStationRepository;
+    private TesterRepository testerRepository;
+    private VehicleClassRepository vehicleClassRepository;
     private TestTypeRepository testTypeRepository;
+    private PreparerRepository preparerRepository;
+    private IdentityRepository identityRepository;
 
     @Before
     public void setUp() {
@@ -28,7 +44,30 @@ public class TestResultRepositoryTest {
         );
 
         testResultRepository = new TestResultRepository(connectionFactory);
+
+        vehicleRepository = new VehicleRepository(connectionFactory);
+        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
+
+        fuelEmissionRepository = new FuelEmissionRepository(connectionFactory);
+        fuelEmissionPK = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
+
+        testStationRepository = new TestStationRepository(connectionFactory);
+        testStationPK = testStationRepository.partialUpsert(newTestTestStation());
+
+        testerRepository = new TesterRepository(connectionFactory);
+        testerPK = testerRepository.partialUpsert(newTestTester());
+
+        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
+        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+
         testTypeRepository = new TestTypeRepository(connectionFactory);
+        testTypePK = testTypeRepository.partialUpsert(newTestTestType());
+
+        preparerRepository = new PreparerRepository(connectionFactory);
+        preparerPK = preparerRepository.partialUpsert(newTestPreparer());
+
+        identityRepository = new IdentityRepository(connectionFactory);
+        identityPK = identityRepository.partialUpsert(newTestIdentity());
 
         deleteOnExit = new ArrayList<>();
     }
@@ -38,6 +77,21 @@ public class TestResultRepositoryTest {
         for (int primaryKey : deleteOnExit) {
             testResultRepository.delete(primaryKey);
         }
+
+        vehicleRepository.delete(vehiclePK);
+        if (vehicle2PK != null){
+            vehicleRepository.delete(vehicle2PK);
+        }
+        fuelEmissionRepository.delete(fuelEmissionPK);
+        testStationRepository.delete(testStationPK);
+        testerRepository.delete(testerPK);
+        vehicleClassRepository.delete(vehicleClassPK);
+        testTypeRepository.delete(testTypePK);
+        if (testType2PK != null){
+            testTypeRepository.delete(testType2PK);
+        }
+        preparerRepository.delete(preparerPK);
+        identityRepository.delete(identityPK);
     }
 
     @Test
@@ -53,10 +107,14 @@ public class TestResultRepositoryTest {
 
     @Test
     public void upsertingNewVehicleIDReturnsDifferentPk() {
+        Vehicle vehicle2 = newTestVehicle();
+        vehicle2.setVin("Vin Updated");
+        vehicle2PK = vehicleRepository.fullUpsert(vehicle2);
+
         TestResult tr1 = newTestTestResult();
 
         TestResult tr2 = newTestTestResult();
-        tr2.setVehicleID("2");
+        tr2.setVehicleID(String.valueOf(vehicle2PK));
 
         int primaryKey1 = testResultRepository.fullUpsert(tr1);
         int primaryKey2 = testResultRepository.fullUpsert(tr2);
@@ -69,26 +127,21 @@ public class TestResultRepositoryTest {
 
     @Test
     public void upsertingNewTestTypeIDReturnsDifferentPk() {
-        TestType tt = newTestTestType();
+        TestType tt2 = newTestTestType();
+        tt2.setTestTypeClassification("Auto Test Type");
 
-        int ttpk = testTypeRepository.partialUpsert(tt);
+        testType2PK = testTypeRepository.partialUpsert(tt2);
 
         TestResult tr1 = newTestTestResult();
 
         TestResult tr2 = newTestTestResult();
-        tr2.setTestTypeID(Integer.toString(ttpk));
+        tr2.setTestTypeID(String.valueOf(testType2PK));
 
         int primaryKey1 = testResultRepository.fullUpsert(tr1);
         int primaryKey2 = testResultRepository.fullUpsert(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
-
-        for (int primaryKey : deleteOnExit) {
-            testResultRepository.delete(primaryKey);
-        }
-
-        testTypeRepository.delete(ttpk);
 
         assertNotEquals(primaryKey1, primaryKey2);
     }
@@ -125,16 +178,98 @@ public class TestResultRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    private Vehicle newTestVehicle() {
+        Vehicle vehicle = new Vehicle();
+
+        vehicle.setSystemNumber("SYSTEM-NUMBER");
+        vehicle.setVin("Test VIN");
+        vehicle.setVrm_trm("999999999");
+        vehicle.setTrailerID("88888888");
+
+        return vehicle;
+    }
+
+    private FuelEmission newTestFuelEmission() {
+        FuelEmission fe = new FuelEmission();
+
+        fe.setModTypeCode("a");
+        fe.setDescription("Test Description");
+        fe.setEmissionStandard("Test Standard");
+        fe.setFuelType("Petrol");
+
+        return fe;
+    }
+
+    private TestStation newTestTestStation() {
+        TestStation ts = new TestStation();
+
+        ts.setPNumber("987654321");
+        ts.setName("Test Test Station");
+        ts.setType("Test");
+
+        return ts;
+    }
+
+    private Tester newTestTester() {
+        Tester tester = new Tester();
+
+        tester.setStaffID("1");
+        tester.setName("Auto Test");
+        tester.setEmailAddress("auto@test.com");
+
+        return tester;
+    }
+
+    private VehicleClass newTestVehicleClass() {
+        VehicleClass vc = new VehicleClass();
+
+        vc.setCode("1");
+        vc.setDescription("Test Description");
+        vc.setVehicleType("Test Type");
+        vc.setVehicleSize("55555");
+        vc.setVehicleConfiguration("Test Configuration");
+        vc.setEuVehicleCategory("ABC");
+
+        return vc;
+    }
+
+    private TestType newTestTestType() {
+        TestType tt = new TestType();
+
+        tt.setTestTypeClassification("Test Test Type");
+        tt.setTestTypeName("Test Name");
+
+        return tt;
+    }
+
+    private Preparer newTestPreparer() {
+        Preparer preparer = new Preparer();
+
+        preparer.setPreparerID("1");
+        preparer.setName("Test Name");
+
+        return preparer;
+    }
+
+    private Identity newTestIdentity() {
+        Identity identity = new Identity();
+
+        identity.setIdentityID("55555");
+        identity.setName("Test Name");
+
+        return identity;
+    }
+
     private TestResult newTestTestResult() {
         TestResult tr = new TestResult();
 
-        tr.setVehicleID("1");
-        tr.setFuelEmissionID("1");
-        tr.setTestStationID("1");
-        tr.setTesterID("1");
-        tr.setPreparerID("1");
-        tr.setVehicleClassID("1");
-        tr.setTestTypeID("1");
+        tr.setVehicleID(String.valueOf(vehiclePK));
+        tr.setFuelEmissionID(String.valueOf(fuelEmissionPK));
+        tr.setTestStationID(String.valueOf(testStationPK));
+        tr.setTesterID(String.valueOf(testerPK));
+        tr.setPreparerID(String.valueOf(preparerPK));
+        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
+        tr.setTestTypeID(String.valueOf(testTypePK));
         tr.setTestStatus("Test Pass");
         tr.setReasonForCancellation("Automation Test Run");
         tr.setNumberOfSeats("3");
@@ -165,18 +300,9 @@ public class TestResultRepositoryTest {
         tr.setParticulateTrapSerialNumber("ABC123");
         tr.setModificationTypeUsed("Test Modification");
         tr.setSmokeTestKLimitApplied("Smoke Test");
-        tr.setCreatedByID("1");
-        tr.setLastUpdatedByID("1");
+        tr.setCreatedByID(String.valueOf(identityPK));
+        tr.setLastUpdatedByID(String.valueOf(identityPK));
 
         return tr;
-    }
-
-    private TestType newTestTestType() {
-        TestType tt = new TestType();
-
-        tt.setTestTypeClassification("Test Test Type");
-        tt.setTestTypeName("Test Name");
-
-        return tt;
     }
 }

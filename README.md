@@ -13,7 +13,10 @@ These instructions will get you up and running with the automation framework.
 In order to run the test locally your will need to complete the following steps:
 - Connect to Jenkins VPN (required for database access)
 - Populate the template config file: src>main>resources>config.json
+  
   !!Ensure only the template is committed to Git!!
+
+
   Running can be triggered from IntelliJ
 ## Running the Tests
 Pull the repo

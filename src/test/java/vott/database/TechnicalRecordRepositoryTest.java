@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.TechnicalRecord;
+import vott.models.dao.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,19 @@ import static org.junit.Assert.assertNotEquals;
 public class TechnicalRecordRepositoryTest {
 
     private List<Integer> deleteOnExit;
+    private Integer vehiclePK;
+    private Integer vehicle2PK;
+    private Integer makeModelPK;
+    private Integer identityPK;
+    private Integer contactDetailsPK;
+    private Integer vehicleClassPK;
 
     private TechnicalRecordRepository technicalRecordRepository;
+    private VehicleRepository vehicleRepository;
+    private MakeModelRepository makeModelRepository;
+    private IdentityRepository identityRepository;
+    private ContactDetailsRepository contactDetailsRepository;
+    private VehicleClassRepository vehicleClassRepository;
 
     @Before
     public void setUp() {
@@ -27,6 +38,21 @@ public class TechnicalRecordRepositoryTest {
 
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
 
+        vehicleRepository = new VehicleRepository(connectionFactory);
+        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
+
+        makeModelRepository = new MakeModelRepository(connectionFactory);
+        makeModelPK = makeModelRepository.partialUpsert(newTestMakeModel());
+
+        identityRepository = new IdentityRepository(connectionFactory);
+        identityPK = identityRepository.partialUpsert(newTestIdentity());
+
+        contactDetailsRepository = new ContactDetailsRepository(connectionFactory);
+        contactDetailsPK = contactDetailsRepository.partialUpsert(newTestContactDetails());
+
+        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
+        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+
         deleteOnExit = new ArrayList<>();
     }
 
@@ -35,6 +61,15 @@ public class TechnicalRecordRepositoryTest {
         for (int primaryKey : deleteOnExit) {
             technicalRecordRepository.delete(primaryKey);
         }
+
+        vehicleRepository.delete(vehiclePK);
+        if (vehicle2PK != null){
+            vehicleRepository.delete(vehicle2PK);
+        }
+        makeModelRepository.delete(makeModelPK);
+        identityRepository.delete(identityPK);
+        contactDetailsRepository.delete(contactDetailsPK);
+        vehicleClassRepository.delete(vehicleClassPK);
     }
 
     @Test
@@ -53,7 +88,10 @@ public class TechnicalRecordRepositoryTest {
         TechnicalRecord tr1 = newTestTechnicalRecord();
 
         TechnicalRecord tr2 = newTestTechnicalRecord();
-        tr2.setVehicleID("2");
+        Vehicle vehicle2 = newTestVehicle();
+        vehicle2.setVin("Auto VIN");
+        vehicle2PK = vehicleRepository.fullUpsert(vehicle2);
+        tr2.setVehicleID(String.valueOf(vehicle2PK));
 
         int primaryKey1 = technicalRecordRepository.fullUpsert(tr1);
         int primaryKey2 = technicalRecordRepository.fullUpsert(tr2);
@@ -96,28 +134,94 @@ public class TechnicalRecordRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    private Vehicle newTestVehicle() {
+        Vehicle vehicle = new Vehicle();
+
+        vehicle.setSystemNumber("SYSTEM-NUMBER");
+        vehicle.setVin("Test VIN");
+        vehicle.setVrm_trm("999999999");
+        vehicle.setTrailerID("88888888");
+
+        return vehicle;
+    }
+
+    private MakeModel newTestMakeModel() {
+        MakeModel mm = new MakeModel();
+
+        mm.setMake("Test Make");
+        mm.setModel("Test Model");
+        mm.setChassisMake("Test Chassis Make");
+        mm.setChassisModel("Test Chassis Model");
+        mm.setBodyMake("Test Body Make");
+        mm.setBodyModel("Test Body Model");
+        mm.setModelLiteral("Test Model Literal");
+        mm.setBodyTypeCode("1");
+        mm.setBodyTypeDescription("Test Description");
+        mm.setFuelPropulsionSystem("Test Fuel");
+        mm.setDtpCode("888888");
+
+        return mm;
+    }
+
+    private Identity newTestIdentity() {
+        Identity identity = new Identity();
+
+        identity.setIdentityID("55555");
+        identity.setName("Test Name");
+
+        return identity;
+    }
+
+    private ContactDetails newTestContactDetails() {
+        ContactDetails cd = new ContactDetails();
+
+        cd.setName("Test Name");
+        cd.setAddress1("Test Address 1");
+        cd.setAddress2("Test Address 2");
+        cd.setPostTown("Test Post Town");
+        cd.setAddress3("Test Address 3");
+        cd.setEmailAddress("TestEmailAddress");
+        cd.setTelephoneNumber("8888888");
+        cd.setFaxNumber("99999999");
+
+        return cd;
+    }
+
+    private VehicleClass newTestVehicleClass() {
+        VehicleClass vc = new VehicleClass();
+
+        vc.setCode("1");
+        vc.setDescription("Test Description");
+        vc.setVehicleType("Test Type");
+        vc.setVehicleSize("55555");
+        vc.setVehicleConfiguration("Test Configuration");
+        vc.setEuVehicleCategory("ABC");
+
+        return vc;
+    }
+
     private TechnicalRecord newTestTechnicalRecord() {
         TechnicalRecord tr = new TechnicalRecord();
 
-        tr.setVehicleID("1");
+        tr.setVehicleID(String.valueOf(vehiclePK));
         tr.setRecordCompleteness("Complete");
         tr.setCreatedAt("2021-01-01 00:00:00");
         tr.setLastUpdatedAt("2021-01-01 00:00:00");
-        tr.setMakeModelID("1");
+        tr.setMakeModelID(String.valueOf(makeModelPK));
         tr.setFunctionCode("A");
         tr.setOffRoad("1");
         tr.setNumberOfWheelsDriven("4");
         tr.setEmissionsLimit("Test Emission Limit");
         tr.setDepartmentalVehicleMarker("1");
         tr.setAlterationMarker("1");
-        tr.setVehicleClassID("1");
+        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
         tr.setVariantVersionNumber("Test Variant Number");
         tr.setGrossEecWeight("1200");
         tr.setTrainEecWeight("1400");
         tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID("1");
-        tr.setPurchaserDetailID("1");
-        tr.setManufacturerDetailID("1");
+        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
+        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
+        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
         tr.setManufactureYear("2021");
         tr.setRegnDate("2021-01-01");
         tr.setFirstUseDate("2021-01-01");
@@ -178,8 +282,8 @@ public class TechnicalRecordRepositoryTest {
         tr.setBrakes_dtpNumber("DTP111");
         tr.setBrakes_loadSensingValve("1");
         tr.setBrakes_antilockBrakingSystem("1");
-        tr.setCreatedByID("1");
-        tr.setLastUpdatedByID("1");
+        tr.setCreatedByID(String.valueOf(identityPK));
+        tr.setLastUpdatedByID(String.valueOf(identityPK));
         tr.setUpdateType("AutoTest");
         tr.setNumberOfSeatbelts("3");
         tr.setSeatbeltInstallationApprovalDate("2021-01-01");

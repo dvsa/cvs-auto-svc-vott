@@ -17,7 +17,7 @@ public class TesterReporitoryTest {
 
     private List<Integer> deleteOnExit;
 
-    private TesterRepository testRepository;
+    private TesterRepository testerRepository;
 
     @Before
     public void setUp() {
@@ -25,7 +25,7 @@ public class TesterReporitoryTest {
                 VottConfiguration.local()
         );
 
-        testRepository = new TesterRepository(connectionFactory);
+        testerRepository = new TesterRepository(connectionFactory);
 
         deleteOnExit = new ArrayList<>();
     }
@@ -33,14 +33,14 @@ public class TesterReporitoryTest {
     @After
     public void tearDown() {
         for (int primaryKey : deleteOnExit) {
-            testRepository.delete(primaryKey);
+            testerRepository.delete(primaryKey);
         }
     }
 
     @Test
     public void upsertingIdenticalDataReturnsSamePk() {
-        int primaryKey1 = testRepository.partialUpsert(newTestTester());
-        int primaryKey2 = testRepository.partialUpsert(newTestTester());
+        int primaryKey1 = testerRepository.partialUpsert(newTestTester());
+        int primaryKey2 = testerRepository.partialUpsert(newTestTester());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -55,8 +55,8 @@ public class TesterReporitoryTest {
         Tester tester2 = newTestTester();
         tester2.setName("Auto Test 2");
 
-        int primaryKey1 = testRepository.partialUpsert(tester1);
-        int primaryKey2 = testRepository.partialUpsert(tester2);
+        int primaryKey1 = testerRepository.partialUpsert(tester1);
+        int primaryKey2 = testerRepository.partialUpsert(tester2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
