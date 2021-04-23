@@ -68,7 +68,7 @@ public class TestResultRepositoryTest {
 
         identityRepository = new IdentityRepository(connectionFactory);
         identityPK = identityRepository.partialUpsert(newTestIdentity());
-
+      
         deleteOnExit = new ArrayList<>();
     }
 

@@ -6,6 +6,7 @@ import org.junit.Test;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.VehicleClass;
+
 import vott.models.dao.VehicleSubclass;
 
 import java.util.ArrayList;
