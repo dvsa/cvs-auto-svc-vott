@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import net.thucydides.core.annotations.Title;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import vott.auth.GrantType;
@@ -18,8 +19,13 @@ import vott.models.dao.*;
 import vott.models.dto.enquiry.TechnicalRecord;
 import vott.models.dto.enquiry.Vehicle;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
@@ -37,26 +43,42 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     private final String invalidVINNumber = "A123456789";
     private final String invalidVehicleRegMark = "W01A00229";
 
-    private VehicleRepository vehicleRepository;
+    //Test Data Variables
+    private Integer vehiclePK;
+    private Integer makeModelPK;
+    private Integer identityPK;
+    private Integer contactDetailsPK;
+    private Integer vehicleClassPK;
+    private Integer technicalRecordPK;
+    private Integer psvBrakesPK;
+    private Integer tyrePK;
+    private Integer axlesPK;
+    private Integer platePK;
+    private Integer axleSpacingPK;
+
     private TechnicalRecordRepository technicalRecordRepository;
+    private VehicleRepository vehicleRepository;
     private MakeModelRepository makeModelRepository;
+    private IdentityRepository identityRepository;
+    private ContactDetailsRepository contactDetailsRepository;
     private VehicleClassRepository vehicleClassRepository;
+    private TyreRepository tyreRepository;
     private PSVBrakesRepository psvBrakesRepository;
     private AxlesRepository axlesRepository;
-    private TyreRepository tyreRepository;
     private PlateRepository plateRepository;
     private AxleSpacingRepository axleSpacingRepository;
 
     vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
     MakeModel mm = newTestMakeModel();
     VehicleClass vc = newTestVehicleClass();
-    vott.models.dao.TechnicalRecord tr = newTestTechnicalRecord();
-    PSVBrakes psv = newTestPSVBrakes();
-    Axles axles = newTestAxles();
+    ContactDetails cd = newTestContactDetails();
+    Identity identity = newTestIdentity();
+    vott.models.dao.TechnicalRecord tr;
     Tyre tyre = newTestTyre();
-    Plate plate = newTestPlate();
-    AxleSpacing as = newTestAxleSpacing();
-
+    PSVBrakes psv;
+    Axles axles;
+    Plate plate;
+    AxleSpacing as;
 
     @Before
     public void Setup() {
@@ -69,51 +91,64 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         );
 
         vehicleRepository = new VehicleRepository(connectionFactory);
-        technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        makeModelRepository = new MakeModelRepository(connectionFactory);
-        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
-        axlesRepository = new AxlesRepository(connectionFactory);
-        tyreRepository = new TyreRepository(connectionFactory);
-        plateRepository = new PlateRepository(connectionFactory);
-        axleSpacingRepository = new AxleSpacingRepository(connectionFactory);
+        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
 
-        //Upsert Vehicle
-        int vehicleID = vehicleRepository.fullUpsert(vehicleUpsert);
+        makeModelRepository = new MakeModelRepository(connectionFactory);
+        makeModelPK = makeModelRepository.partialUpsert(mm);
+
+        identityRepository = new IdentityRepository(connectionFactory);
+        identityPK = identityRepository.partialUpsert(identity);
+
+        contactDetailsRepository = new ContactDetailsRepository(connectionFactory);
+        contactDetailsPK = contactDetailsRepository.partialUpsert(cd);
+
+        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
+        vehicleClassPK = vehicleClassRepository.partialUpsert(vc);
+
+        technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
+        tr = newTestTechnicalRecord();
+        technicalRecordPK = technicalRecordRepository.fullUpsert(tr);
+
+        psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
+        psv = newTestPSVBrakes();
+        psvBrakesPK = psvBrakesRepository.fullUpsert(psv);
+
+        tyreRepository = new TyreRepository(connectionFactory);
+        tyrePK = tyreRepository.partialUpsert(tyre);
+
+        axlesRepository = new AxlesRepository(connectionFactory);
+        axles = newTestAxles();
+        axlesPK = axlesRepository.fullUpsert(axles);
+
+        plateRepository = new PlateRepository(connectionFactory);
+        plate = newTestPlate();
+        platePK = plateRepository.fullUpsert(plate);
+
+        axleSpacingRepository = new AxleSpacingRepository(connectionFactory);
+        as = newTestAxleSpacing();
+        axleSpacingPK = axleSpacingRepository.fullUpsert(as);
+
         validVINNumber = vehicleUpsert.getVin();
         validVehicleRegMark = vehicleUpsert.getVrm_trm();
 
-        //Upsert MakeModel
-        int mmId = makeModelRepository.partialUpsert(mm);
+        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
+        with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
+    }
 
-        //Upsert Vehicle Class
-        int vcId = vehicleClassRepository.partialUpsert(vc);
-
-        //upsert Tech Record
-        tr.setVehicleID(String.valueOf(vehicleID));
-        tr.setMakeModelID(String.valueOf(mmId));
-        tr.setVehicleClassID(String.valueOf(vcId));
-        int trId = technicalRecordRepository.fullUpsert(tr);
-
-        //PSV Brakes
-        psv.setTechnicalRecordID(String.valueOf(trId));
-        psvBrakesRepository.fullUpsert(psv);
-
-        //Upsert Tyre
-        int tyreId = tyreRepository.partialUpsert(tyre);
-
-        //Upsert Axles
-        axles.setTechnicalRecordID(String.valueOf(trId));
-        axles.setTyreID(String.valueOf(tyreId));
-        axlesRepository.fullUpsert(axles);
-
-        //Upsert Axle spacing
-        as.setTechnicalRecordID(String.valueOf(trId));
-        axleSpacingRepository.fullUpsert(as);
-
-        //Upsert Plate
-        plate.setTechnicalRecordID(String.valueOf(trId));
-        plateRepository.fullUpsert(plate);
+    @After
+    public void tearDown() {
+        //Test Data Cleanup
+        axleSpacingRepository.delete(axleSpacingPK);
+        plateRepository.delete(platePK);
+        axlesRepository.delete(axlesPK);
+        tyreRepository.delete(tyrePK);
+        psvBrakesRepository.delete(psvBrakesPK);
+        technicalRecordRepository.delete(technicalRecordPK);
+        vehicleRepository.delete(vehiclePK);
+        makeModelRepository.delete(makeModelPK);
+        identityRepository.delete(identityPK);
+        contactDetailsRepository.delete(contactDetailsPK);
+        vehicleClassRepository.delete(vehicleClassPK);
     }
 
     @Title ("CVSB-19222 - AC1 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
@@ -135,6 +170,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                 then().//log().all().
                         statusCode(200).
                         extract().response().asString();
+
+        System.out.println(response);
 
         Gson gson = GsonInstance.get();
 
@@ -605,28 +642,94 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                 body(equalTo("Vehicle identifier is invalid"));
     }
 
+    private vott.models.dao.Vehicle newTestVehicle() {
+        vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
+
+        vehicle.setSystemNumber("SYSTEM-NUMBER");
+        vehicle.setVin("A12345");
+        vehicle.setVrm_trm("999999999");
+        vehicle.setTrailerID("88888888");
+
+        return vehicle;
+    }
+
+    private MakeModel newTestMakeModel() {
+        MakeModel mm = new MakeModel();
+
+        mm.setMake("Test Make");
+        mm.setModel("Test Model");
+        mm.setChassisMake("Test Chassis Make");
+        mm.setChassisModel("Test Chassis Model");
+        mm.setBodyMake("Test Body Make");
+        mm.setBodyModel("Test Body Model");
+        mm.setModelLiteral("Test Model Literal");
+        mm.setBodyTypeCode("1");
+        mm.setBodyTypeDescription("Test Description");
+        mm.setFuelPropulsionSystem("Test Fuel");
+        mm.setDtpCode("888888");
+
+        return mm;
+    }
+
+    private Identity newTestIdentity() {
+        Identity identity = new Identity();
+
+        identity.setIdentityID("55555");
+        identity.setName("Test Name");
+
+        return identity;
+    }
+
+    private ContactDetails newTestContactDetails() {
+        ContactDetails cd = new ContactDetails();
+
+        cd.setName("Test Name");
+        cd.setAddress1("Test Address 1");
+        cd.setAddress2("Test Address 2");
+        cd.setPostTown("Test Post Town");
+        cd.setAddress3("Test Address 3");
+        cd.setEmailAddress("TestEmailAddress");
+        cd.setTelephoneNumber("8888888");
+        cd.setFaxNumber("99999999");
+
+        return cd;
+    }
+
+    private VehicleClass newTestVehicleClass() {
+        VehicleClass vc = new VehicleClass();
+
+        vc.setCode("1");
+        vc.setDescription("Test Description");
+        vc.setVehicleType("Test Type");
+        vc.setVehicleSize("55555");
+        vc.setVehicleConfiguration("Test Configuration");
+        vc.setEuVehicleCategory("ABC");
+
+        return vc;
+    }
+
     private vott.models.dao.TechnicalRecord newTestTechnicalRecord() {
         vott.models.dao.TechnicalRecord tr = new vott.models.dao.TechnicalRecord();
 
-        tr.setVehicleID("1");
+        tr.setVehicleID(String.valueOf(vehiclePK));
         tr.setRecordCompleteness("Complete");
         tr.setCreatedAt("2021-01-01 00:00:00.000000");
         tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
-        tr.setMakeModelID("1");
+        tr.setMakeModelID(String.valueOf(makeModelPK));
         tr.setFunctionCode("A");
         tr.setOffRoad("1");
         tr.setNumberOfWheelsDriven("4");
         tr.setEmissionsLimit("Test Emission Limit");
         tr.setDepartmentalVehicleMarker("1");
         tr.setAlterationMarker("1");
-        tr.setVehicleClassID("1");
+        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
         tr.setVariantVersionNumber("Test Variant Number");
         tr.setGrossEecWeight("1200");
         tr.setTrainEecWeight("1400");
         tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID("1");
-        tr.setPurchaserDetailID("1");
-        tr.setManufacturerDetailID("1");
+        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
+        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
+        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
         tr.setManufactureYear("2021");
         tr.setRegnDate("2021-01-01");
         tr.setFirstUseDate("2021-01-01");
@@ -668,16 +771,16 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         tr.setLength("100");
         tr.setHeight("50");
         tr.setWidth("50");
-        tr.setFrontAxleTo5thWheelMin("55");
-        tr.setFrontAxleTo5thWheelMax("65");
-        tr.setFrontAxleTo5thWheelCouplingMin("45");
+        tr.setFrontAxleTo5thWheelCouplingMin("55");
         tr.setFrontAxleTo5thWheelCouplingMax("65");
+        tr.setFrontAxleTo5thWheelMin("45");
+        tr.setFrontAxleTo5thWheelMax("65");
         tr.setFrontAxleToRearAxle("15");
         tr.setRearAxleToRearTrl("25");
-        tr.setCouplingCenterToRearAxleMin("10");
-        tr.setCouplingCenterToRearAxleMax("20");
-        tr.setCouplingCenterToRearTrlMin("5");
-        tr.setCouplingCenterToRearTrlMax("15");
+        tr.setCouplingCenterToRearAxleMin("25");
+        tr.setCouplingCenterToRearAxleMax("85");
+        tr.setCouplingCenterToRearTrlMin("25");
+        tr.setCouplingCenterToRearTrlMax("85");
         tr.setCentreOfRearmostAxleToRearOfTrl("25");
         tr.setNotes("Test Notes");
         tr.setPurchaserNotes("Purchaser Notes");
@@ -687,8 +790,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         tr.setBrakes_dtpNumber("DTP111");
         tr.setBrakes_loadSensingValve("1");
         tr.setBrakes_antilockBrakingSystem("1");
-        tr.setCreatedByID("1");
-        tr.setLastUpdatedByID("1");
+        tr.setCreatedByID(String.valueOf(identityPK));
+        tr.setLastUpdatedByID(String.valueOf(identityPK));
         tr.setUpdateType("AutoTest");
         tr.setNumberOfSeatbelts("3");
         tr.setSeatbeltInstallationApprovalDate("2021-01-01");
@@ -696,52 +799,10 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         return tr;
     }
 
-    private vott.models.dao.Vehicle newTestVehicle() {
-        vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
-
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("T123456");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
-
-        return vehicle;
-    }
-
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
-
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
-
-        return mm;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
-    }
-
     private PSVBrakes newTestPSVBrakes() {
         PSVBrakes psv = new PSVBrakes();
 
-        psv.setTechnicalRecordID("1");
+        psv.setTechnicalRecordID(String.valueOf(technicalRecordPK));
         psv.setBrakeCodeOriginal("222");
         psv.setBrakeCode("Test");
         psv.setDataTrBrakeOne("Test Data");
@@ -762,8 +823,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     private Axles newTestAxles() {
         Axles axles = new Axles();
 
-        axles.setTechnicalRecordID("1");
-        axles.setTyreID("1");
+        axles.setTechnicalRecordID(String.valueOf(technicalRecordPK));
+        axles.setTyreID(String.valueOf(tyrePK));
         axles.setAxleNumber("222");
         axles.setParkingBrakeMrk("1");
         axles.setKerbWeight("1200");
@@ -794,7 +855,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     private AxleSpacing newTestAxleSpacing() {
         AxleSpacing as = new AxleSpacing();
 
-        as.setTechnicalRecordID("1");
+        as.setTechnicalRecordID(String.valueOf(technicalRecordPK));
         as.setAxles("Test");
         as.setValue("120");
 
@@ -803,14 +864,31 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     private Plate newTestPlate() {
         Plate plate = new Plate();
-
-        plate.setTechnicalRecordID("1");
+        plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
         plate.setPlateSerialNumber("666666");
         plate.setPlateIssueDate("2100-12-31");
         plate.setPlateReasonForIssue("Test Reason");
         plate.setPlateIssuer("Auto Test");
 
         return plate;
+    }
+
+    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
+        return () -> {
+            List<vott.models.dao.Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
+            return !vehicles.isEmpty();
+        };
+    }
+
+    private Callable<Boolean> techRecordIsPresentInDatabase(String vehicleID) {
+        return () -> {
+            List<vott.models.dao.TechnicalRecord> testResults = technicalRecordRepository.select(String.format(
+                    "SELECT *\n"
+                            + "FROM `technical_record`\n"
+                            + "WHERE `vehicle_id` = '%s'", vehicleID
+            ));
+            return !testResults.isEmpty();
+        };
     }
 }
 
