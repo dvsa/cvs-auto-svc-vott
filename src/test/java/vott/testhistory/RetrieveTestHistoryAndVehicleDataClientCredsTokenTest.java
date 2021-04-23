@@ -140,6 +140,22 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
     }
 
+    @After
+    public void tearDown() {
+        //Test Data Cleanup
+        axleSpacingRepository.delete(axleSpacingPK);
+        plateRepository.delete(platePK);
+        axlesRepository.delete(axlesPK);
+        tyreRepository.delete(tyrePK);
+        psvBrakesRepository.delete(psvBrakesPK);
+        technicalRecordRepository.delete(technicalRecordPK);
+        vehicleRepository.delete(vehiclePK);
+        makeModelRepository.delete(makeModelPK);
+        identityRepository.delete(identityPK);
+        contactDetailsRepository.delete(contactDetailsPK);
+        vehicleClassRepository.delete(vehicleClassPK);
+    }
+
     @Title ("CVSB-19222 - AC2 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
