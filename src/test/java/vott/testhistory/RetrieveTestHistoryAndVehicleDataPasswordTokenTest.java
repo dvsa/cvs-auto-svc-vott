@@ -864,7 +864,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     private Plate newTestPlate() {
         Plate plate = new Plate();
-
         plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
         plate.setPlateSerialNumber("666666");
         plate.setPlateIssueDate("2100-12-31");
