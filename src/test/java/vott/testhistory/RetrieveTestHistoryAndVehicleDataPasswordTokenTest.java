@@ -155,6 +155,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
 
+        System.out.println("Vehicle History User Auth Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -317,6 +318,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
+        System.out.println("Vehicle History User Auth Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -479,6 +481,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
+        System.out.println("Vehicle History User Auth Bad Token");
         System.out.println("Using invalid token: " + token);
 
         //prep request

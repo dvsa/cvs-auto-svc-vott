@@ -120,6 +120,7 @@ public class DownloadMotCertificateClientCredentialsTest {
     @Test
     public void DownloadTestCertificateTest() {
 
+        System.out.println("Test Certificate Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
         //Retrieve and save test certificate (pdf) as byteArray
@@ -167,6 +168,7 @@ public class DownloadMotCertificateClientCredentialsTest {
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
 
+        System.out.println("Test Certificate Client Creds Invalid Token");
         System.out.println("Using invalid token: " + token);
 
         //prep request
