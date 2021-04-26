@@ -60,6 +60,27 @@ public class DownloadMotCertificateUserAuthTest {
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
 
+    //Test Data
+    private Integer vehiclePK;
+    private Integer testResultPK;
+    private Integer fuelEmissionPK;
+    private Integer testStationPK;
+    private Integer testerPK;
+    private Integer vehicleClassPK;
+    private Integer testTypePK;
+    private Integer preparerPK;
+    private Integer identityPK;
+
+    private TestResultRepository testResultRepository;
+    private VehicleRepository vehicleRepository;
+    private FuelEmissionRepository fuelEmissionRepository;
+    private TestStationRepository testStationRepository;
+    private TesterRepository testerRepository;
+    private VehicleClassRepository vehicleClassRepository;
+    private TestTypeRepository testTypeRepository;
+    private PreparerRepository preparerRepository;
+    private IdentityRepository identityRepository;
+
     @Before
     public void Setup() {
 
