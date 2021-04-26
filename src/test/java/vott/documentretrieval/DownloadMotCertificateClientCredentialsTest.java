@@ -116,7 +116,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         identityRepository.delete(identityPK);
     }
 
-    @Title("CVSB-19156 - AC2 - TC1 - Happy Path - DownloadTestCertificateTest")
+    @Title("VOTT-5 - AC1 - TC18 - Happy Path - Download Test Certificate Using Client Credentials generated JWT Token")
     @Test
     public void DownloadTestCertificateTest() {
 
@@ -164,7 +164,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         }
     }
 
-    @Title("CVSB-19156 - AC2 - TC2 - DownloadTestCertificateBadJwtTokenTest")
+    @Title("VOTT-5 - AC1 - TC19 - DownloadTestCertificateBadJwtTokenTest")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
 
@@ -187,7 +187,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC3 - DownloadTestCertificateNoJwtTokenTest")
+    @Title("VOTT-5 - AC1 - TC20 - DownloadTestCertificateNoJwtTokenTest")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
 
@@ -208,7 +208,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Unauthorized"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC4 - DownloadTestCertificateNoVinNumberTest")
+    @Title("VOTT-5 - AC1 - TC21 - DownloadTestCertificateNoVinNumberTest")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
 
@@ -228,7 +228,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(400);
     }
 
-    @Title("CVSB-19156 - AC2 - TC5 - DownloadTestCertificateNoTestNumberTest")
+    @Title("VOTT-5 - AC1 - TC22 - DownloadTestCertificateNoTestNumberTest")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
 
@@ -248,7 +248,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(400);
     }
 
-    @Title("CVSB-19156 - AC2 - TC6 - DownloadTestCertificateNoAPIKeyTest")
+    @Title("VOTT-5 - AC1 - TC23 - DownloadTestCertificateNoAPIKeyTest")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
 
@@ -270,7 +270,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC7 - DownloadTestCertificateInvalidAPIKeyTest")
+    @Title("VOTT-5 - AC1 - TC24 - DownloadTestCertificateInvalidAPIKeyTest")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
 
@@ -292,7 +292,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC8 - DownloadTestCertificateTestNumberDoesntExistTest")
+    @Title("VOTT-5 - AC1 - TC25 - DownloadTestCertificateTestNumberDoesntExistTest")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
 
@@ -314,7 +314,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC9 - DownloadTestCertificateNumericTestNumberTest")
+    @Title("VOTT-5 - AC1 - TC26 - DownloadTestCertificateNumericTestNumberTest")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
 
@@ -336,7 +336,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC10 - DownloadTestCertificateVinNumberDoesntExistTest")
+    @Title("VOTT-5 - AC1 - TC27 - DownloadTestCertificateVinNumberDoesntExistTest")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
 
@@ -358,7 +358,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC11 - DownloadTestCertificateNumericVINNumberTest")
+    @Title("VOTT-5 - AC1 - TC28 - DownloadTestCertificateNumericVINNumberTest")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
 
@@ -380,7 +380,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC12 - DownloadTestCertificateVinNumberSpecialCharsTest")
+    @Title("VOTT-5 - AC1 - TC29 - DownloadTestCertificateVinNumberSpecialCharsTest")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
 
@@ -402,7 +402,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("VIN is in incorrect format"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC13 - DownloadTestCertificateTestNumberSpecialCharsTest")
+    @Title("VOTT-5 - AC1 - TC30 - DownloadTestCertificateTestNumberSpecialCharsTest")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
 
@@ -424,7 +424,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
-    @Title("CVSB-19156 - AC2 - TC14 - DownloadTestCertificatePostRequestTest")
+    @Title("VOTT-5 - AC1 - TC31 - DownloadTestCertificatePostRequestTest")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
 
@@ -444,7 +444,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
-    @Title("CVSB-19156 - AC2 - TC15 - DownloadTestCertificatePutRequestTest")
+    @Title("VOTT-5 - AC1 - TC32 - DownloadTestCertificatePutRequestTest")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
 
@@ -464,7 +464,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
-    @Title("CVSB-19156 - AC2 - TC16 - DownloadTestCertificatePatchRequestTest")
+    @Title("VOTT-5 - AC1 - TC33 - DownloadTestCertificatePatchRequestTest")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
 
@@ -484,7 +484,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
-    @Title("CVSB-19156 - AC2 - TC17 - DownloadTestCertificateDeleteRequestTest")
+    @Title("VOTT-5 - AC1 - TC34 - DownloadTestCertificateDeleteRequestTest")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
 
