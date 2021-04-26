@@ -190,6 +190,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
         System.out.println(response);
 
+        System.out.println(response);
+
         Gson gson = GsonInstance.get();
 
         Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
