@@ -38,7 +38,7 @@ public class IdentityRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalIdentityReturnsSamePk() {
         int primaryKey1 = identityRepository.partialUpsert(newTestIdentity());
         int primaryKey2 = identityRepository.partialUpsert(newTestIdentity());
 

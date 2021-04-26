@@ -1,0 +1,55 @@
+{
+  "testerStaffId": "133",
+  "testResultId": "84b2094e-a6b0-11eb-bcbc-0242ac131112",
+  "systemNumber": "BSFD3244BDSGR123",
+  "testStartTimestamp": "2020-05-27T13:18:56.966Z",
+  "odometerReadingUnits": "kilometres",
+  "testEndTimestamp": "2020-05-27T13:21:56.966Z",
+  "testStatus": "submitted",
+  "numberOfWheelsDriven": 3,
+  "noOfAxles": "2",
+  "testTypes": [
+    {
+      "additionalCommentsForAbandon": "none",
+      "testTypeEndTimestamp": "2020-05-27T13:20:56.966Z",
+      "reasonForAbandoning": "none",
+      "testTypeId": "95",
+      "prohibitionIssued": false,
+      "secondaryCertificateNumber": "1234",
+      "testTypeStartTimestamp": "2020-05-27T13:19:56.966Z",
+      "certificateNumber": "W01A00209",
+      "testTypeName": "First test",
+      "additionalNotesRecorded": "VEHICLE FRONT REGISTRATION PLATE MISSING",
+      "customDefects": [
+        {
+          "referenceNumber": "abcd",
+          "defectName": "Some custom defect",
+          "defectNotes": "some defect noe"
+        }
+      ],
+      "defects": [
+      ],
+      "name": "First test",
+      "testResult": "pass"
+    }
+  ],
+  "vehicleClass": {
+    "description": "motorbikes over 200cc or with a sidecar",
+    "code": "2"
+  },
+  "vin": "A00037502999999999",
+  "testStationName": "Rowe, Wunsch and Wisoky",
+  "vehicleType": "hgv",
+  "countryOfRegistration": "gb",
+  "preparerId": "ak4434",
+  "preparerName": "Durrell Vehicles Limited",
+  "odometerReading": 100000,
+  "vehicleConfiguration": "rigid",
+  "testStationType": "gvts",
+  "reasonForCancellation": "none",
+  "testerName": "Gica",
+  "vrm": "B2C1C11",
+  "testStationPNumber": "87-1369569",
+  "testerEmailAddress": "someone@email.com",
+  "euVehicleCategory": "m1"
+}

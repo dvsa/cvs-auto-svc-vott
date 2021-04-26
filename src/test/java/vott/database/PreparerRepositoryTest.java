@@ -38,7 +38,7 @@ public class PreparerRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalPreparerReturnsSamePk() {
         int primaryKey1 = preparerRepository.partialUpsert(newTestPreparer());
         int primaryKey2 = preparerRepository.partialUpsert(newTestPreparer());
 

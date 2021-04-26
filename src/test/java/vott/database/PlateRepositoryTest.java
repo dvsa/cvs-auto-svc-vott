@@ -78,7 +78,7 @@ public class PlateRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalPlateReturnsSamePk() {
         int primaryKey1 = plateRepository.fullUpsert(newTestPlate());
         int primaryKey2 = plateRepository.fullUpsert(newTestPlate());
 
