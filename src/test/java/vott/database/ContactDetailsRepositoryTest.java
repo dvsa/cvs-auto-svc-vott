@@ -38,7 +38,7 @@ public class ContactDetailsRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalContactDetailsReturnsSamePk() {
         int primaryKey1 = contactDetailsRepository.partialUpsert(newTestContactDetails());
         int primaryKey2 = contactDetailsRepository.partialUpsert(newTestContactDetails());
 

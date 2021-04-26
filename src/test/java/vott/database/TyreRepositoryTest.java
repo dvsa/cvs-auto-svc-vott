@@ -38,7 +38,7 @@ public class TyreRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalTyreReturnsSamePk() {
         int primaryKey1 = tyreRepository.partialUpsert(newTestTyre());
         int primaryKey2 = tyreRepository.partialUpsert(newTestTyre());
 

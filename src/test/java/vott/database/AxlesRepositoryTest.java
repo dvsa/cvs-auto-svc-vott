@@ -89,7 +89,7 @@ public class AxlesRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalAxleReturnsSamePk() {
         int primaryKey1 = axlesRepository.fullUpsert(newTestAxles());
         int primaryKey2 = axlesRepository.fullUpsert(newTestAxles());
 

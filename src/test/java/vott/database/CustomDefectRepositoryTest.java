@@ -97,7 +97,7 @@ public class CustomDefectRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsDifferentPk() {
+    public void upsertingIdenticalCustomDefectReturnsDifferentPk() {
         int primaryKey1 = customDefectRepository.fullUpsert(newTestCustomDefect());
         int primaryKey2 = customDefectRepository.fullUpsert(newTestCustomDefect());
 

@@ -95,7 +95,7 @@ public class TestResultRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalTestResultReturnsSamePk() {
         int primaryKey1 = testResultRepository.fullUpsert(newTestTestResult());
         int primaryKey2 = testResultRepository.fullUpsert(newTestTestResult());
 

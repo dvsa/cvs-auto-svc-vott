@@ -79,7 +79,7 @@ public class MicrofilmRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalMicrofilmReturnsSamePk() {
         int primaryKey1 = microfilmRepository.fullUpsert(newTestMicrofilm());
         int primaryKey2 = microfilmRepository.fullUpsert(newTestMicrofilm());
 
