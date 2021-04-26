@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,6 +73,7 @@ public class TechnicalRecordRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC38 - Testing technical record unique index compound key")
     @Test
     public void upsertingIdenticalTechnicalRecordReturnsSamePk() {
         int primaryKey1 = technicalRecordRepository.fullUpsert(newTestTechnicalRecord());
@@ -83,6 +85,7 @@ public class TechnicalRecordRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC39 - Testing technical record unique index compound key")
     @Test
     public void upsertingDifferentVehicleIDValueReturnsDifferentPk() {
         TechnicalRecord tr1 = newTestTechnicalRecord();
@@ -102,6 +105,7 @@ public class TechnicalRecordRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC40 - Testing technical record unique index compound key")
     @Test
     public void upsertingDifferentCreatedAtValueReturnsDifferentPk() {
         TechnicalRecord tr1 = newTestTechnicalRecord();
@@ -118,6 +122,7 @@ public class TechnicalRecordRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC41 - Testing technical record unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         TechnicalRecord tr1 = newTestTechnicalRecord();

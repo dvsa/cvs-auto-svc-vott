@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -120,6 +121,7 @@ public class TestDefectRepositoryTest {
         identityRepository.delete(identityPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC42 - Testing test defect unique index compound key")
     @Test
     public void upsertingIdenticalTestDefectReturnsSamePk() {
         int primaryKey1 = testDefectRepository.fullUpsert(newTestTestDefect());
@@ -131,6 +133,7 @@ public class TestDefectRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC43 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewTestResultIDReturnsDifferentPk() {
         TestResult tr2 = newTestTestResult();
@@ -151,6 +154,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC44 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewDefectIDReturnsDifferentPk() {
         Defect defect2 = newTestDefect();
@@ -171,6 +175,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC45 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewLocationIDReturnsDifferentPk() {
         Location location2 = newTestLocation();
@@ -191,6 +196,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC46 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewNonIndexDataSamePk() {
         TestDefect td1 = newTestTestDefect();

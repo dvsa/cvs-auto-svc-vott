@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class DefectRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC15 - Testing defect unique index compound key")
     @Test
     public void upsertingIdenticalDefectReturnsSamePk() {
         int primaryKey1 = defectRepository.partialUpsert(newTestDefect());
@@ -48,6 +50,7 @@ public class DefectRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC16 - Testing defect unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         Defect defect1 = newTestDefect();

@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +79,7 @@ public class MicrofilmRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC25 - Testing microfilm unique index compound key")
     @Test
     public void upsertingIdenticalMicrofilmReturnsSamePk() {
         int primaryKey1 = microfilmRepository.fullUpsert(newTestMicrofilm());
@@ -89,6 +91,7 @@ public class MicrofilmRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC26 - Testing microfilm unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
         Microfilm mf1 = newTestMicrofilm();
@@ -108,6 +111,7 @@ public class MicrofilmRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC27 - Testing microfilm unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         Microfilm mf1 = newTestMicrofilm();

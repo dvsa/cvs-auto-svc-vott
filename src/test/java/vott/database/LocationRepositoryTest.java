@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class LocationRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC21 - Testing location unique index compound key")
     @Test
     public void upsertingIdenticalLocationReturnsSamePk() {
         int primaryKey1 = locationRepository.partialUpsert(newTestLocation());
@@ -48,6 +50,7 @@ public class LocationRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC22 - Testing location unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         Location location1 = newTestLocation();

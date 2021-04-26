@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,6 +95,7 @@ public class TestResultRepositoryTest {
         identityRepository.delete(identityPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC49 - Testing test result unique index compound key")
     @Test
     public void upsertingIdenticalTestResultReturnsSamePk() {
         int primaryKey1 = testResultRepository.fullUpsert(newTestTestResult());
@@ -105,6 +107,7 @@ public class TestResultRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC50 - Testing test result unique index compound key")
     @Test
     public void upsertingNewVehicleIDReturnsDifferentPk() {
         Vehicle vehicle2 = newTestVehicle();
@@ -125,6 +128,7 @@ public class TestResultRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC51 - Testing test result unique index compound key")
     @Test
     public void upsertingNewTestTypeIDReturnsDifferentPk() {
         TestType tt2 = newTestTestType();
@@ -146,6 +150,7 @@ public class TestResultRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC52 - Testing test result unique index compound key")
     @Test
     public void upsertingNewCreatedAtReturnsDifferentPk() {
         TestResult tr1 = newTestTestResult();
@@ -162,6 +167,7 @@ public class TestResultRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC53 - Testing test result unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         TestResult tr1 = newTestTestResult();

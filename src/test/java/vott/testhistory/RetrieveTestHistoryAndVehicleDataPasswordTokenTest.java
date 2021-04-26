@@ -151,7 +151,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
+    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With Implicit Token")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
 

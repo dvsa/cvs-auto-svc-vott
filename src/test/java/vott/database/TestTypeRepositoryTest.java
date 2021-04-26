@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class TestTypeRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC56 - Testing test type unique index compound key")
     @Test
     public void upsertingIdenticalTestTypeReturnsSamePk() {
         int primaryKey1 = testTypeRepository.partialUpsert(newTestTestType());
@@ -48,6 +50,7 @@ public class TestTypeRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC57 - Testing test type unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         TestType tt1 = newTestTestType();

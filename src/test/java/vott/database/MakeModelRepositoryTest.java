@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class MakeModelRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC23 - Testing makemodel unique index compound key")
     @Test
     public void upsertingIdenticalMakeModelReturnsSamePk() {
         int primaryKey1 = makeModelRepository.partialUpsert(newTestMakeModel());
@@ -47,6 +49,7 @@ public class MakeModelRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC24 - Testing makemodel unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         MakeModel mm1 = newTestMakeModel();

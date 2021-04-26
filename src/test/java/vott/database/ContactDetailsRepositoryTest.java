@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class ContactDetailsRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC10 - Testing contact details unique index compound key")
     @Test
     public void upsertingIdenticalContactDetailsReturnsSamePk() {
         int primaryKey1 = contactDetailsRepository.partialUpsert(newTestContactDetails());
@@ -48,6 +50,7 @@ public class ContactDetailsRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC11 - Testing contact details unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         ContactDetails cd1 = newTestContactDetails();

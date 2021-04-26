@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class FuelEmissionRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC17 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingIdenticalFuelEmissionReturnsSamePk() {
         int primaryKey1 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
@@ -48,6 +50,7 @@ public class FuelEmissionRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC18 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         FuelEmission fe1 = newTestFuelEmission();

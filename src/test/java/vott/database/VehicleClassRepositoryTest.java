@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class VehicleClassRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC60 - Testing vehicle class unique index compound key")
     @Test
     public void upsertingIdenticalVehicleClassReturnsSamePk() {
         int primaryKey1 = vehicleClassRepository.partialUpsert(newTestVehicleClass());
@@ -47,6 +49,7 @@ public class VehicleClassRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC61 - Testing vehicle class unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         VehicleClass vc1 = newTestVehicleClass();

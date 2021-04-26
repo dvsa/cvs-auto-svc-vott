@@ -1,5 +1,6 @@
 package vott.database;
 
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class VehicleRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC62 - Testing vehicle unique index compound key")
     @Test
     public void upsertingIdenticalVehicleReturnsSamePk() {
         int primaryKey1 = vehicleRepository.fullUpsert(newTestVehicle());
@@ -48,6 +50,7 @@ public class VehicleRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC63 - Testing vehicle unique index compound key")
     @Test
     public void upsertingDifferentSystemNumberReturnsDifferentPk() {
         Vehicle vehicle1 = newTestVehicle();
@@ -64,6 +67,7 @@ public class VehicleRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC64 - Testing vehicle unique index compound key")
     @Test
     public void upsertingDifferentVINReturnsDifferentPk() {
         Vehicle vehicle1 = newTestVehicle();
@@ -80,6 +84,7 @@ public class VehicleRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC65 - Testing vehicle unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         Vehicle vehicle1 = newTestVehicle();
