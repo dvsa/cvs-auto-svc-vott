@@ -37,7 +37,7 @@ public class MakeModelRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalMakeModelReturnsSamePk() {
         int primaryKey1 = makeModelRepository.partialUpsert(newTestMakeModel());
         int primaryKey2 = makeModelRepository.partialUpsert(newTestMakeModel());
 

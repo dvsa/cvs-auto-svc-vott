@@ -38,7 +38,7 @@ public class FuelEmissionRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalFuelEmissionReturnsSamePk() {
         int primaryKey1 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
         int primaryKey2 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
 

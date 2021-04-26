@@ -73,7 +73,7 @@ public class TechnicalRecordRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalTechnicalRecordReturnsSamePk() {
         int primaryKey1 = technicalRecordRepository.fullUpsert(newTestTechnicalRecord());
         int primaryKey2 = technicalRecordRepository.fullUpsert(newTestTechnicalRecord());
 

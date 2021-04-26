@@ -79,7 +79,7 @@ public class PSVBrakesRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalPSVBrakesReturnsSamePk() {
         int primaryKey1 = psvBrakesRepository.fullUpsert(newTestPSVBrakes());
         int primaryKey2 = psvBrakesRepository.fullUpsert(newTestPSVBrakes());
 

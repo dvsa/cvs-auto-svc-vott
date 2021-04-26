@@ -38,7 +38,7 @@ public class DefectRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalDefectReturnsSamePk() {
         int primaryKey1 = defectRepository.partialUpsert(newTestDefect());
         int primaryKey2 = defectRepository.partialUpsert(newTestDefect());
 

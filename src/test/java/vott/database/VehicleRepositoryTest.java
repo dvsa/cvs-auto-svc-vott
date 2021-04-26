@@ -38,7 +38,7 @@ public class VehicleRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalVehicleReturnsSamePk() {
         int primaryKey1 = vehicleRepository.fullUpsert(newTestVehicle());
         int primaryKey2 = vehicleRepository.fullUpsert(newTestVehicle());
 

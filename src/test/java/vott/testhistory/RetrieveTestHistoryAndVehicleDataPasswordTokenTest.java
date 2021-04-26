@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +28,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 
@@ -84,6 +86,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     public void Setup() {
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
+
+        System.out.println("Base URI: " + RestAssured.baseURI);
 
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
@@ -153,29 +157,44 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     @Title ("CVSB-19222 - AC1 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
+    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
+        System.out.println("Vehicle History User Auth Happy Path");
         System.out.println("Valid access token: " + token);
 
-        String response =
-                givenAuth(token, xApiKey)
-                        .header("content-type", "application/json")
-                        .queryParam("vinNumber", validVINNumber).
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        Response response;
 
-                //send request
-                when().//log().all().
-                        get().
+        //Retrieve and save test certificate (pdf) as byteArray
+        do {
+            response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/json")
+                            .queryParam("vinNumber", validVINNumber).
 
-                //verification
-                then().//log().all().
-                        statusCode(200).
-                        extract().response().asString();
+                            //send request
+                                    when().//log().all().
+                            get().
+
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
+
+        assertEquals(statusCode, 200);
+
+        System.out.println(response);
 
         System.out.println(response);
 
         Gson gson = GsonInstance.get();
 
-        Vehicle vehicle = gson.fromJson(response, Vehicle.class);
+        Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
 
         TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
 
@@ -317,6 +336,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
+        System.out.println("Vehicle History User Auth Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -479,6 +499,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
+        System.out.println("Vehicle History User Auth Bad Token");
         System.out.println("Using invalid token: " + token);
 
         //prep request

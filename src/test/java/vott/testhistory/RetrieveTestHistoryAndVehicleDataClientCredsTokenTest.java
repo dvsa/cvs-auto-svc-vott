@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +33,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
@@ -95,6 +97,8 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         RestAssured.baseURI = VottConfiguration.local().getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
 
+        System.out.println("Base URI: " + RestAssured.baseURI);
+
         vehicleRepository = new VehicleRepository(connectionFactory);
         vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
 
@@ -140,29 +144,58 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
     }
 
+    @After
+    public void tearDown() {
+        //Test Data Cleanup
+        axleSpacingRepository.delete(axleSpacingPK);
+        plateRepository.delete(platePK);
+        axlesRepository.delete(axlesPK);
+        tyreRepository.delete(tyrePK);
+        psvBrakesRepository.delete(psvBrakesPK);
+        technicalRecordRepository.delete(technicalRecordPK);
+        vehicleRepository.delete(vehiclePK);
+        makeModelRepository.delete(makeModelPK);
+        identityRepository.delete(identityPK);
+        contactDetailsRepository.delete(contactDetailsPK);
+        vehicleClassRepository.delete(vehicleClassPK);
+    }
+
     @Title ("CVSB-19222 - AC2 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
+    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
+        System.out.println("Vehicle History Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
-        String response =
-                givenAuth(token, xApiKey)
-                        .header("content-type", "application/json")
-                        .queryParam("vinNumber", validVINNumber).
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        Response response;
 
-                        //send request
-                                when().//log().all().
-                        get().
+        //Retrieve and save test certificate (pdf) as byteArray
+        do {
+            response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/json")
+                            .queryParam("vinNumber", validVINNumber).
 
-                        //verification
-                                then().//log().all().
-                        statusCode(200).
-                        extract().response().asString();
+                            //send request
+                                    when().//log().all().
+                            get().
+
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
+
+        assertEquals(statusCode, 200);
 
         Gson gson = GsonInstance.get();
 
-        Vehicle vehicle = gson.fromJson(response, Vehicle.class);
+        Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
 
         TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
 
@@ -305,6 +338,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
+        System.out.println("Vehicle History Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -467,7 +501,8 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
-        System.out.println("Using invalid token: " + token);
+        System.out.println("Vehicle History Client Creds Bad Token");
+        System.out.println("Invalid access token: " + token);
 
         //prep request
         givenAuth(token + 1, xApiKey)

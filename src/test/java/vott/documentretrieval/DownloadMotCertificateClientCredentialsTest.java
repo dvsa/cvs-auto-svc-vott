@@ -1,6 +1,9 @@
 package vott.documentretrieval;
 
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import lombok.SneakyThrows;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
@@ -9,22 +12,32 @@ import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.config.VottConfiguration;
-import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.*;
+import vott.e2e.FieldGenerator;
+import vott.json.GsonInstance;
+import vott.models.dao.Vehicle;
+import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.testresults.CompleteTestResults;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 public class DownloadMotCertificateClientCredentialsTest {
@@ -37,7 +50,14 @@ public class DownloadMotCertificateClientCredentialsTest {
     private String validVINNumber = "";
     private String validTestNumber = "";
     private String invalidVINNumber = "T123456789";
-    private String invalidTestNumber = "A0A00000";
+    private String invalidTestNumber = "W00A00000";
+
+    private Gson gson;
+    private FieldGenerator fieldGenerator;
+    private TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
+
+    private VehicleRepository vehicleRepository;
+    private TestResultRepository testResultRepository;
 
     //Test Data
     private Integer vehiclePK;
@@ -61,82 +81,66 @@ public class DownloadMotCertificateClientCredentialsTest {
     private IdentityRepository identityRepository;
 
     @Before
-    public void Setup() {
-        ConnectionFactory connectionFactory = new ConnectionFactory(
-                VottConfiguration.local()
-        );
+    public void setUp() throws Exception {
 
-        //Test Data Upserts
-        vehicleRepository = new VehicleRepository(connectionFactory);
-        Vehicle vehicle = newTestVehicle();
-        vehiclePK = vehicleRepository.fullUpsert(vehicle);
-
-        fuelEmissionRepository = new FuelEmissionRepository(connectionFactory);
-        fuelEmissionPK = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
-
-        testStationRepository = new TestStationRepository(connectionFactory);
-        testStationPK = testStationRepository.partialUpsert(newTestTestStation());
-
-        testerRepository = new TesterRepository(connectionFactory);
-        testerPK = testerRepository.partialUpsert(newTestTester());
-
-        vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
-
-        testTypeRepository = new TestTypeRepository(connectionFactory);
-        testTypePK = testTypeRepository.partialUpsert(newTestTestType());
-
-        preparerRepository = new PreparerRepository(connectionFactory);
-        preparerPK = preparerRepository.partialUpsert(newTestPreparer());
-
-        identityRepository = new IdentityRepository(connectionFactory);
-        identityPK = identityRepository.partialUpsert(newTestIdentity());
-
-        testResultRepository = new TestResultRepository(connectionFactory);
-        TestResult tr = newTestTestResult();
-        testResultPK = testResultRepository.fullUpsert(tr);
-
-        validVINNumber = vehicle.getVin();
-        validTestNumber= tr.getTestNumber();
-
-        this.token = new TokenService(OAuthVersion.V1, GrantType.CLIENT_CREDENTIALS).getBearerToken();
+        this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/document-retrieval";
-    }
 
-    @After
-    public void tearDown() {
-        testResultRepository.delete(testResultPK);
-        vehicleRepository.delete(vehiclePK);
-        fuelEmissionRepository.delete(fuelEmissionPK);
-        testStationRepository.delete(testStationPK);
-        testerRepository.delete(testerPK);
-        vehicleClassRepository.delete(vehicleClassPK);
-        testTypeRepository.delete(testTypePK);
-        preparerRepository.delete(preparerPK);
-        identityRepository.delete(identityPK);
+        gson = GsonInstance.get();
+        fieldGenerator = new FieldGenerator();
+
+        TechRecordPOST techRecord = techRecord();
+        CompleteTestResults testResult = testResult(techRecord);
+        System.out.println("VIN: "+ testResult.getVin());
+
+        postTechRecord(techRecord);
+        postTestResult(testResult);
+
+        ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
+        vehicleRepository = new VehicleRepository(connectionFactory);
+        testResultRepository = new TestResultRepository(connectionFactory);
+
+        validVINNumber = testResult.getVin();
+
+        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
+        with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(validVINNumber));
+
+        validTestNumber = getTestNumber(validVINNumber);
     }
 
     @Title("CVSB-19156 - AC2 - TC1 - Happy Path - DownloadTestCertificateTest")
     @Test
-    public void DownloadTestCertificateTest() {
+    public void DownloadTestCertificateTest() throws InterruptedException {
 
+        System.out.println("Test Certificate Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        byte[] pdf;
+
         //Retrieve and save test certificate (pdf) as byteArray
-        byte[] pdf =
-            givenAuth(token, xApiKey)
-                        .header("content-type", "application/pdf")
-                        .queryParam("vinNumber", validVINNumber)
-                        .queryParam("testNumber", validTestNumber).
+        do {
+            Response response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/pdf")
+                            .queryParam("vinNumber", validVINNumber)
+                            .queryParam("testNumber", validTestNumber).
 
-                        //send request
-                                when().//log().all().
-                        get().
+                            //send request
+                                    when().//log().all().
+                            get().
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            pdf = response.asByteArray();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
 
-                        //verification
-                                then().//log().all().
-                        statusCode(200).
-                        extract().response().asByteArray();
+        assertEquals(statusCode, 200);
 
         //Save file in resources folder
         File file = new File("src/test/resources/DownloadedMotTestCertificates/TestCert.pdf");
@@ -167,6 +171,7 @@ public class DownloadMotCertificateClientCredentialsTest {
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
 
+        System.out.println("Test Certificate Client Creds Invalid Token");
         System.out.println("Using invalid token: " + token);
 
         //prep request
@@ -502,132 +507,119 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
-    //Test Data Setup
-    private Vehicle newTestVehicle() {
-        Vehicle vehicle = new Vehicle();
+    private void postTestResult(CompleteTestResults testResult) {
+        String testResultJson = gson.toJson(testResult);
 
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("A12345");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
+        Response response;
+        int statusCode;
 
-        return vehicle;
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(v1ImplicitTokens.getBearerToken())
+                    .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                    .body(testResultJson)
+                    .post("/test-results")
+                    .thenReturn();
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+
+        assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private FuelEmission newTestFuelEmission() {
-        FuelEmission fe = new FuelEmission();
+    private void postTechRecord(TechRecordPOST techRecord) {
+        String techRecordJson = gson.toJson(techRecord);
 
-        fe.setModTypeCode("a");
-        fe.setDescription("Test Description");
-        fe.setEmissionStandard("Test Standard");
-        fe.setFuelType("Petrol");
+        Response response;
+        int statusCode;
 
-        return fe;
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(v1ImplicitTokens.getBearerToken())
+                    .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                    .body(techRecordJson)
+                    .post("/vehicles")
+                    .thenReturn();
+            System.out.println(response);
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+
+        assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private TestStation newTestTestStation() {
-        TestStation ts = new TestStation();
-
-        ts.setPNumber("987654321");
-        ts.setName("Test Test Station");
-        ts.setType("Test");
-
-        return ts;
+    private CompleteTestResults testResult(TechRecordPOST techRecord) {
+        return matchKeys(techRecord, readTestResult("src/test/resources/test-results-user-auth-doc-retrieval.json"));
     }
 
-    private Tester newTestTester() {
-        Tester tester = new Tester();
-
-        tester.setStaffID("1");
-        tester.setName("Auto Test");
-        tester.setEmailAddress("auto@test.com");
-
-        return tester;
+    private TechRecordPOST techRecord() {
+        return randomizeKeys(readTechRecord("src/test/resources/technical-record-user-auth-doc-retrieval.json"));
     }
 
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
+    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
+        String vin = fieldGenerator.randomVin();
 
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
+        techRecord.setVin(vin);
 
-        return vc;
+        return techRecord;
     }
 
-    private TestType newTestTestType() {
-        TestType tt = new TestType();
+    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
+        testResult.setTestResultId(UUID.randomUUID().toString());
+        System.out.println("Test Result ID: "+ testResult.getTestResultId());
+        testResult.setTesterName(UUID.randomUUID().toString());
+        testResult.setVin(techRecord.getVin());
 
-        tt.setTestTypeClassification("Test Test Type");
-        tt.setTestTypeName("Test Name");
-
-        return tt;
+        return testResult;
     }
 
-    private Preparer newTestPreparer() {
-        Preparer preparer = new Preparer();
-
-        preparer.setPreparerID("1");
-        preparer.setName("Test Name");
-
-        return preparer;
+    @SneakyThrows(IOException.class)
+    private CompleteTestResults readTestResult(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                CompleteTestResults.class
+        );
     }
 
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
-
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
-
-        return identity;
+    @SneakyThrows(IOException.class)
+    private TechRecordPOST readTechRecord(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                TechRecordPOST.class
+        );
     }
 
-    private TestResult newTestTestResult() {
-        TestResult tr = new TestResult();
+    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
+        return () -> {
+            List<Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
+            return !vehicles.isEmpty();
+        };
+    }
 
-        tr.setVehicleID(String.valueOf(vehiclePK));
-        tr.setFuelEmissionID(String.valueOf(fuelEmissionPK));
-        tr.setTestStationID(String.valueOf(testStationPK));
-        tr.setTesterID(String.valueOf(testerPK));
-        tr.setPreparerID(String.valueOf(preparerPK));
-        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
-        tr.setTestTypeID(String.valueOf(testTypePK));
-        tr.setTestStatus("Test Pass");
-        tr.setReasonForCancellation("Automation Test Run");
-        tr.setNumberOfSeats("3");
-        tr.setOdometerReading("900");
-        tr.setOdometerReadingUnits("Test Units");
-        tr.setCountryOfRegistration("Test Country");
-        tr.setNoOfAxles("4");
-        tr.setRegnDate("2100-12-31");
-        tr.setFirstUseDate("2100-12-31");
-        tr.setCreatedAt("2021-01-01 00:00:00");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00");
-        tr.setTestCode("111");
-        tr.setTestNumber("A111B222");
-        tr.setCertificateNumber("A111B222");
-        tr.setSecondaryCertificateNumber("A111B222");
-        tr.setTestExpiryDate("2022-01-01");
-        tr.setTestAnniversaryDate("2022-01-01");
-        tr.setTestTypeStartTimestamp("2022-01-01 00:00:00");
-        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00");
-        tr.setNumberOfSeatbeltsFitted("2");
-        tr.setLastSeatbeltInstallationCheckDate("2022-01-01");
-        tr.setSeatbeltInstallationCheckDate("1");
-        tr.setTestResult("Auto Test");
-        tr.setReasonForAbandoning("Test Automation Run");
-        tr.setAdditionalNotesRecorded("Additional Test Notes");
-        tr.setAdditionalCommentsForAbandon("Additional Test Comments");
-        tr.setParticulateTrapFitted("Particulate Test");
-        tr.setParticulateTrapSerialNumber("ABC123");
-        tr.setModificationTypeUsed("Test Modification");
-        tr.setSmokeTestKLimitApplied("Smoke Test");
-        tr.setCreatedByID(String.valueOf(identityPK));
-        tr.setLastUpdatedByID(String.valueOf(identityPK));
+    private Callable<Boolean> testResultIsPresentInDatabase(String vin) {
+        return () -> {
+            List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
+                    "SELECT `test_result`.*\n"
+                            + "FROM `vehicle`\n"
+                            + "JOIN `test_result`\n"
+                            + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
+                            + "WHERE `vehicle`.`vin` = '%s'", vin
+            ));
+            return !testResults.isEmpty();
+        };
+    }
 
-        return tr;
+    private String getTestNumber(String vin) {
+        List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
+                "SELECT `test_result`.*\n"
+                        + "FROM `vehicle`\n"
+                        + "JOIN `test_result`\n"
+                        + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
+                        + "WHERE `vehicle`.`vin` = '%s'", vin
+        ));
+
+        return testResults.get(0).getTestNumber();
     }
 }

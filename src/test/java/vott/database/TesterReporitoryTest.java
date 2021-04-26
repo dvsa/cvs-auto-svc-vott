@@ -38,7 +38,7 @@ public class TesterReporitoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalTesterReturnsSamePk() {
         int primaryKey1 = testerRepository.partialUpsert(newTestTester());
         int primaryKey2 = testerRepository.partialUpsert(newTestTester());
 
