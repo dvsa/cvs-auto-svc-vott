@@ -160,6 +160,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
 
+        System.out.println("Vehicle History Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -321,6 +322,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
+        System.out.println("Vehicle History Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
         String response =
@@ -483,7 +485,8 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
-        System.out.println("Using invalid token: " + token);
+        System.out.println("Vehicle History Client Creds Bad Token");
+        System.out.println("Invalid access token: " + token);
 
         //prep request
         givenAuth(token + 1, xApiKey)
