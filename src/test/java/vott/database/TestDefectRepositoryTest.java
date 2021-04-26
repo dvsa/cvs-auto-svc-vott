@@ -121,7 +121,7 @@ public class TestDefectRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataSamePk() {
+    public void upsertingIdenticalTestDefectReturnsSamePk() {
         int primaryKey1 = testDefectRepository.fullUpsert(newTestTestDefect());
         int primaryKey2 = testDefectRepository.fullUpsert(newTestTestDefect());
 

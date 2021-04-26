@@ -79,7 +79,7 @@ public class AxleSpacingRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalAxleSpacingReturnsSamePk() {
         int primaryKey1 = axleSpacingRepository.fullUpsert(newTestAxleSpacing());
         int primaryKey2 = axleSpacingRepository.fullUpsert(newTestAxleSpacing());
 

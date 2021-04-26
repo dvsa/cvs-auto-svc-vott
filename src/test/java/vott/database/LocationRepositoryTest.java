@@ -38,7 +38,7 @@ public class LocationRepositoryTest {
     }
 
     @Test
-    public void upsertingIdenticalDataReturnsSamePk() {
+    public void upsertingIdenticalLocationReturnsSamePk() {
         int primaryKey1 = locationRepository.partialUpsert(newTestLocation());
         int primaryKey2 = locationRepository.partialUpsert(newTestLocation());
 
