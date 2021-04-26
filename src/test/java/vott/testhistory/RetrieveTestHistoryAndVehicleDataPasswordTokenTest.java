@@ -85,6 +85,8 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
+        System.out.println("Base URI: " + RestAssured.baseURI);
+
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
                 VottConfiguration.local()

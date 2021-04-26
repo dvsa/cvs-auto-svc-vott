@@ -104,6 +104,7 @@ public class DownloadMotCertificateUserAuthTest {
 
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/document-retrieval";
+        System.out.println("Base URI: " + RestAssured.baseURI);
     }
 
     @After

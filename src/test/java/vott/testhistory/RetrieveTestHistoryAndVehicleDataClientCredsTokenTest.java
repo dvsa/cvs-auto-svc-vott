@@ -95,6 +95,8 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         RestAssured.baseURI = VottConfiguration.local().getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
 
+        System.out.println("Base URI: " + RestAssured.baseURI);
+
         vehicleRepository = new VehicleRepository(connectionFactory);
         vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
 
