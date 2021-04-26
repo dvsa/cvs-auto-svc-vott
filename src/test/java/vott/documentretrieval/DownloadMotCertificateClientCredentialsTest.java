@@ -37,6 +37,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 public class DownloadMotCertificateClientCredentialsTest {
@@ -49,7 +50,7 @@ public class DownloadMotCertificateClientCredentialsTest {
     private String validVINNumber = "";
     private String validTestNumber = "";
     private String invalidVINNumber = "T123456789";
-    private String invalidTestNumber = "A0A00000";
+    private String invalidTestNumber = "W00A00000";
 
     private Gson gson;
     private FieldGenerator fieldGenerator;
@@ -67,42 +68,58 @@ public class DownloadMotCertificateClientCredentialsTest {
         gson = GsonInstance.get();
         fieldGenerator = new FieldGenerator();
 
-        CompleteTestResults testResult = hgvTestResult();
-        postTestResult(testResult);
+        TechRecordPOST techRecord = techRecord();
+        CompleteTestResults testResult = testResult(techRecord);
+        System.out.println("VIN: "+ testResult.getVin());
 
-        validVINNumber = testResult.getVin();
-        validTestNumber = testResult.getTestTypes().get(0).getCertificateNumber();
+        postTechRecord(techRecord);
+        postTestResult(testResult);
 
         ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
         vehicleRepository = new VehicleRepository(connectionFactory);
         testResultRepository = new TestResultRepository(connectionFactory);
 
+        validVINNumber = testResult.getVin();
+
         with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
         with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(validVINNumber));
+
+        validTestNumber = getTestNumber(validVINNumber);
     }
 
     @Title("CVSB-19156 - AC2 - TC1 - Happy Path - DownloadTestCertificateTest")
     @Test
-    public void DownloadTestCertificateTest() {
+    public void DownloadTestCertificateTest() throws InterruptedException {
 
         System.out.println("Test Certificate Client Creds Happy Path");
         System.out.println("Valid access token: " + token);
 
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        byte[] pdf;
+
         //Retrieve and save test certificate (pdf) as byteArray
-        byte[] pdf =
-            givenAuth(token, xApiKey)
-                        .header("content-type", "application/pdf")
-                        .queryParam("vinNumber", validVINNumber)
-                        .queryParam("testNumber", validTestNumber).
+        do {
+            Response response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/pdf")
+                            .queryParam("vinNumber", validVINNumber)
+                            .queryParam("testNumber", validTestNumber).
 
-                        //send request
-                                when().//log().all().
-                        get().
+                            //send request
+                                    when().//log().all().
+                            get().
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            pdf = response.asByteArray();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
 
-                        //verification
-                                then().//log().all().
-                        statusCode(200).
-                        extract().response().asByteArray();
+        assertEquals(statusCode, 200);
 
         //Save file in resources folder
         File file = new File("src/test/resources/DownloadedMotTestCertificates/TestCert.pdf");
@@ -490,16 +507,49 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private CompleteTestResults hgvTestResult() {
-        return randomizeKeys(readTestResult("src/test/resources/test-results-client-creds-doc-retrieval.json"));
+    private void postTechRecord(TechRecordPOST techRecord) {
+        String techRecordJson = gson.toJson(techRecord);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(v1ImplicitTokens.getBearerToken())
+                    .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                    .body(techRecordJson)
+                    .post("/vehicles")
+                    .thenReturn();
+            System.out.println(response);
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+
+        assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private CompleteTestResults randomizeKeys(CompleteTestResults testResult) {
+    private CompleteTestResults testResult(TechRecordPOST techRecord) {
+        return matchKeys(techRecord, readTestResult("src/test/resources/test-results-user-auth-doc-retrieval.json"));
+    }
+
+    private TechRecordPOST techRecord() {
+        return randomizeKeys(readTechRecord("src/test/resources/technical-record-user-auth-doc-retrieval.json"));
+    }
+
+    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
         String vin = fieldGenerator.randomVin();
 
+        techRecord.setVin(vin);
+
+        return techRecord;
+    }
+
+    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
+        System.out.println("Test Result ID: "+ testResult.getTestResultId());
         testResult.setTesterName(UUID.randomUUID().toString());
-        testResult.setVin(vin);
+        testResult.setVin(techRecord.getVin());
 
         return testResult;
     }
@@ -509,6 +559,14 @@ public class DownloadMotCertificateClientCredentialsTest {
         return gson.fromJson(
                 Files.newBufferedReader(Paths.get(path)),
                 CompleteTestResults.class
+        );
+    }
+
+    @SneakyThrows(IOException.class)
+    private TechRecordPOST readTechRecord(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                TechRecordPOST.class
         );
     }
 
@@ -530,5 +588,17 @@ public class DownloadMotCertificateClientCredentialsTest {
             ));
             return !testResults.isEmpty();
         };
+    }
+
+    private String getTestNumber(String vin) {
+        List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
+                "SELECT `test_result`.*\n"
+                        + "FROM `vehicle`\n"
+                        + "JOIN `test_result`\n"
+                        + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
+                        + "WHERE `vehicle`.`vin` = '%s'", vin
+        ));
+
+        return testResults.get(0).getTestNumber();
     }
 }
