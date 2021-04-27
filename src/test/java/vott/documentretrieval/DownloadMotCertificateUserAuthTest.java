@@ -19,6 +19,7 @@ import vott.database.connection.ConnectionFactory;
 import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
 import vott.models.dao.*;
+import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.testresults.CompleteTestResults;
 
 import java.awt.*;
@@ -39,6 +40,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
@@ -52,14 +54,14 @@ public class DownloadMotCertificateUserAuthTest {
     private String validVINNumber = "";
     private String validTestNumber = "";
     private String invalidVINNumber = "T123456789";
-    private String invalidTestNumber = "A0A00000";
+    private String invalidTestNumber = "W00A00000";
 
     private Gson gson;
     private FieldGenerator fieldGenerator;
     private TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
-    private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
+    private VehicleRepository vehicleRepository;
 
     @Before
     public void Setup() {
@@ -70,42 +72,54 @@ public class DownloadMotCertificateUserAuthTest {
         gson = GsonInstance.get();
         fieldGenerator = new FieldGenerator();
 
-        CompleteTestResults testResult = testResult();
-        postTestResult(testResult);
+        TechRecordPOST techRecord = techRecord();
+        CompleteTestResults testResult = testResult(techRecord);
 
-        validVINNumber = testResult.getVin();
-        validTestNumber = testResult.getTestTypes().get(0).getCertificateNumber();
+        postTechRecord(techRecord);
+        postTestResult(testResult);
 
         ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
         vehicleRepository = new VehicleRepository(connectionFactory);
         testResultRepository = new TestResultRepository(connectionFactory);
 
+        validVINNumber = testResult.getVin();
+
         with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
         with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(validVINNumber));
+        validTestNumber = getTestNumber(validVINNumber);
     }
 
     @Title("VOTT-5 - AC1 - TC1 - Happy Path - DownloadTestCertificateTest")
     @Test
-    public void DownloadTestCertificateTest() {
+    public void DownloadTestCertificateTest() throws InterruptedException {
 
-        System.out.println("Test Certificate User Auth Happy Path");
-        System.out.println("Valid access token: " + token);
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        byte[] pdf;
 
         //Retrieve and save test certificate (pdf) as byteArray
-        byte[] pdf =
-            givenAuth(token, xApiKey)
-                .header("content-type", "application/pdf")
-                .queryParam("vinNumber", validVINNumber)
-                .queryParam("testNumber", validTestNumber).
+        do {
+            Response response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/pdf")
+                            .queryParam("vinNumber", validVINNumber)
+                            .queryParam("testNumber", validTestNumber).
 
-            //send request
-            when().//log().all().
-                get().
+                            //send request
+                                    when().//log().all().
+                            get().
 
-            //verification
-            then().//log().all().
-                statusCode(200).
-                extract().response().asByteArray();
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            pdf = response.asByteArray();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
+
+        assertEquals(200, statusCode);
 
         //Save file in resources folder
         File file = new File("src/test/resources/DownloadedMotTestCertificates/TestCert.pdf");
@@ -135,9 +149,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC2 - DownloadTestCertificateBadJwtTokenTest")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
-
-        System.out.println("Test Certificate User Auth Invalid Token");
-        System.out.println("Using invalid token: " + token);
 
         //prep request
         givenAuth(token + 1, xApiKey)
@@ -180,8 +191,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -200,8 +209,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -219,8 +226,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC6 - DownloadTestCertificateNoAPIKeyTest")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token)
@@ -242,8 +247,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token, xApiKey + 1)
             .header("content-type", "application/pdf")
@@ -263,8 +266,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC8 - DownloadTestCertificateTestNumberDoesntExistTest")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -286,7 +287,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
 
-        System.out.println("Using valid token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -308,8 +308,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -330,7 +328,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
 
-        System.out.println("Using valid token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -352,8 +349,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -373,8 +368,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC13 - DownloadTestCertificateTestNumberSpecialCharsTest")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -396,8 +389,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificatePostRequestTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -415,8 +406,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC15 - DownloadTestCertificatePutRequestTest")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -436,8 +425,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -455,8 +442,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("VOTT-5 - AC1 - TC17 - DownloadTestCertificateDeleteRequestTest")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -493,16 +478,47 @@ public class DownloadMotCertificateUserAuthTest {
         assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private CompleteTestResults testResult() {
-        return randomizeKeys(readTestResult("src/test/resources/test-results-user-auth-doc-retrieval.json"));
+    private void postTechRecord(TechRecordPOST techRecord) {
+        String techRecordJson = gson.toJson(techRecord);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(v1ImplicitTokens.getBearerToken())
+                    .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                    .body(techRecordJson)
+                    .post("/vehicles")
+                    .thenReturn();
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+
+        assertThat(response.statusCode()).isBetween(200, 300);
     }
 
-    private CompleteTestResults randomizeKeys(CompleteTestResults testResult) {
+    private CompleteTestResults testResult(TechRecordPOST techRecord) {
+        return matchKeys(techRecord, readTestResult("src/test/resources/test-results-user-auth-doc-retrieval.json"));
+    }
+
+    private TechRecordPOST techRecord() {
+        return randomizeKeys(readTechRecord("src/test/resources/technical-record-user-auth-doc-retrieval.json"));
+    }
+
+    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
         String vin = fieldGenerator.randomVin();
 
+        techRecord.setVin(vin);
+
+        return techRecord;
+    }
+
+    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
         testResult.setTesterName(UUID.randomUUID().toString());
-        testResult.setVin(vin);
+        testResult.setVin(techRecord.getVin());
 
         return testResult;
     }
@@ -512,6 +528,14 @@ public class DownloadMotCertificateUserAuthTest {
         return gson.fromJson(
                 Files.newBufferedReader(Paths.get(path)),
                 CompleteTestResults.class
+        );
+    }
+
+    @SneakyThrows(IOException.class)
+    private TechRecordPOST readTechRecord(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                TechRecordPOST.class
         );
     }
 
@@ -535,6 +559,17 @@ public class DownloadMotCertificateUserAuthTest {
         };
     }
 
+    private String getTestNumber(String vin) {
+        List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
+                    "SELECT `test_result`.*\n"
+                            + "FROM `vehicle`\n"
+                            + "JOIN `test_result`\n"
+                            + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
+                            + "WHERE `vehicle`.`vin` = '%s'", vin
+            ));
+
+        return testResults.get(0).getTestNumber();
+    }
 }
 
 

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
@@ -86,8 +88,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     public void Setup() {
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
-
-        System.out.println("Base URI: " + RestAssured.baseURI);
 
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
@@ -157,30 +157,37 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
 
     @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With Implicit Token")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() {
+    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
-        System.out.println("Vehicle History User Auth Happy Path");
-        System.out.println("Valid access token: " + token);
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        Response response;
 
-        String response =
-                givenAuth(token, xApiKey)
-                        .header("content-type", "application/json")
-                        .queryParam("vinNumber", validVINNumber).
+        //Retrieve and save test certificate (pdf) as byteArray
+        do {
+            response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/json")
+                            .queryParam("vinNumber", validVINNumber).
 
-                //send request
-                when().//log().all().
-                        get().
+                            //send request
+                                    when().//log().all().
+                            get().
 
-                //verification
-                then().//log().all().
-                        statusCode(200).
-                        extract().response().asString();
+                            //verification
+                                    then().//log().all().
+                            extract().response();
+            statusCode = response.statusCode();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
 
-        System.out.println(response);
+        assertEquals(200, statusCode);
 
         Gson gson = GsonInstance.get();
 
-        Vehicle vehicle = gson.fromJson(response, Vehicle.class);
+        Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
 
         TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
 
@@ -322,9 +329,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
-        System.out.println("Vehicle History User Auth Happy Path");
-        System.out.println("Valid access token: " + token);
-
         String response =
                 givenAuth(token, xApiKey)
                         .header("content-type", "application/json")
@@ -335,11 +339,9 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                         get().
 
                 //verification
-                then().log().all().
+                then().//log().all().
                         statusCode(200).
                         extract().response().asString();
-
-        System.out.println(response);
 
         Gson gson = GsonInstance.get();
 
@@ -485,9 +487,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
-        System.out.println("Vehicle History User Auth Bad Token");
-        System.out.println("Using invalid token: " + token);
-
         //prep request
         givenAuth(token + 1, xApiKey)
             .header("content-type", "application/json")
@@ -507,8 +506,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/json").
@@ -526,8 +523,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Title("VOTT-9 - AC1 - TC5 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -549,8 +544,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token)
             .header("content-type", "application/json")
@@ -569,8 +562,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Title("VOTT-9 - AC1 - TC7 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey + "badkey")
@@ -591,8 +582,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/json")
@@ -611,8 +600,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Title("VOTT-9 - AC1 - TC9 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -633,7 +620,6 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
 
-        System.out.println("Valid access token: " + token);
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
