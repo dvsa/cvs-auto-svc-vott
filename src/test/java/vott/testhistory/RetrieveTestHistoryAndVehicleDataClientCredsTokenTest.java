@@ -43,11 +43,11 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     private String token;
     private final String xApiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private String validVINNumber = "";
-    private  String validVehicleRegMark = "";
-
-    private String invalidVINNumber = "T123456789";
-    private final String invalidVehicleRegMark = "W01A00229";
+    private String validVehicleRegMark = "";
     private String nonAlphaVehicleMark = "!@/'";
+
+    private final String invalidVINNumber = "A123456789";
+    private final String invalidVehicleRegMark = "W01A00229";
 
     //Test Data Variables
     private Integer vehiclePK;
@@ -89,15 +89,13 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Before
     public void Setup() {
 
+        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
+        this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
+
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
                 VottConfiguration.local()
         );
-
-        RestAssured.baseURI = VottConfiguration.local().getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
-        this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
-
-        System.out.println("Base URI: " + RestAssured.baseURI);
 
         vehicleRepository = new VehicleRepository(connectionFactory);
         vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
@@ -164,9 +162,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
-        System.out.println("Vehicle History Client Creds Happy Path");
-        System.out.println("Valid access token: " + token);
-
         int tries = 0;
         int maxRetries = 20;
         int statusCode;
@@ -191,7 +186,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
             Thread.sleep(1000);
         } while (statusCode >= 400 && tries < maxRetries);
 
-        assertEquals(statusCode, 200);
+        assertEquals(200, statusCode);
 
         Gson gson = GsonInstance.get();
 
@@ -338,9 +333,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
-        System.out.println("Vehicle History Client Creds Happy Path");
-        System.out.println("Valid access token: " + token);
-
         String response =
                 givenAuth(token, xApiKey)
                         .header("content-type", "application/json")
@@ -354,8 +346,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                                 then().log().all().
                         statusCode(200).
                         extract().response().asString();
-
-        System.out.println(response);
 
         Gson gson = new GsonBuilder().create();
 
@@ -501,9 +491,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
-        System.out.println("Vehicle History Client Creds Bad Token");
-        System.out.println("Invalid access token: " + token);
-
         //prep request
         givenAuth(token + 1, xApiKey)
                 .header("content-type", "application/json")
@@ -523,8 +510,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json").
@@ -542,8 +527,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Title("CVSB-19222 - AC2 - TC5 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -565,8 +548,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token)
                 .header("content-type", "application/json")
@@ -585,8 +566,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Title("CVSB-19222 - AC2 - TC7 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey + "badkey")
@@ -607,8 +586,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
@@ -627,8 +604,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Title("CVSB-19222 - AC2 - TC9 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -649,8 +624,6 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
@@ -670,7 +643,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
 
         vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("Test VIN");
+        vehicle.setVin("A12345");
         vehicle.setVrm_trm("999999999");
         vehicle.setTrailerID("88888888");
 
