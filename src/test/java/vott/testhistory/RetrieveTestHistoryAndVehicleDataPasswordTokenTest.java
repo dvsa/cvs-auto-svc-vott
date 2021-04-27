@@ -181,7 +181,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
             Thread.sleep(1000);
         } while (statusCode >= 400 && tries < maxRetries);
 
-        assertEquals(statusCode, 200);
+        assertEquals(200, statusCode);
 
         Gson gson = GsonInstance.get();
 

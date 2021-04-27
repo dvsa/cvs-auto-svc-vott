@@ -91,7 +91,7 @@ public class DownloadMotCertificateUserAuthTest {
     public void DownloadTestCertificateTest() throws InterruptedException {
 
         int tries = 0;
-        int maxRetries = 10;
+        int maxRetries = 20;
         int statusCode;
         byte[] pdf;
 
@@ -116,7 +116,7 @@ public class DownloadMotCertificateUserAuthTest {
             Thread.sleep(1000);
         } while (statusCode >= 400 && tries < maxRetries);
 
-        assertEquals(statusCode, 200);
+        assertEquals(200, statusCode);
 
         //Save file in resources folder
         File file = new File("src/test/resources/DownloadedMotTestCertificates/TestCert.pdf");
