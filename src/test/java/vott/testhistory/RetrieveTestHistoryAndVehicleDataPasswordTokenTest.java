@@ -337,7 +337,7 @@ public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
                         get().
 
                 //verification
-                then().log().all().
+                then().//log().all().
                         statusCode(200).
                         extract().response().asString();
 
