@@ -5,10 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -34,6 +36,7 @@ import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
+@RunWith(SerenityRunner.class)
 public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
 
     // Variable + Constant Test Data Setup
