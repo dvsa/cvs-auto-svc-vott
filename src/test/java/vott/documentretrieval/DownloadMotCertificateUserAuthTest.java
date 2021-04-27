@@ -57,29 +57,8 @@ public class DownloadMotCertificateUserAuthTest {
     private FieldGenerator fieldGenerator;
     private TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
-    private VehicleRepository vehicleRepository;
-    private TestResultRepository testResultRepository;
-
-    //Test Data
-    private Integer vehiclePK;
-    private Integer testResultPK;
-    private Integer fuelEmissionPK;
-    private Integer testStationPK;
-    private Integer testerPK;
-    private Integer vehicleClassPK;
-    private Integer testTypePK;
-    private Integer preparerPK;
-    private Integer identityPK;
-
     private TestResultRepository testResultRepository;
     private VehicleRepository vehicleRepository;
-    private FuelEmissionRepository fuelEmissionRepository;
-    private TestStationRepository testStationRepository;
-    private TesterRepository testerRepository;
-    private VehicleClassRepository vehicleClassRepository;
-    private TestTypeRepository testTypeRepository;
-    private PreparerRepository preparerRepository;
-    private IdentityRepository identityRepository;
 
     @Before
     public void Setup() {
@@ -92,7 +71,6 @@ public class DownloadMotCertificateUserAuthTest {
 
         TechRecordPOST techRecord = techRecord();
         CompleteTestResults testResult = testResult(techRecord);
-        System.out.println("VIN: "+ testResult.getVin());
 
         postTechRecord(techRecord);
         postTestResult(testResult);
@@ -105,16 +83,12 @@ public class DownloadMotCertificateUserAuthTest {
 
         with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
         with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(validVINNumber));
-
         validTestNumber = getTestNumber(validVINNumber);
     }
 
     @Title("CVSB-19156 - AC1 - TC1 - Happy Path - DownloadTestCertificateTest")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
-
-        System.out.println("Test Certificate User Auth Happy Path");
-        System.out.println("Valid access token: " + token);
 
         int tries = 0;
         int maxRetries = 10;
@@ -173,9 +147,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
 
-        System.out.println("Test Certificate User Auth Invalid Token");
-        System.out.println("Using invalid token: " + token);
-
         //prep request
         givenAuth(token + 1, xApiKey)
             .header("content-type", "application/pdf")
@@ -217,8 +188,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -237,8 +206,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -256,8 +223,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("CVSB-19156 - AC1 - TC6 - DownloadTestCertificateNoAPIKeyTest")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token)
@@ -279,8 +244,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token, xApiKey + 1)
             .header("content-type", "application/pdf")
@@ -300,8 +263,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("CVSB-19156 - AC1 - TC8 - DownloadTestCertificateTestNumberDoesntExistTest")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -323,7 +284,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
 
-        System.out.println("Using valid token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -345,8 +305,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
             .header("content-type", "application/pdf")
@@ -367,7 +325,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
 
-        System.out.println("Using valid token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -389,8 +346,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -410,8 +365,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("CVSB-19156 - AC1 - TC13 - DownloadTestCertificateTestNumberSpecialCharsTest")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
-
-        System.out.println("Valid access token: " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -433,8 +386,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificatePostRequestTest() {
 
-        System.out.println("Valid access token " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -452,8 +403,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("CVSB-19156 - AC1 - TC15 - DownloadTestCertificatePutRequestTest")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -473,8 +422,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
 
-        System.out.println("Valid access token: " + token);
-
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
@@ -492,8 +439,6 @@ public class DownloadMotCertificateUserAuthTest {
     @Title("CVSB-19156 - AC1 - TC17 - DownloadTestCertificateDeleteRequestTest")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
-
-        System.out.println("Valid access token " + token);
 
         //prep request
         givenAuth(token, xApiKey)
@@ -544,7 +489,6 @@ public class DownloadMotCertificateUserAuthTest {
                     .body(techRecordJson)
                     .post("/vehicles")
                     .thenReturn();
-            System.out.println(response);
             statusCode = response.statusCode();
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
@@ -570,7 +514,6 @@ public class DownloadMotCertificateUserAuthTest {
 
     private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
-        System.out.println("Test Result ID: "+ testResult.getTestResultId());
         testResult.setTesterName(UUID.randomUUID().toString());
         testResult.setVin(techRecord.getVin());
 
