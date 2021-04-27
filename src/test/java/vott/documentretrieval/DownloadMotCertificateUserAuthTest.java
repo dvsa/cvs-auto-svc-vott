@@ -57,9 +57,6 @@ public class DownloadMotCertificateUserAuthTest {
     private FieldGenerator fieldGenerator;
     private TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
-    private VehicleRepository vehicleRepository;
-    private TestResultRepository testResultRepository;
-
     //Test Data
     private Integer vehiclePK;
     private Integer testResultPK;
