@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.*;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class PSVBrakesRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -78,6 +82,7 @@ public class PSVBrakesRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC35 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingIdenticalPSVBrakesReturnsSamePk() {
         int primaryKey1 = psvBrakesRepository.fullUpsert(newTestPSVBrakes());
@@ -89,6 +94,7 @@ public class PSVBrakesRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC36 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingDifferentTechRecordIDReturnsDifferentPk() {
         TechnicalRecord tr2 = newTestTechnicalRecord();
@@ -109,6 +115,7 @@ public class PSVBrakesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC37 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         PSVBrakes vs1 = newTestPSVBrakes();

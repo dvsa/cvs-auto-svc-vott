@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.*;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class PlateRepositoryTest {
     private List<Integer> deleteOnExit;
     private Integer vehiclePK;
@@ -77,6 +81,7 @@ public class PlateRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC28 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalPlateReturnsSamePk() {
         int primaryKey1 = plateRepository.fullUpsert(newTestPlate());
@@ -88,6 +93,7 @@ public class PlateRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC29 - Testing plate unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
         Plate plate1 = newTestPlate();
@@ -107,6 +113,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC30 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateSerialNumReturnsDifferentPk() {
         Plate plate1 = newTestPlate();
@@ -123,6 +130,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC31 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateIssueDateReturnsDifferentPk() {
         Plate plate1 = newTestPlate();
@@ -139,6 +147,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC32 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         Plate plate1 = newTestPlate();

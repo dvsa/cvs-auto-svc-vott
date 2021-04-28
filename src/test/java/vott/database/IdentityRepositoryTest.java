@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.Identity;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class IdentityRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -37,6 +41,7 @@ public class IdentityRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC19 - Testing identity unique index compound key")
     @Test
     public void upsertingIdenticalIdentityReturnsSamePk() {
         int primaryKey1 = identityRepository.partialUpsert(newTestIdentity());
@@ -48,6 +53,7 @@ public class IdentityRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC20 - Testing identity unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         Identity identity1 = newTestIdentity();

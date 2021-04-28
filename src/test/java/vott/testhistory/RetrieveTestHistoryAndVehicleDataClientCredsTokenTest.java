@@ -5,15 +5,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
-import vott.config.VottConfiguration;
 import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
@@ -22,20 +23,18 @@ import vott.models.dao.*;
 import vott.models.dto.enquiry.TechnicalRecord;
 import vott.models.dto.enquiry.Vehicle;
 import vott.database.VehicleRepository;
-import vott.database.connection.ConnectionFactory;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
+@RunWith(SerenityRunner.class)
 public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
 
     // Variable + Constant Test Data Setup
@@ -158,7 +157,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("CVSB-19222 - AC2 - TC1 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVinTest")
+    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With A Client Credentials Token")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -329,7 +328,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
 
     }
 
-    @Title("CVSB-19222 - AC2 - TC2 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
@@ -487,7 +486,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("CVSB-19222 - AC2 - TC3 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 
@@ -506,7 +505,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC4 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
 
@@ -524,7 +523,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC5 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
 
@@ -544,7 +543,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC6 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
 
@@ -563,7 +562,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC7 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
 
@@ -582,7 +581,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC8 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
 
@@ -601,7 +600,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC9 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
 
@@ -620,7 +619,7 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("CVSB-19222 - AC2 - TC10 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
 

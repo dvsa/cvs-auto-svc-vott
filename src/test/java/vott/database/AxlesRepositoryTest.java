@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.*;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class AxlesRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -88,6 +92,7 @@ public class AxlesRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC5 - Testing axles unique index compound key")
     @Test
     public void upsertingIdenticalAxleReturnsSamePk() {
         int primaryKey1 = axlesRepository.fullUpsert(newTestAxles());
@@ -99,6 +104,7 @@ public class AxlesRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC6 - Testing axles unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
         Axles axles1 = newTestAxles();
@@ -118,6 +124,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC7 - Testing axles unique index compound key")
     @Test
     public void upsertingNewTyreIDReturnsDifferentPk() {
         Axles axles1 = newTestAxles();
@@ -137,6 +144,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC8 - Testing axles unique index compound key")
     @Test
     public void upsertingNewAxleNumberReturnsDifferentPk() {
         Axles axles1 = newTestAxles();
@@ -153,6 +161,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC9 - Testing axles unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         Axles axles1 = newTestAxles();

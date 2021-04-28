@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.VehicleClass;
@@ -15,6 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class VehicleSubclassRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -46,6 +50,7 @@ public class VehicleSubclassRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC66 - Testing vehicle subclass index compound key")
     @Test
     public void upsertingIdenticalVehicleSubclassReturnsSamePk() {
         int primaryKey1 = vehicleSubclassRepository.partialUpsert(newTestVehicleSubclass());
@@ -57,6 +62,7 @@ public class VehicleSubclassRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC67 - Testing vehicle subclass index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         VehicleSubclass vs1 = newTestVehicleSubclass();

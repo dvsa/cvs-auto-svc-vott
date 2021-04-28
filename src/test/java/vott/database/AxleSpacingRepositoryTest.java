@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.*;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class AxleSpacingRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -78,6 +82,7 @@ public class AxleSpacingRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC1 - Testing axleSpacing unique index compound key")
     @Test
     public void upsertingIdenticalAxleSpacingReturnsSamePk() {
         int primaryKey1 = axleSpacingRepository.fullUpsert(newTestAxleSpacing());
@@ -89,6 +94,7 @@ public class AxleSpacingRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC2 - Testing axleSpacing unique index compound key")
     @Test
     public void upsertingDifferentTechRecordIDReturnsDifferentPk() {
         AxleSpacing as1 = newTestAxleSpacing();
@@ -108,6 +114,7 @@ public class AxleSpacingRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC3 - Testing axleSpacing unique index compound key")
     @Test
     public void upsertingDifferentAxlesReturnsDifferentPk() {
         AxleSpacing as1 = newTestAxleSpacing();
@@ -124,6 +131,7 @@ public class AxleSpacingRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC4 - Testing axleSpacing unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         AxleSpacing as1 = newTestAxleSpacing();
