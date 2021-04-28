@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.FuelEmission;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class FuelEmissionRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -37,6 +41,7 @@ public class FuelEmissionRepositoryTest {
         }
     }
 
+    @Title("VOTT-8 - AC1 - TC17 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingIdenticalFuelEmissionReturnsSamePk() {
         int primaryKey1 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
@@ -48,6 +53,7 @@ public class FuelEmissionRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC18 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
         FuelEmission fe1 = newTestFuelEmission();

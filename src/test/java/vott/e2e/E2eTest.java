@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
@@ -35,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
+@RunWith(SerenityRunner.class)
 public class E2eTest {
 
     private VottConfiguration configuration;

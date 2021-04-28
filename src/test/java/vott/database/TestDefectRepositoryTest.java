@@ -1,8 +1,11 @@
 package vott.database;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Title;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.models.dao.*;
@@ -13,6 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(SerenityRunner.class)
 public class TestDefectRepositoryTest {
 
     private List<Integer> deleteOnExit;
@@ -120,6 +124,7 @@ public class TestDefectRepositoryTest {
         identityRepository.delete(identityPK);
     }
 
+    @Title("VOTT-8 - AC1 - TC42 - Testing test defect unique index compound key")
     @Test
     public void upsertingIdenticalTestDefectReturnsSamePk() {
         int primaryKey1 = testDefectRepository.fullUpsert(newTestTestDefect());
@@ -131,6 +136,7 @@ public class TestDefectRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC43 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewTestResultIDReturnsDifferentPk() {
         TestResult tr2 = newTestTestResult();
@@ -151,6 +157,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC44 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewDefectIDReturnsDifferentPk() {
         Defect defect2 = newTestDefect();
@@ -171,6 +178,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC45 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewLocationIDReturnsDifferentPk() {
         Location location2 = newTestLocation();
@@ -191,6 +199,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @Title("VOTT-8 - AC1 - TC46 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewNonIndexDataSamePk() {
         TestDefect td1 = newTestTestDefect();
