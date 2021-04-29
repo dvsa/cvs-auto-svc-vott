@@ -19,7 +19,7 @@ In order to run the test locally your will need to complete the following steps:
 - Populate the template config file: src>main>resources>config.json  
  !!Ensure only the template is committed to Git!!  
   
-- Running can be triggered from IntelliJ and command line using `mvn test`
+- Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
 
 ## Running the Tests
 Pull the repo  
