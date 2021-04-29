@@ -35,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
+public class RetrieveVehicleDataClientCredsTokenTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
@@ -157,9 +157,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With A Client Credentials Token")
+    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Vin Test With A Client Credentials Token")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
+    public void RetrieveVehicleDataUsingVinTest() throws InterruptedException {
 
         int tries = 0;
         int maxRetries = 20;
@@ -328,9 +328,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
 
     }
 
-    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataUsingVrmTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
+    public void RetrieveVehicleDataUsingVrmTest() {
 
         String response =
                 givenAuth(token, xApiKey)
@@ -486,9 +486,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataBadJwtTokenTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
+    public void RetrieveVehicleDataBadJwtTokenTest() {
 
         //prep request
         givenAuth(token + 1, xApiKey)
@@ -505,9 +505,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataNoParamsTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
+    public void RetrieveVehicleDataNoParamsTest() {
 
         //prep request
         givenAuth(token, xApiKey)
@@ -523,9 +523,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataBothVinAndVrmTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
+    public void RetrieveVehicleDataBothVinAndVrmTest() {
 
         //prep request
         givenAuth(token, xApiKey)
@@ -543,9 +543,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataNoAPIKeyTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
+    public void RetrieveVehicleDataNoAPIKeyTest() {
 
         //prep request
         givenAuth(token)
@@ -562,9 +562,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataInvalidAPIKey")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
+    public void RetrieveVehicleDataInvalidAPIKey() {
 
         //prep request
         givenAuth(token, xApiKey + "badkey")
@@ -581,9 +581,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataVehicleRegMarkDoesntExistTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
+    public void RetrieveVehicleDataVehicleRegMarkDoesntExistTest() {
 
         //prep request
         givenAuth(token, xApiKey)
@@ -600,9 +600,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataVinNumberDoesntExistTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
+    public void RetrieveVehicleDataVinNumberDoesntExistTest() {
 
         //prep request
         givenAuth(token, xApiKey)
@@ -619,9 +619,9 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataNonPrintableCharsParamsTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
+    public void RetrieveVehicleDataNonPrintableCharsParamsTest() {
 
         //prep request
         givenAuth(token, xApiKey)

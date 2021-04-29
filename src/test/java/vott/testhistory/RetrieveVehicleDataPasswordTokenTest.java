@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryAndVehicleDataPasswordTokenTest {
+public class RetrieveVehicleDataPasswordTokenTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
