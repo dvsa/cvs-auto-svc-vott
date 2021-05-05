@@ -166,7 +166,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
         locationRepository.delete(locationPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC21 - Happy Path - Retrieve Test History Using Vin Test With A Client Credentials Token")
+    @Title ("VOTT-9 - AC1 - TC21 - Happy Path - Retrieve Test History Using Implicit token and a valid vin")
     @Test
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -291,7 +291,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
 
     }
 
-    @Title("VOTT-9 - AC1 - TC22 - Happy Path - RetrieveTestHistoryUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC22 - Happy Path - Retrieve Test History Using Implicit token and a valid vrm")
     @Test
     public void RetrieveTestHistoryUsingVrmTest() throws InterruptedException {
 
@@ -304,7 +304,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
             response =
                     givenAuth(token, xApiKey)
                             .header("content-type", "application/json")
-                            .queryParam("VehicleRegMark", validVehicleRegMark). // todo enter paramed vin
+                            .queryParam("VehicleRegMark", validVehicleRegMark).
 
                             //send request
                                     when().//log().all().
@@ -416,7 +416,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC23 - RetrieveTestHistoryBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC23 - Retrieve Test History Using a bad client creds JWT Token")
     @Test
     public void RetrieveTestHistoryBadJwtTokenTest() {
 
@@ -435,7 +435,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC24 - RetrieveTestHistoryNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC24 - Retrieve Test History Using an implicit JWT Token and no query params")
     @Test
     public void RetrieveTestHistoryNoParamsTest() {
 
@@ -453,7 +453,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC25 - RetrieveTestHistoryBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC25 - Retrieve Test History Using an implicit JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveTestHistoryBothVinAndVrmTest() {
 
@@ -473,7 +473,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC26 RetrieveTestHistoryNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC26 Retrieve Test History Using an implicit JWT Token and no api key")
     @Test
     public void RetrieveTestHistoryNoAPIKeyTest() {
 
@@ -492,7 +492,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC27 - RetrieveTestHistoryInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC27 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryInvalidAPIKey() {
 
@@ -511,7 +511,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC28 - RetrieveTestHistoryVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC28 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVehicleRegMarkDoesntExistTest() {
 
@@ -530,7 +530,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC29 - RetrieveTestHistoryVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC29 - Retrieve Test History Using an implicit JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVinNumberDoesntExistTest() {
 
@@ -549,7 +549,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC30 - RetrieveTestHistoryNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC30 - Retrieve Test History Using an implicit and non alpha numeric vrm")
     @Test
     public void RetrieveTestHistoryNonPrintableCharsParamsTest() {
 
