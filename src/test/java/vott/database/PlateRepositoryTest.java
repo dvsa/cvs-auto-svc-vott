@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,6 +83,7 @@ public class PlateRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC28 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalPlateReturnsSamePk() {
@@ -94,6 +96,7 @@ public class PlateRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC29 - Testing plate unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
@@ -113,6 +116,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC30 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateSerialNumReturnsDifferentPk() {
@@ -130,6 +134,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC31 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateIssueDateReturnsDifferentPk() {
@@ -147,6 +152,7 @@ public class PlateRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC32 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {

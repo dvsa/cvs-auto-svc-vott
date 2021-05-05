@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,6 +84,7 @@ public class MicrofilmRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC25 - Testing microfilm unique index compound key")
     @Test
     public void upsertingIdenticalMicrofilmReturnsSamePk() {
@@ -95,6 +97,7 @@ public class MicrofilmRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC26 - Testing microfilm unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
@@ -114,6 +117,7 @@ public class MicrofilmRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC27 - Testing microfilm unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
