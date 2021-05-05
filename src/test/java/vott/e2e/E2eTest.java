@@ -68,7 +68,7 @@ public class E2eTest {
         testResultRepository = new TestResultRepository(connectionFactory);
     }
 
-    @Title("VOTT-10 - AC1 - TC1 - e2eTestHgv")
+    @Title("VOTT-10 - AC1 - TC1 - End to End for HGV")
     @Test
     public void e2eTestHgv() {
         TechRecordPOST hgvTechRecord = hgvTechRecord();
@@ -77,7 +77,7 @@ public class E2eTest {
         e2eTest(hgvTechRecord, hgvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC2 - e2eTestPsv")
+    @Title("VOTT-10 - AC1 - TC2 - End to End Test for PSV")
     @Test
     public void e2eTestPsv() {
         TechRecordPOST psvTechRecord = psvTechRecord();
@@ -86,7 +86,7 @@ public class E2eTest {
         e2eTest(psvTechRecord, psvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC3 - e2eTestTrl")
+    @Title("VOTT-10 - AC1 - TC3 - End to End Test for Trailers ")
     @Test
     public void e2eTestTrl() {
         TechRecordPOST trlTechRecord = trlTechRecord();
