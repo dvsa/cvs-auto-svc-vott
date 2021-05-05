@@ -29,8 +29,8 @@ public class Tester {
   @SerializedName("name")
   private String name = null;
 
-  @SerializedName("emailAddress")
-  private String emailAddress = null;
+  @SerializedName("email_address")
+  private String email_address = null;
 
   public Tester staffId(String staffId) {
     this.staffId = staffId;
@@ -66,21 +66,21 @@ public class Tester {
     this.name = name;
   }
 
-  public Tester emailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
+  public Tester email_address(String email_address) {
+    this.email_address = email_address;
     return this;
   }
 
    /**
-   * Get emailAddress
-   * @return emailAddress
+   * Get email_address
+   * @return email_address
   **/
   public String getEmailAddress() {
-    return emailAddress;
+    return email_address;
   }
 
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
+  public void setEmailAddress(String email_address) {
+    this.email_address = email_address;
   }
 
 
@@ -95,12 +95,12 @@ public class Tester {
     Tester tester = (Tester) o;
     return Objects.equals(this.staffId, tester.staffId) &&
         Objects.equals(this.name, tester.name) &&
-        Objects.equals(this.emailAddress, tester.emailAddress);
+        Objects.equals(this.email_address, tester.email_address);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(staffId, name, emailAddress);
+    return Objects.hash(staffId, name, email_address);
   }
 
 
@@ -111,7 +111,7 @@ public class Tester {
     
     sb.append("    staffId: ").append(toIndentedString(staffId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    emailAddress: ").append(toIndentedString(emailAddress)).append("\n");
+    sb.append("    email_address: ").append(toIndentedString(email_address)).append("\n");
     sb.append("}");
     return sb.toString();
   }

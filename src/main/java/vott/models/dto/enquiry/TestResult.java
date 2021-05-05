@@ -64,11 +64,11 @@ public class TestResult {
   @SerializedName("noOfAxles")
   private Integer noOfAxles = null;
 
-  @SerializedName("regndate")
-  private String regndate = null;
+  @SerializedName("regnDate")
+  private String regnDate = null;
 
-  @SerializedName("firstUsedate")
-  private String firstUsedate = null;
+  @SerializedName("firstUseDate")
+  private String firstUseDate = null;
 
   @SerializedName("createdAt")
   private String createdAt = null;
@@ -94,11 +94,11 @@ public class TestResult {
   @SerializedName("testAnniversaryDate")
   private String testAnniversaryDate = null;
 
-  @SerializedName("testDateStartTimestamp")
-  private String testDateStartTimestamp = null;
+  @SerializedName("testTypeStartTimestamp")
+  private String testTypeStartTimestamp = null;
 
-  @SerializedName("testDateEndTimestamp")
-  private String testDateEndTimestamp = null;
+  @SerializedName("testTypeEndTimestamp")
+  private String testTypeEndTimestamp = null;
 
   @SerializedName("numberOfSeatbeltsFitted")
   private Integer numberOfSeatbeltsFitted = null;
@@ -127,8 +127,8 @@ public class TestResult {
   @SerializedName("particulateTrapSerialNumber")
   private String particulateTrapSerialNumber = null;
 
-  @SerializedName("modificationDateUsed")
-  private String modificationDateUsed = null;
+  @SerializedName("modificationTypeUsed")
+  private String modificationTypeUsed = null;
 
   @SerializedName("smokeTestKLimitApplied")
   private String smokeTestKLimitApplied = null;
@@ -369,38 +369,38 @@ public class TestResult {
     this.noOfAxles = noOfAxles;
   }
 
-  public TestResult regndate(String regndate) {
-    this.regndate = regndate;
+  public TestResult regnDate(String regnDate) {
+    this.regnDate = regnDate;
     return this;
   }
 
    /**
-   * Get regndate
-   * @return regndate
+   * Get regnDate
+   * @return regnDate
   **/
-  public String getRegndate() {
-    return regndate;
+  public String getRegnDate() {
+    return regnDate;
   }
 
-  public void setRegndate(String regndate) {
-    this.regndate = regndate;
+  public void setRegndate(String regnDate) {
+    this.regnDate = regnDate;
   }
 
-  public TestResult firstUsedate(String firstUsedate) {
-    this.firstUsedate = firstUsedate;
+  public TestResult firstUseDate(String firstUseDate) {
+    this.firstUseDate = firstUseDate;
     return this;
   }
 
    /**
-   * Get firstUsedate
-   * @return firstUsedate
+   * Get firstUseDate
+   * @return firstUseDate
   **/
-  public String getFirstUsedate() {
-    return firstUsedate;
+  public String getFirstUseDate() {
+    return firstUseDate;
   }
 
-  public void setFirstUsedate(String firstUsedate) {
-    this.firstUsedate = firstUsedate;
+  public void setFirstUsedate(String firstUseDate) {
+    this.firstUseDate = firstUseDate;
   }
 
   public TestResult createdAt(String createdAt) {
@@ -539,38 +539,38 @@ public class TestResult {
     this.testAnniversaryDate = testAnniversaryDate;
   }
 
-  public TestResult testDateStartTimestamp(String testDateStartTimestamp) {
-    this.testDateStartTimestamp = testDateStartTimestamp;
+  public TestResult testTypeStartTimestamp(String testTypeStartTimestamp) {
+    this.testTypeStartTimestamp = testTypeStartTimestamp;
     return this;
   }
 
    /**
-   * Get testDateStartTimestamp
-   * @return testDateStartTimestamp
+   * Get testTypeStartTimestamp
+   * @return testTypeStartTimestamp
   **/
-  public String getTestDateStartTimestamp() {
-    return testDateStartTimestamp;
+  public String getTestTypeStartTimestamp() {
+    return testTypeStartTimestamp;
   }
 
-  public void setTestDateStartTimestamp(String testDateStartTimestamp) {
-    this.testDateStartTimestamp = testDateStartTimestamp;
+  public void setTesttypeStartTimestamp(String testTypeStartTimestamp) {
+    this.testTypeStartTimestamp = testTypeStartTimestamp;
   }
 
-  public TestResult testDateEndTimestamp(String testDateEndTimestamp) {
-    this.testDateEndTimestamp = testDateEndTimestamp;
+  public TestResult testTypeEndTimestamp(String testTypeEndTimestamp) {
+    this.testTypeEndTimestamp = testTypeEndTimestamp;
     return this;
   }
 
    /**
-   * Get testDateEndTimestamp
-   * @return testDateEndTimestamp
+   * Get testTypeEndTimestamp
+   * @return testTypeEndTimestamp
   **/
-  public String getTestDateEndTimestamp() {
-    return testDateEndTimestamp;
+  public String getTestTypeEndTimestamp() {
+    return testTypeEndTimestamp;
   }
 
-  public void setTestDateEndTimestamp(String testDateEndTimestamp) {
-    this.testDateEndTimestamp = testDateEndTimestamp;
+  public void setTestTypeEndTimestamp(String testTypeEndTimestamp) {
+    this.testTypeEndTimestamp = testTypeEndTimestamp;
   }
 
   public TestResult numberOfSeatbeltsFitted(Integer numberOfSeatbeltsFitted) {
@@ -726,21 +726,21 @@ public class TestResult {
     this.particulateTrapSerialNumber = particulateTrapSerialNumber;
   }
 
-  public TestResult modificationDateUsed(String modificationDateUsed) {
-    this.modificationDateUsed = modificationDateUsed;
+  public TestResult modificationTypeUsed(String modificationTypeUsed) {
+    this.modificationTypeUsed = modificationTypeUsed;
     return this;
   }
 
    /**
-   * Get modificationDateUsed
-   * @return modificationDateUsed
+   * Get modificationTypeUsed
+   * @return modificationTypeUsed
   **/
-  public String getModificationDateUsed() {
-    return modificationDateUsed;
+  public String getModificationTypeUsed() {
+    return modificationTypeUsed;
   }
 
-  public void setModificationDateUsed(String modificationDateUsed) {
-    this.modificationDateUsed = modificationDateUsed;
+  public void setModificationTypeUsed(String modificationTypeUsed) {
+    this.modificationTypeUsed = modificationTypeUsed;
   }
 
   public TestResult smokeTestKLimitApplied(String smokeTestKLimitApplied) {
@@ -876,8 +876,8 @@ public class TestResult {
         Objects.equals(this.odometerReadingUnits, testResult.odometerReadingUnits) &&
         Objects.equals(this.countryOfRegistration, testResult.countryOfRegistration) &&
         Objects.equals(this.noOfAxles, testResult.noOfAxles) &&
-        Objects.equals(this.regndate, testResult.regndate) &&
-        Objects.equals(this.firstUsedate, testResult.firstUsedate) &&
+        Objects.equals(this.regnDate, testResult.regnDate) &&
+        Objects.equals(this.firstUseDate, testResult.firstUseDate) &&
         Objects.equals(this.createdAt, testResult.createdAt) &&
         Objects.equals(this.lastUpdatedAt, testResult.lastUpdatedAt) &&
         Objects.equals(this.testCode, testResult.testCode) &&
@@ -886,8 +886,8 @@ public class TestResult {
         Objects.equals(this.secondaryCertificateNumber, testResult.secondaryCertificateNumber) &&
         Objects.equals(this.testExpiryDate, testResult.testExpiryDate) &&
         Objects.equals(this.testAnniversaryDate, testResult.testAnniversaryDate) &&
-        Objects.equals(this.testDateStartTimestamp, testResult.testDateStartTimestamp) &&
-        Objects.equals(this.testDateEndTimestamp, testResult.testDateEndTimestamp) &&
+        Objects.equals(this.testTypeStartTimestamp, testResult.testTypeStartTimestamp) &&
+        Objects.equals(this.testTypeEndTimestamp, testResult.testTypeEndTimestamp) &&
         Objects.equals(this.numberOfSeatbeltsFitted, testResult.numberOfSeatbeltsFitted) &&
         Objects.equals(this.lastSeatbeltInstallationCheckDate, testResult.lastSeatbeltInstallationCheckDate) &&
         Objects.equals(this.seatbeltInstallationCheckDate, testResult.seatbeltInstallationCheckDate) &&
@@ -897,7 +897,7 @@ public class TestResult {
         Objects.equals(this.additionalCommentsForAbandon, testResult.additionalCommentsForAbandon) &&
         Objects.equals(this.particulateTrapFitted, testResult.particulateTrapFitted) &&
         Objects.equals(this.particulateTrapSerialNumber, testResult.particulateTrapSerialNumber) &&
-        Objects.equals(this.modificationDateUsed, testResult.modificationDateUsed) &&
+        Objects.equals(this.modificationTypeUsed, testResult.modificationTypeUsed) &&
         Objects.equals(this.smokeTestKLimitApplied, testResult.smokeTestKLimitApplied) &&
         Objects.equals(this.createdById, testResult.createdById) &&
         Objects.equals(this.createdByName, testResult.createdByName) &&
@@ -908,7 +908,7 @@ public class TestResult {
 
   @Override
   public int hashCode() {
-    return Objects.hash(fuelEmission, testStation, tester, vehicleClass, testType, customDefect, testStatus, reasonForCancellation, numberOfSeats, odometerReading, odometerReadingUnits, countryOfRegistration, noOfAxles, regndate, firstUsedate, createdAt, lastUpdatedAt, testCode, testNumber, certificateNumber, secondaryCertificateNumber, testExpiryDate, testAnniversaryDate, testDateStartTimestamp, testDateEndTimestamp, numberOfSeatbeltsFitted, lastSeatbeltInstallationCheckDate, seatbeltInstallationCheckDate, testResult, reasonForAbandoning, additionalNotesRecorded, additionalCommentsForAbandon, particulateTrapFitted, particulateTrapSerialNumber, modificationDateUsed, smokeTestKLimitApplied, createdById, createdByName, lastUpdatedById, lastUpdatedByName, defects);
+    return Objects.hash(fuelEmission, testStation, tester, vehicleClass, testType, customDefect, testStatus, reasonForCancellation, numberOfSeats, odometerReading, odometerReadingUnits, countryOfRegistration, noOfAxles, regnDate, firstUseDate, createdAt, lastUpdatedAt, testCode, testNumber, certificateNumber, secondaryCertificateNumber, testExpiryDate, testAnniversaryDate, testTypeStartTimestamp, testTypeEndTimestamp, numberOfSeatbeltsFitted, lastSeatbeltInstallationCheckDate, seatbeltInstallationCheckDate, testResult, reasonForAbandoning, additionalNotesRecorded, additionalCommentsForAbandon, particulateTrapFitted, particulateTrapSerialNumber, modificationTypeUsed, smokeTestKLimitApplied, createdById, createdByName, lastUpdatedById, lastUpdatedByName, defects);
   }
 
 
@@ -930,8 +930,8 @@ public class TestResult {
     sb.append("    odometerReadingUnits: ").append(toIndentedString(odometerReadingUnits)).append("\n");
     sb.append("    countryOfRegistration: ").append(toIndentedString(countryOfRegistration)).append("\n");
     sb.append("    noOfAxles: ").append(toIndentedString(noOfAxles)).append("\n");
-    sb.append("    regndate: ").append(toIndentedString(regndate)).append("\n");
-    sb.append("    firstUsedate: ").append(toIndentedString(firstUsedate)).append("\n");
+    sb.append("    regnDate: ").append(toIndentedString(regnDate)).append("\n");
+    sb.append("    firstUseDate: ").append(toIndentedString(firstUseDate)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    lastUpdatedAt: ").append(toIndentedString(lastUpdatedAt)).append("\n");
     sb.append("    testCode: ").append(toIndentedString(testCode)).append("\n");
@@ -940,8 +940,8 @@ public class TestResult {
     sb.append("    secondaryCertificateNumber: ").append(toIndentedString(secondaryCertificateNumber)).append("\n");
     sb.append("    testExpiryDate: ").append(toIndentedString(testExpiryDate)).append("\n");
     sb.append("    testAnniversaryDate: ").append(toIndentedString(testAnniversaryDate)).append("\n");
-    sb.append("    testDateStartTimestamp: ").append(toIndentedString(testDateStartTimestamp)).append("\n");
-    sb.append("    testDateEndTimestamp: ").append(toIndentedString(testDateEndTimestamp)).append("\n");
+    sb.append("    testTypeStartTimestamp: ").append(toIndentedString(testTypeStartTimestamp)).append("\n");
+    sb.append("    testTypeEndTimestamp: ").append(toIndentedString(testTypeEndTimestamp)).append("\n");
     sb.append("    numberOfSeatbeltsFitted: ").append(toIndentedString(numberOfSeatbeltsFitted)).append("\n");
     sb.append("    lastSeatbeltInstallationCheckDate: ").append(toIndentedString(lastSeatbeltInstallationCheckDate)).append("\n");
     sb.append("    seatbeltInstallationCheckDate: ").append(toIndentedString(seatbeltInstallationCheckDate)).append("\n");
@@ -951,7 +951,7 @@ public class TestResult {
     sb.append("    additionalCommentsForAbandon: ").append(toIndentedString(additionalCommentsForAbandon)).append("\n");
     sb.append("    particulateTrapFitted: ").append(toIndentedString(particulateTrapFitted)).append("\n");
     sb.append("    particulateTrapSerialNumber: ").append(toIndentedString(particulateTrapSerialNumber)).append("\n");
-    sb.append("    modificationDateUsed: ").append(toIndentedString(modificationDateUsed)).append("\n");
+    sb.append("    modificationTypeUsed: ").append(toIndentedString(modificationTypeUsed)).append("\n");
     sb.append("    smokeTestKLimitApplied: ").append(toIndentedString(smokeTestKLimitApplied)).append("\n");
     sb.append("    createdById: ").append(toIndentedString(createdById)).append("\n");
     sb.append("    createdByName: ").append(toIndentedString(createdByName)).append("\n");
