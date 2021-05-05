@@ -1,12 +1,12 @@
-package vott.testhistory;
+package vott.enquiryservicetests;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,6 @@ import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.json.GsonInstance;
 import vott.models.dao.*;
-import vott.models.dto.enquiry.TechnicalRecord;
 import vott.models.dto.enquiry.TestResult;
 
 import java.time.Duration;
@@ -33,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryClientCredsTokenTest {
+public class RetrieveTestHistoryImplicitTokenTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
@@ -75,7 +74,6 @@ public class RetrieveTestHistoryClientCredsTokenTest {
     private LocationRepository locationRepository;
     private TestDefectRepository testDefectRepository;
 
-    CustomDefect cd = newTestCustomDefect();
     Vehicle vehicle = newTestVehicle();
     FuelEmission fe = newTestFuelEmission();
     TestStation ts = newTestTestStation();
@@ -87,6 +85,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
     Defect defect = newTestDefect();
     Location location = newTestLocation();
     vott.models.dao.TestResult tr;
+    CustomDefect cd;
     TestDefect td;
 
 
@@ -94,7 +93,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
     public void Setup() {
 
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/testResults";
-        this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
+        this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
         //Connect to DB
         ConnectionFactory connectionFactory = new ConnectionFactory(
@@ -168,7 +167,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         locationRepository.delete(locationPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History using client credentials token and a valid vin")
+    @WithTag("Vott")
+    @Title ("VOTT-9 - AC1 - TC21 - Happy Path - Retrieve Test History Using Implicit token and a valid vin")
     @Test
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -177,7 +177,6 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         int statusCode;
         Response response;
 
-        //Retrieve and save test certificate (pdf) as byteArray
         do {
             response =
                     givenAuth(token, xApiKey)
@@ -291,9 +290,11 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
             assertThat(testResult.getDefects().get(0).getProhibitionIssued()).isEqualTo(true);
         }
+
     }
 
-    @Title("VOTT-9 - AC1 - TC32 - Happy Path - Retrieve Test History Using Client Credentials token and a valid vrm")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC22 - Happy Path - Retrieve Test History Using Implicit token and a valid vrm")
     @Test
     public void RetrieveTestHistoryUsingVrmTest() throws InterruptedException {
 
@@ -418,14 +419,15 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC33 - Retrieve Test History Using a bad client creds JWT Token")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC23 - Retrieve Test History Using a bad implicit JWT Token")
     @Test
     public void RetrieveTestHistoryBadJwtTokenTest() {
 
         //prep request
         givenAuth(token + 1, xApiKey)
                 .header("content-type", "application/json")
-                .queryParam("vinNumber", validVINNumber).
+                .queryParam("VinNumber", validVINNumber).
 
                 //send request
                         when().//log().all().
@@ -437,7 +439,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC34 - Retrieve Test History Using a client creds JWT Token and no query params")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC24 - Retrieve Test History Using an implicit JWT Token and no query params")
     @Test
     public void RetrieveTestHistoryNoParamsTest() {
 
@@ -455,7 +458,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC35 - Retrieve Test History Using a client creds JWT Token and both vin and vrm as query params")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC25 - Retrieve Test History Using an implicit JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveTestHistoryBothVinAndVrmTest() {
 
@@ -463,7 +467,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
                 .queryParam("vinNumber", validVINNumber)
-                .queryParam("VehicleRegMark", validVehicleRegMark).
+                .queryParam("VehicleRegMark", invalidVehicleRegMark).
 
                 //send request
                         when().//log().all().
@@ -475,7 +479,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC36 - Retrieve Test History Using a client creds JWT Token and no api key")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC26 Retrieve Test History Using an implicit JWT Token and no api key")
     @Test
     public void RetrieveTestHistoryNoAPIKeyTest() {
 
@@ -494,7 +499,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC37 - Retrieve Test History Using a client creds JWT Token and an invalid api key")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC27 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryInvalidAPIKey() {
 
@@ -513,7 +519,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC38 - Retrieve Test History Using a client creds JWT Token and vrm that doesn't exist in db")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC28 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVehicleRegMarkDoesntExistTest() {
 
@@ -532,7 +539,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC39 - Retrieve Test History Using a client creds JWT Token and vin that doesn't exist in db")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC29 - Retrieve Test History Using an implicit JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVinNumberDoesntExistTest() {
 
@@ -551,7 +559,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC40 - Retrieve Test History Using a client creds and non alpha numeric vrm")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC30 - Retrieve Test History Using an implicit and non alpha numeric vrm")
     @Test
     public void RetrieveTestHistoryNonPrintableCharsParamsTest() {
 
