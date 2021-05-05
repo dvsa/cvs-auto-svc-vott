@@ -29,7 +29,7 @@ import static org.awaitility.Awaitility.with;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveVehicleDataPasswordTokenTest {
+public class RetrieveVehicleDataImplicitTokenTest {
 
     // Variable + Constant Test Data Setup
     private String token;
@@ -142,7 +142,7 @@ public class RetrieveVehicleDataPasswordTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With Implicit Token")
+    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vin")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -300,7 +300,7 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC2 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC2 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vrm")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() throws InterruptedException {
 
@@ -458,14 +458,14 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC3 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC3 - Retrieve Vehicle Data Using a bad client creds JWT Token")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
         Response response = VehicleDataAPI.getVehicleDataUsingVIN(validVINNumber, token+1);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC4 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC4 - Retrieve Vehicle Data Using an implicit JWT Token and no query params")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
         Response response = VehicleDataAPI.getVehicleDataNoParams(token);
@@ -473,7 +473,7 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertEquals("No parameter defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC5 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC5 - Retrieve Vehicle Data Using an implicit JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
         Response response = VehicleDataAPI.getVehicleDataUsingVIN_VRM(validVINNumber, validVehicleRegMark, token);
@@ -481,21 +481,21 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertEquals("Too many parameters defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC6 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC6 - Retrieve Vehicle Data Using an implicit JWT Token and no api key")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
         Response response = VehicleDataAPI.getVehicleDataNoAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC7 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC7 - Retrieve Vehicle Data Using an implicit JWT Token and an invalid api key")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
         Response response = VehicleDataAPI.getVehicleDataInvalidAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC8 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC8 - Retrieve Vehicle Data Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
         String invalidVehicleRegMark = "W01A00229";
@@ -504,7 +504,7 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC9 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC9 - Retrieve Vehicle Data Using an implicit JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
         String invalidVINNumber = "A123456789";
@@ -513,7 +513,7 @@ public class RetrieveVehicleDataPasswordTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC10 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC10 - Retrieve Vehicle Data Using an implicit JWT Token and non alpha numeric vrm")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
         String nonAlphaVehicleMark = "!@/'";
