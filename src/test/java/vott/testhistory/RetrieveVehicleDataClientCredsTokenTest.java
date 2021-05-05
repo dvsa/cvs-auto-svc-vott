@@ -157,7 +157,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Vin Test With A Client Credentials Token")
+    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vin")
     @Test
     public void RetrieveVehicleDataUsingVinTest() throws InterruptedException {
 
@@ -328,7 +328,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
 
     }
 
-    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC12 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vrm")
     @Test
     public void RetrieveVehicleDataUsingVrmTest() {
 
@@ -486,7 +486,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC13 - Retrieve Vehicle Data Using a bad client creds JWT Token")
     @Test
     public void RetrieveVehicleDataBadJwtTokenTest() {
 
@@ -505,7 +505,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC14 - Retrieve Vehicle Data Using a client creds JWT Token and no query params")
     @Test
     public void RetrieveVehicleDataNoParamsTest() {
 
@@ -523,7 +523,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC15 - Retrieve Vehicle Data Using a client creds JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveVehicleDataBothVinAndVrmTest() {
 
@@ -543,7 +543,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC16 - Retrieve Vehicle Data Using a client creds JWT Token and no api key")
     @Test
     public void RetrieveVehicleDataNoAPIKeyTest() {
 
@@ -562,7 +562,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC17 - Retrieve Vehicle Data Using a client creds JWT Token and an invalid api key")
     @Test
     public void RetrieveVehicleDataInvalidAPIKey() {
 
@@ -581,7 +581,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC18 - Retrieve Vehicle Data Using a client creds JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataVehicleRegMarkDoesntExistTest() {
 
@@ -600,7 +600,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC19 - Retrieve Vehicle Data Using a client creds JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataVinNumberDoesntExistTest() {
 
@@ -619,14 +619,14 @@ public class RetrieveVehicleDataClientCredsTokenTest {
                 body(equalTo("Vehicle was not found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC20 - Retrieve Vehicle Data Using a client creds JWT Token and non alpha numeric vrm")
     @Test
     public void RetrieveVehicleDataNonPrintableCharsParamsTest() {
 
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", nonAlphaVehicleMark). // todo create a var with non print chars and pass it as VehicleRegMark
+                .queryParam("VehicleRegMark", nonAlphaVehicleMark).
 
                 //send request
                         when().//log().all().

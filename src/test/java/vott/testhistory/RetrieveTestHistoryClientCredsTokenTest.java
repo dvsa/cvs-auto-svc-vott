@@ -168,7 +168,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         locationRepository.delete(locationPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History Using Vin Test With A Client Credentials Token")
+    @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History using client credentials token and a valid vin")
     @Test
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -293,7 +293,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC32 - Happy Path - RetrieveTestHistoryUsingVrmTest")
+    @Title("VOTT-9 - AC1 - TC32 - Happy Path - Retrieve Test History Using Client Credentials token and a valid vrm")
     @Test
     public void RetrieveTestHistoryUsingVrmTest() throws InterruptedException {
 
@@ -306,7 +306,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             response =
                     givenAuth(token, xApiKey)
                             .header("content-type", "application/json")
-                            .queryParam("VehicleRegMark", validVehicleRegMark). // todo enter paramed vin
+                            .queryParam("VehicleRegMark", validVehicleRegMark).
 
                             //send request
                                     when().//log().all().
@@ -418,7 +418,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC33 - RetrieveTestHistoryBadJwtTokenTest")
+    @Title("VOTT-9 - AC1 - TC33 - Retrieve Test History Using a bad client creds JWT Token")
     @Test
     public void RetrieveTestHistoryBadJwtTokenTest() {
 
@@ -437,7 +437,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-9 - AC1 - TC34 - RetrieveTestHistoryNoParamsTest")
+    @Title("VOTT-9 - AC1 - TC34 - Retrieve Test History Using a client creds JWT Token and no query params")
     @Test
     public void RetrieveTestHistoryNoParamsTest() {
 
@@ -455,7 +455,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No parameter defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC35 - RetrieveTestHistoryBothVinAndVrmTest")
+    @Title("VOTT-9 - AC1 - TC35 - Retrieve Test History Using a client creds JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveTestHistoryBothVinAndVrmTest() {
 
@@ -475,7 +475,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("Too many parameters defined"));
     }
 
-    @Title("VOTT-9 - AC1 - TC36 RetrieveTestHistoryNoAPIKeyTest")
+    @Title("VOTT-9 - AC1 - TC36 - Retrieve Test History Using a client creds JWT Token and no api key")
     @Test
     public void RetrieveTestHistoryNoAPIKeyTest() {
 
@@ -494,7 +494,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC37 - RetrieveTestHistoryInvalidAPIKey")
+    @Title("VOTT-9 - AC1 - TC37 - Retrieve Test History Using a client creds JWT Token and an invalid api key")
     @Test
     public void RetrieveTestHistoryInvalidAPIKey() {
 
@@ -513,7 +513,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-9 - AC1 - TC38 - RetrieveTestHistoryVehicleRegMarkDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC38 - Retrieve Test History Using a client creds JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVehicleRegMarkDoesntExistTest() {
 
@@ -532,7 +532,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC39 - RetrieveTestHistoryVinNumberDoesntExistTest")
+    @Title("VOTT-9 - AC1 - TC39 - Retrieve Test History Using a client creds JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVinNumberDoesntExistTest() {
 
@@ -551,7 +551,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("No tests found"));
     }
 
-    @Title("VOTT-9 - AC1 - TC40 - RetrieveTestHistoryNonPrintableCharsParamsTest")
+    @Title("VOTT-9 - AC1 - TC40 - Retrieve Test History Using a client creds and non alpha numeric vrm")
     @Test
     public void RetrieveTestHistoryNonPrintableCharsParamsTest() {
 

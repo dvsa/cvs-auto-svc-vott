@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryPasswordTokenTest {
+public class RetrieveTestHistoryImplicitTokenTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
@@ -416,7 +416,7 @@ public class RetrieveTestHistoryPasswordTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC23 - Retrieve Test History Using a bad client creds JWT Token")
+    @Title("VOTT-9 - AC1 - TC23 - Retrieve Test History Using a bad implicit JWT Token")
     @Test
     public void RetrieveTestHistoryBadJwtTokenTest() {
 
