@@ -20,7 +20,6 @@ import vott.database.connection.ConnectionFactory;
 import vott.json.GsonInstance;
 import vott.models.dao.*;
 import vott.models.dto.enquiry.TechnicalRecord;
-import vott.models.dto.enquiry.Vehicle;
 import vott.models.dto.enquiry.TestResult;
 
 import java.time.Duration;
@@ -48,46 +47,53 @@ public class RetrieveTestHistoryClientCredsTokenTest {
     private final String invalidVehicleRegMark = "W01A00229";
 
     //Test Data Variables
+    private Integer customDefectPK;
+    private Integer testResultPK;
     private Integer vehiclePK;
-    private Integer makeModelPK;
-    private Integer identityPK;
-    private Integer contactDetailsPK;
+    private Integer fuelEmissionPK;
+    private Integer testStationPK;
+    private Integer testerPK;
     private Integer vehicleClassPK;
-    private Integer technicalRecordPK;
-    private Integer psvBrakesPK;
-    private Integer tyrePK;
-    private Integer axlesPK;
-    private Integer platePK;
-    private Integer axleSpacingPK;
+    private Integer testTypePK;
+    private Integer preparerPK;
+    private Integer identityPK;
+    private Integer defectPK;
+    private Integer locationPK;
+    private Integer testDefectPK;
 
-    private TechnicalRecordRepository technicalRecordRepository;
+    private CustomDefectRepository customDefectRepository;
+    private TestResultRepository testResultRepository;
     private VehicleRepository vehicleRepository;
-    private MakeModelRepository makeModelRepository;
-    private IdentityRepository identityRepository;
-    private ContactDetailsRepository contactDetailsRepository;
+    private FuelEmissionRepository fuelEmissionRepository;
+    private TestStationRepository testStationRepository;
+    private TesterRepository testerRepository;
     private VehicleClassRepository vehicleClassRepository;
-    private TyreRepository tyreRepository;
-    private PSVBrakesRepository psvBrakesRepository;
-    private AxlesRepository axlesRepository;
-    private PlateRepository plateRepository;
-    private AxleSpacingRepository axleSpacingRepository;
+    private TestTypeRepository testTypeRepository;
+    private PreparerRepository preparerRepository;
+    private IdentityRepository identityRepository;
+    private DefectRepository defectRepository;
+    private LocationRepository locationRepository;
+    private TestDefectRepository testDefectRepository;
 
-    vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
-    MakeModel mm = newTestMakeModel();
+    CustomDefect cd = newTestCustomDefect();
+    Vehicle vehicle = newTestVehicle();
+    FuelEmission fe = newTestFuelEmission();
+    TestStation ts = newTestTestStation();
+    Tester tester = newTestTester();
     VehicleClass vc = newTestVehicleClass();
-    ContactDetails cd = newTestContactDetails();
+    TestType tt = newTestTestType();
+    Preparer preparer = newTestPreparer();
     Identity identity = newTestIdentity();
-    vott.models.dao.TechnicalRecord tr;
-    Tyre tyre = newTestTyre();
-    PSVBrakes psv;
-    Axles axles;
-    Plate plate;
-    AxleSpacing as;
+    Defect defect = newTestDefect();
+    Location location = newTestLocation();
+    vott.models.dao.TestResult tr;
+    TestDefect td;
+
 
     @Before
     public void Setup() {
 
-        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
+        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/testResults";
         this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
 
         //Connect to DB
@@ -96,64 +102,70 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         );
 
         vehicleRepository = new VehicleRepository(connectionFactory);
-        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
+        vehiclePK = vehicleRepository.fullUpsert(vehicle);
 
-        makeModelRepository = new MakeModelRepository(connectionFactory);
-        makeModelPK = makeModelRepository.partialUpsert(mm);
+        fuelEmissionRepository = new FuelEmissionRepository(connectionFactory);
+        fuelEmissionPK = fuelEmissionRepository.partialUpsert(fe);
 
-        identityRepository = new IdentityRepository(connectionFactory);
-        identityPK = identityRepository.partialUpsert(identity);
+        testStationRepository = new TestStationRepository(connectionFactory);
+        testStationPK = testStationRepository.partialUpsert(ts);
 
-        contactDetailsRepository = new ContactDetailsRepository(connectionFactory);
-        contactDetailsPK = contactDetailsRepository.partialUpsert(cd);
+        testerRepository = new TesterRepository(connectionFactory);
+        testerPK = testerRepository.partialUpsert(tester);
 
         vehicleClassRepository = new VehicleClassRepository(connectionFactory);
         vehicleClassPK = vehicleClassRepository.partialUpsert(vc);
 
-        technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        tr = newTestTechnicalRecord();
-        technicalRecordPK = technicalRecordRepository.fullUpsert(tr);
+        testTypeRepository = new TestTypeRepository(connectionFactory);
+        testTypePK = testTypeRepository.partialUpsert(tt);
 
-        psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
-        psv = newTestPSVBrakes();
-        psvBrakesPK = psvBrakesRepository.fullUpsert(psv);
+        preparerRepository = new PreparerRepository(connectionFactory);
+        preparerPK = preparerRepository.partialUpsert(preparer);
 
-        tyreRepository = new TyreRepository(connectionFactory);
-        tyrePK = tyreRepository.partialUpsert(tyre);
+        identityRepository = new IdentityRepository(connectionFactory);
+        identityPK = identityRepository.partialUpsert(identity);
 
-        axlesRepository = new AxlesRepository(connectionFactory);
-        axles = newTestAxles();
-        axlesPK = axlesRepository.fullUpsert(axles);
+        defectRepository = new DefectRepository(connectionFactory);
+        defectPK = defectRepository.partialUpsert(newTestDefect());
 
-        plateRepository = new PlateRepository(connectionFactory);
-        plate = newTestPlate();
-        platePK = plateRepository.fullUpsert(plate);
+        locationRepository = new LocationRepository(connectionFactory);
+        locationPK = locationRepository.partialUpsert(location);
 
-        axleSpacingRepository = new AxleSpacingRepository(connectionFactory);
-        as = newTestAxleSpacing();
-        axleSpacingPK = axleSpacingRepository.fullUpsert(as);
+        testResultRepository = new TestResultRepository(connectionFactory);
+        tr = newTestTestResult();
+        testResultPK = testResultRepository.fullUpsert(tr);
 
-        validVINNumber = vehicleUpsert.getVin();
-        validVehicleRegMark = vehicleUpsert.getVrm_trm();
+        customDefectRepository = new CustomDefectRepository(connectionFactory);
+        cd = newTestCustomDefect();
+        customDefectPK = customDefectRepository.fullUpsert(cd);
+
+        testDefectRepository = new TestDefectRepository(connectionFactory);
+        td = newTestTestDefect();
+        testDefectPK = testDefectRepository.fullUpsert(td);
+
+        validVINNumber = vehicle.getVin();
+        validVehicleRegMark = vehicle.getVrm_trm();
 
         with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
-        with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
+        with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(String.valueOf(validVINNumber)));
     }
 
     @After
     public void tearDown() {
         //Test Data Cleanup
-        axleSpacingRepository.delete(axleSpacingPK);
-        plateRepository.delete(platePK);
-        axlesRepository.delete(axlesPK);
-        tyreRepository.delete(tyrePK);
-        psvBrakesRepository.delete(psvBrakesPK);
-        technicalRecordRepository.delete(technicalRecordPK);
+        testDefectRepository.delete(testDefectPK);
+        customDefectRepository.delete(customDefectPK);
+        testResultRepository.delete(testResultPK);
         vehicleRepository.delete(vehiclePK);
-        makeModelRepository.delete(makeModelPK);
-        identityRepository.delete(identityPK);
-        contactDetailsRepository.delete(contactDetailsPK);
+        fuelEmissionRepository.delete(fuelEmissionPK);
+        testStationRepository.delete(testStationPK);
+        testerRepository.delete(testerPK);
         vehicleClassRepository.delete(vehicleClassPK);
+        testTypeRepository.delete(testTypePK);
+        preparerRepository.delete(preparerPK);
+        identityRepository.delete(identityPK);
+        defectRepository.delete(defectPK);
+        locationRepository.delete(locationPK);
     }
 
     @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History Using Vin Test With A Client Credentials Token")
@@ -188,200 +200,222 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
         Gson gson = GsonInstance.get();
 
-        TestResult testResult  = gson.fromJson(response.asString(), TestResult.class);
+        TestResult[] testResultArray  = gson.fromJson(response.asString(), TestResult[].class);
 
-        assertThat(testResult.getTester().getName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTester().getStaffId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTester().getEmailAddress()).isEqualTo(vehicleUpsert.getVin());
+        for (TestResult testResult : testResultArray) {
 
-//        assertThat(testResult.getPreparer().getName()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTester().getName()).isEqualTo(tester.getName());
+            assertThat(testResult.getTester().getStaffId()).isEqualTo(tester.getStaffID());
+            assertThat(testResult.getTester().getEmailAddress()).isEqualTo(tester.getEmailAddress());
 
-        assertThat(testResult.getRegndate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestCode()).isEqualTo(vehicleUpsert.getVin());
+//        assertThat(testResult.getPreparer().getName()).isEqualTo(preparer.getName());
+//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(preparer.getPreparerID());
 
-        assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getRegnDate()).isEqualTo(tr.getRegnDate());
+            assertThat(testResult.getTestCode()).isEqualTo(tr.getTestCode());
 
-        assertThat(testResult.getCreatedAt()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNoOfAxles()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestResult()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestStatus()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCreatedById()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFirstUsedate()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
+            assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-        assertThat(testResult.getFuelEmission().getFuelType()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getModTypeCode()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getEmissionStandard()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
+            assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
+            assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
+            assertThat(testResult.getTestStatus()).isEqualTo(tr.getTestStatus());
+            assertThat(testResult.getFirstUseDate()).isEqualTo(tr.getFirstUseDate());
 
-        assertThat(testResult.getLastUpdatedAt()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNumberOfSeats()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getFuelEmission().getFuelType()).isEqualTo(fe.getFuelType());
+            assertThat(testResult.getFuelEmission().getDescription()).isEqualTo(fe.getDescription());
+            assertThat(testResult.getFuelEmission().getModTypeCode()).isEqualTo(fe.getModTypeCode());
+            assertThat(testResult.getFuelEmission().getEmissionStandard()).isEqualTo(fe.getEmissionStandard());
 
-        assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleSize()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleType()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getEuVehicleCategory()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleConfiguration()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestStation().getName()).isEqualTo(ts.getName());
+            assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
+            assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-        assertThat(testResult.getTestExpiryDate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getLastUpdatedById()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getOdometerReading()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCertificateNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getReasonForAbandoning()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestAnniversaryDate()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getModificationTypeUsed()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getOdometerReadingUnits()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getTesTypeEndTimestamp()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCountryOfRegistration()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getParticulateTrapFitted()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getReasonForCancellation()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getParticulateTrapSerialNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getAdditionalCommentsForAbandon()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSeatbeltInstallationCheckDate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getLastSeatbeltInstallationCheckDate()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
-        assertThat(testResult.getCustomDefect().get(0).getDefectName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCustomDefect().get(0).getDefectNotes()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCustomDefect().get(0).getReferenceNumber()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
+            assertThat(testResult.getVehicleClass().getDescription()).isEqualTo(vc.getDescription());
+            assertThat(testResult.getVehicleClass().getVehicleSize()).isEqualTo(vc.getVehicleSize());
+            assertThat(testResult.getVehicleClass().getVehicleType()).isEqualTo(vc.getVehicleType());
+            assertThat(testResult.getVehicleClass().getEuVehicleCategory()).isEqualTo(vc.getEuVehicleCategory());
+            assertThat(testResult.getVehicleClass().getVehicleConfiguration()).isEqualTo(vc.getVehicleConfiguration());
 
-//        assertThat(testResult.getDefects().get(0).getPrs()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getNotes()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getImNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getItemNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyRef()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getImDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyText()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencySubId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getItemDescription()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getDefects().get(0).getDefect().getStdForProhibition).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyCategory()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestExpiryDate()).isEqualTo(tr.getTestExpiryDate());
+            assertThat(testResult.getOdometerReading()).isEqualTo(Integer.valueOf(tr.getOdometerReading()));
+            assertThat(testResult.getCertificateNumber()).isEqualTo(tr.getCertificateNumber());
+            assertThat(testResult.getReasonForAbandoning()).isEqualTo(tr.getReasonForAbandoning());
+            assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
+            assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
+            assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
+            assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
+            assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
+            assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
+            assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
+            assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
+            assertThat(testResult.getParticulateTrapSerialNumber()).isEqualTo(tr.getParticulateTrapSerialNumber());
+            assertThat(testResult.getAdditionalCommentsForAbandon()).isEqualTo(tr.getAdditionalCommentsForAbandon());
+            assertThat(testResult.getSeatbeltInstallationCheckDate()).isEqualTo("true");
+            assertThat(testResult.getLastSeatbeltInstallationCheckDate()).isEqualTo(tr.getLastSeatbeltInstallationCheckDate());
 
-        assertThat(testResult.getDefects().get(0).getLocation().getLateral()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getVertical()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getRowNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getAxleNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getHorizontal()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getSeatNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getLongitudinal()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getCustomDefect().get(0).getDefectName()).isEqualTo(cd.getDefectName());
+            assertThat(testResult.getCustomDefect().get(0).getDefectNotes()).isEqualTo(cd.getDefectNotes());
+            assertThat(testResult.getCustomDefect().get(0).getReferenceNumber()).isEqualTo(cd.getReferenceNumber());
 
-        assertThat(testResult.getDefects().get(0).getProhibitionIssued()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getDefects().get(0).isPrs()).isEqualTo(true);
+            assertThat(testResult.getDefects().get(0).getNotes()).isEqualTo(td.getNotes());
+            assertThat(testResult.getDefects().get(0).getDefect().getImNumber()).isEqualTo(Integer.valueOf(defect.getImNumber()));
+            assertThat(testResult.getDefects().get(0).getDefect().getItemNumber()).isEqualTo(Integer.valueOf(defect.getItemNumber()));
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyId()).isEqualTo(defect.getDeficiencyID());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyRef()).isEqualTo(defect.getDeficiencyRef());
+            assertThat(testResult.getDefects().get(0).getDefect().getImDescription()).isEqualTo(defect.getImDescription());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyText()).isEqualTo(defect.getDeficiencyText());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencySubId()).isEqualTo(defect.getDeficiencySubID());
+            assertThat(testResult.getDefects().get(0).getDefect().getItemDescription()).isEqualTo(defect.getItemDescription());
+            assertThat(testResult.getDefects().get(0).getDefect().isStdForProhibition()).isEqualTo(true);
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyCategory()).isEqualTo(defect.getDeficiencyCategory());
+
+            assertThat(testResult.getDefects().get(0).getLocation().getLateral()).isEqualTo(location.getLateral());
+            assertThat(testResult.getDefects().get(0).getLocation().getVertical()).isEqualTo(location.getVertical());
+            assertThat(testResult.getDefects().get(0).getLocation().getRowNumber()).isEqualTo(Integer.valueOf(location.getRowNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getAxleNumber()).isEqualTo(Integer.valueOf(location.getAxleNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getHorizontal()).isEqualTo(location.getHorizontal());
+            assertThat(testResult.getDefects().get(0).getLocation().getSeatNumber()).isEqualTo(Integer.valueOf(location.getSeatNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getLongitudinal()).isEqualTo(location.getLongitudinal());
+
+            assertThat(testResult.getDefects().get(0).getProhibitionIssued()).isEqualTo(true);
+        }
     }
 
     @Title("VOTT-9 - AC1 - TC32 - Happy Path - RetrieveTestHistoryUsingVrmTest")
     @Test
-    public void RetrieveTestHistoryUsingVrmTest() {
+    public void RetrieveTestHistoryUsingVrmTest() throws InterruptedException {
 
-        String response =
-                givenAuth(token, xApiKey)
-                        .header("content-type", "application/json")
-                        .queryParam("vinNumber", "B2C1C11"). // todo enter paramed vin
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        Response response;
 
-                        //send request
-                                when().//log().all().
-                        get().
+        do {
+            response =
+                    givenAuth(token, xApiKey)
+                            .header("content-type", "application/json")
+                            .queryParam("VehicleRegMark", validVehicleRegMark). // todo enter paramed vin
 
-                        //verification
-                                then().//log().all().
-                        statusCode(200).
-                        extract().response().asString();
+                            //send request
+                                    when().//log().all().
+                            get().
+
+                            //verification
+                                    then().//log().all().
+                            statusCode(200).
+                            extract().response();
+            statusCode = response.statusCode();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
+
+        assertEquals(200, statusCode);
 
         Gson gson = GsonInstance.get();
 
-        TestResult testResult  = gson.fromJson(response, TestResult.class);
+        TestResult[] testResultArray  = gson.fromJson(response.asString(), TestResult[].class);
 
-        assertThat(testResult.getTester().getName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTester().getStaffId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTester().getEmailAddress()).isEqualTo(vehicleUpsert.getVin());
+        for (TestResult testResult : testResultArray) {
 
-//        assertThat(testResult.getPreparer().getName()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTester().getName()).isEqualTo(tester.getName());
+            assertThat(testResult.getTester().getStaffId()).isEqualTo(tester.getStaffID());
+            assertThat(testResult.getTester().getEmailAddress()).isEqualTo(tester.getEmailAddress());
 
-        assertThat(testResult.getRegndate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestCode()).isEqualTo(vehicleUpsert.getVin());
+//        assertThat(testResult.getPreparer().getName()).isEqualTo(preparer.getName());
+//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(preparer.getPreparerID());
 
-        assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getRegnDate()).isEqualTo(tr.getRegnDate());
+            assertThat(testResult.getTestCode()).isEqualTo(tr.getTestCode());
 
-        assertThat(testResult.getCreatedAt()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNoOfAxles()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestResult()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestStatus()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCreatedById()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFirstUsedate()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
+            assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-        assertThat(testResult.getFuelEmission().getFuelType()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getModTypeCode()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getFuelEmission().getEmissionStandard()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
+            assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
+            assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
+            assertThat(testResult.getTestStatus()).isEqualTo(tr.getTestStatus());
+            assertThat(testResult.getFirstUseDate()).isEqualTo(tr.getFirstUseDate());
 
-        assertThat(testResult.getLastUpdatedAt()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNumberOfSeats()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getFuelEmission().getFuelType()).isEqualTo(fe.getFuelType());
+            assertThat(testResult.getFuelEmission().getDescription()).isEqualTo(fe.getDescription());
+            assertThat(testResult.getFuelEmission().getModTypeCode()).isEqualTo(fe.getModTypeCode());
+            assertThat(testResult.getFuelEmission().getEmissionStandard()).isEqualTo(fe.getEmissionStandard());
 
-        assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleSize()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleType()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getEuVehicleCategory()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getVehicleClass().getVehicleConfiguration()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestStation().getName()).isEqualTo(ts.getName());
+            assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
+            assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-        assertThat(testResult.getTestExpiryDate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getLastUpdatedById()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getOdometerReading()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCertificateNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getReasonForAbandoning()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getTestAnniversaryDate()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getModificationTypeUsed()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getOdometerReadingUnits()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getTesTypeEndTimestamp()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCountryOfRegistration()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getParticulateTrapFitted()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getReasonForCancellation()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getParticulateTrapSerialNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getAdditionalCommentsForAbandon()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getSeatbeltInstallationCheckDate()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getLastSeatbeltInstallationCheckDate()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
-        assertThat(testResult.getCustomDefect().get(0).getDefectName()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCustomDefect().get(0).getDefectNotes()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getCustomDefect().get(0).getReferenceNumber()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
+            assertThat(testResult.getVehicleClass().getDescription()).isEqualTo(vc.getDescription());
+            assertThat(testResult.getVehicleClass().getVehicleSize()).isEqualTo(vc.getVehicleSize());
+            assertThat(testResult.getVehicleClass().getVehicleType()).isEqualTo(vc.getVehicleType());
+            assertThat(testResult.getVehicleClass().getEuVehicleCategory()).isEqualTo(vc.getEuVehicleCategory());
+            assertThat(testResult.getVehicleClass().getVehicleConfiguration()).isEqualTo(vc.getVehicleConfiguration());
 
-//        assertThat(testResult.getDefects().get(0).getPrs()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getNotes()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getImNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getItemNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyRef()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getImDescription()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyText()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencySubId()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getItemDescription()).isEqualTo(vehicleUpsert.getVin());
-//        assertThat(testResult.getDefects().get(0).getDefect().getStdForProhibition).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyCategory()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getTestExpiryDate()).isEqualTo(tr.getTestExpiryDate());
+            assertThat(testResult.getOdometerReading()).isEqualTo(Integer.valueOf(tr.getOdometerReading()));
+            assertThat(testResult.getCertificateNumber()).isEqualTo(tr.getCertificateNumber());
+            assertThat(testResult.getReasonForAbandoning()).isEqualTo(tr.getReasonForAbandoning());
+            assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
+            assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
+            assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
+            assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
+            assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
+            assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
+            assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
+            assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
+            assertThat(testResult.getParticulateTrapSerialNumber()).isEqualTo(tr.getParticulateTrapSerialNumber());
+            assertThat(testResult.getAdditionalCommentsForAbandon()).isEqualTo(tr.getAdditionalCommentsForAbandon());
+            assertThat(testResult.getSeatbeltInstallationCheckDate()).isEqualTo("true");
+            assertThat(testResult.getLastSeatbeltInstallationCheckDate()).isEqualTo(tr.getLastSeatbeltInstallationCheckDate());
 
-        assertThat(testResult.getDefects().get(0).getLocation().getLateral()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getVertical()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getRowNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getAxleNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getHorizontal()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getSeatNumber()).isEqualTo(vehicleUpsert.getVin());
-        assertThat(testResult.getDefects().get(0).getLocation().getLongitudinal()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getCustomDefect().get(0).getDefectName()).isEqualTo(cd.getDefectName());
+            assertThat(testResult.getCustomDefect().get(0).getDefectNotes()).isEqualTo(cd.getDefectNotes());
+            assertThat(testResult.getCustomDefect().get(0).getReferenceNumber()).isEqualTo(cd.getReferenceNumber());
 
-        assertThat(testResult.getDefects().get(0).getProhibitionIssued()).isEqualTo(vehicleUpsert.getVin());
+            assertThat(testResult.getDefects().get(0).isPrs()).isEqualTo(true);
+            assertThat(testResult.getDefects().get(0).getNotes()).isEqualTo(td.getNotes());
+            assertThat(testResult.getDefects().get(0).getDefect().getImNumber()).isEqualTo(Integer.valueOf(defect.getImNumber()));
+            assertThat(testResult.getDefects().get(0).getDefect().getItemNumber()).isEqualTo(Integer.valueOf(defect.getItemNumber()));
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyId()).isEqualTo(defect.getDeficiencyID());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyRef()).isEqualTo(defect.getDeficiencyRef());
+            assertThat(testResult.getDefects().get(0).getDefect().getImDescription()).isEqualTo(defect.getImDescription());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyText()).isEqualTo(defect.getDeficiencyText());
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencySubId()).isEqualTo(defect.getDeficiencySubID());
+            assertThat(testResult.getDefects().get(0).getDefect().getItemDescription()).isEqualTo(defect.getItemDescription());
+            assertThat(testResult.getDefects().get(0).getDefect().isStdForProhibition()).isEqualTo(true);
+            assertThat(testResult.getDefects().get(0).getDefect().getDeficiencyCategory()).isEqualTo(defect.getDeficiencyCategory());
+
+            assertThat(testResult.getDefects().get(0).getLocation().getLateral()).isEqualTo(location.getLateral());
+            assertThat(testResult.getDefects().get(0).getLocation().getVertical()).isEqualTo(location.getVertical());
+            assertThat(testResult.getDefects().get(0).getLocation().getRowNumber()).isEqualTo(Integer.valueOf(location.getRowNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getAxleNumber()).isEqualTo(Integer.valueOf(location.getAxleNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getHorizontal()).isEqualTo(location.getHorizontal());
+            assertThat(testResult.getDefects().get(0).getLocation().getSeatNumber()).isEqualTo(Integer.valueOf(location.getSeatNumber()));
+            assertThat(testResult.getDefects().get(0).getLocation().getLongitudinal()).isEqualTo(location.getLongitudinal());
+
+            assertThat(testResult.getDefects().get(0).getProhibitionIssued()).isEqualTo(true);
+        }
     }
 
     @Title("VOTT-9 - AC1 - TC33 - RetrieveTestHistoryBadJwtTokenTest")
@@ -391,7 +425,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         //prep request
         givenAuth(token + 1, xApiKey)
                 .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", validVINNumber).
+                .queryParam("vinNumber", validVINNumber).
 
                 //send request
                         when().//log().all().
@@ -429,7 +463,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         givenAuth(token, xApiKey)
                 .header("content-type", "application/json")
                 .queryParam("vinNumber", validVINNumber)
-                .queryParam("VehicleRegMark", validVINNumber).
+                .queryParam("VehicleRegMark", validVehicleRegMark).
 
                 //send request
                         when().//log().all().
@@ -495,7 +529,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 //verification
                         then().//log().all().
                 statusCode(404).
-                body(equalTo("Vehicle was not found"));
+                body(equalTo("No tests found"));
     }
 
     @Title("VOTT-9 - AC1 - TC39 - RetrieveTestHistoryVinNumberDoesntExistTest")
@@ -514,7 +548,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 //verification
                         then().//log().all().
                 statusCode(404).
-                body(equalTo("Vehicle was not found"));
+                body(equalTo("No tests found"));
     }
 
     @Title("VOTT-9 - AC1 - TC40 - RetrieveTestHistoryNonPrintableCharsParamsTest")
@@ -536,6 +570,17 @@ public class RetrieveTestHistoryClientCredsTokenTest {
                 body(equalTo("Vehicle identifier is invalid"));
     }
 
+    private CustomDefect newTestCustomDefect() {
+        CustomDefect cd = new CustomDefect();
+
+        cd.setTestResultID(String.valueOf(testResultPK));
+        cd.setReferenceNumber("444444");
+        cd.setDefectName("Test Custom Defect");
+        cd.setDefectNotes("Test Custom Defect Notes");
+
+        return cd;
+    }
+
     private vott.models.dao.Vehicle newTestVehicle() {
         vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
 
@@ -547,46 +592,35 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         return vehicle;
     }
 
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
+    private FuelEmission newTestFuelEmission() {
+        FuelEmission fe = new FuelEmission();
 
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
+        fe.setModTypeCode("a");
+        fe.setDescription("Test Description");
+        fe.setEmissionStandard("Test Standard");
+        fe.setFuelType("Petrol");
 
-        return mm;
+        return fe;
     }
 
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
+    private TestStation newTestTestStation() {
+        TestStation ts = new TestStation();
 
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
+        ts.setPNumber("987654321");
+        ts.setName("Test Test Station");
+        ts.setType("Test");
 
-        return identity;
+        return ts;
     }
 
-    private ContactDetails newTestContactDetails() {
-        ContactDetails cd = new ContactDetails();
+    private Tester newTestTester() {
+        Tester tester = new Tester();
 
-        cd.setName("Test Name");
-        cd.setAddress1("Test Address 1");
-        cd.setAddress2("Test Address 2");
-        cd.setPostTown("Test Post Town");
-        cd.setAddress3("Test Address 3");
-        cd.setEmailAddress("TestEmailAddress");
-        cd.setTelephoneNumber("8888888");
-        cd.setFaxNumber("99999999");
+        tester.setStaffID("1");
+        tester.setName("Auto Test");
+        tester.setEmailAddress("auto@test.com");
 
-        return cd;
+        return tester;
     }
 
     private VehicleClass newTestVehicleClass() {
@@ -602,169 +636,121 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         return vc;
     }
 
-    private vott.models.dao.TechnicalRecord newTestTechnicalRecord() {
-        vott.models.dao.TechnicalRecord tr = new vott.models.dao.TechnicalRecord();
+    private TestType newTestTestType() {
+        TestType tt = new TestType();
+
+        tt.setTestTypeClassification("Test Test Type");
+        tt.setTestTypeName("Test Name");
+
+        return tt;
+    }
+
+    private Preparer newTestPreparer() {
+        Preparer preparer = new Preparer();
+
+        preparer.setPreparerID("1");
+        preparer.setName("Test Name");
+
+        return preparer;
+    }
+
+    private Identity newTestIdentity() {
+        Identity identity = new Identity();
+
+        identity.setIdentityID("55555");
+        identity.setName("Test Name");
+
+        return identity;
+    }
+
+    private vott.models.dao.TestResult newTestTestResult() {
+        vott.models.dao.TestResult tr = new vott.models.dao.TestResult();
 
         tr.setVehicleID(String.valueOf(vehiclePK));
-        tr.setRecordCompleteness("Complete");
+        tr.setFuelEmissionID(String.valueOf(fuelEmissionPK));
+        tr.setTestStationID(String.valueOf(testStationPK));
+        tr.setTesterID(String.valueOf(testerPK));
+        tr.setPreparerID(String.valueOf(preparerPK));
+        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
+        tr.setTestTypeID(String.valueOf(testTypePK));
+        tr.setTestStatus("Test Pass");
+        tr.setReasonForCancellation("Automation Test Run");
+        tr.setNumberOfSeats("3");
+        tr.setOdometerReading("900");
+        tr.setOdometerReadingUnits("Test Units");
+        tr.setCountryOfRegistration("Test Country");
+        tr.setNoOfAxles("4");
+        tr.setRegnDate("2100-12-31");
+        tr.setFirstUseDate("2100-12-31");
         tr.setCreatedAt("2021-01-01 00:00:00.000000");
         tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
-        tr.setMakeModelID(String.valueOf(makeModelPK));
-        tr.setFunctionCode("A");
-        tr.setOffRoad("1");
-        tr.setNumberOfWheelsDriven("4");
-        tr.setEmissionsLimit("Test Emission Limit");
-        tr.setDepartmentalVehicleMarker("1");
-        tr.setAlterationMarker("1");
-        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
-        tr.setVariantVersionNumber("Test Variant Number");
-        tr.setGrossEecWeight("1200");
-        tr.setTrainEecWeight("1400");
-        tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
-        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufactureYear("2021");
-        tr.setRegnDate("2021-01-01");
-        tr.setFirstUseDate("2021-01-01");
-        tr.setCoifDate("2021-01-01");
-        tr.setNtaNumber("NTA Number");
-        tr.setCoifSerialNumber("55555");
-        tr.setCoifCertifierName("88888");
-        tr.setApprovalType("111");
-        tr.setApprovalTypeNumber("ABC11111");
-        tr.setVariantNumber("Test Variant");
-        tr.setConversionRefNo("10");
-        tr.setSeatsLowerDeck("2");
-        tr.setSeatsUpperDeck("3");
-        tr.setStandingCapacity("15");
-        tr.setSpeedRestriction("60");
-        tr.setSpeedLimiterMrk("1");
-        tr.setTachoExemptMrk("1");
-        tr.setDispensations("Test Dispensations");
-        tr.setRemarks("Automation Test Remarks");
-        tr.setReasonForCreation("Automation Test ");
-        tr.setStatusCode("B987");
-        tr.setUnladenWeight("1400");
-        tr.setGrossKerbWeight("1400");
-        tr.setGrossLadenWeight("1400");
-        tr.setGrossGbWeight("1400");
-        tr.setGrossDesignWeight("1400");
-        tr.setTrainGbWeight("1400");
-        tr.setTrainDesignWeight("1400");
-        tr.setMaxTrainGbWeight("1400");
-        tr.setMaxTrainDesignWeight("1400");
-        tr.setMaxLoadOnCoupling("1400");
-        tr.setFrameDescription("Test Automation");
-        tr.setTyreUseCode("A1");
-        tr.setRoadFriendly("1");
-        tr.setDrawbarCouplingFitted("1");
-        tr.setEuroStandard("Y555");
-        tr.setSuspensionType("Y");
-        tr.setCouplingType("B");
-        tr.setLength("100");
-        tr.setHeight("50");
-        tr.setWidth("50");
-        tr.setFrontAxleTo5thWheelCouplingMin("55");
-        tr.setFrontAxleTo5thWheelCouplingMax("65");
-        tr.setFrontAxleTo5thWheelMin("45");
-        tr.setFrontAxleTo5thWheelMax("65");
-        tr.setFrontAxleToRearAxle("15");
-        tr.setRearAxleToRearTrl("25");
-        tr.setCouplingCenterToRearAxleMin("25");
-        tr.setCouplingCenterToRearAxleMax("85");
-        tr.setCouplingCenterToRearTrlMin("25");
-        tr.setCouplingCenterToRearTrlMax("85");
-        tr.setCentreOfRearmostAxleToRearOfTrl("25");
-        tr.setNotes("Test Notes");
-        tr.setPurchaserNotes("Purchaser Notes");
-        tr.setManufacturerNotes("Manufactuer Notes");
-        tr.setNoOfAxles("3");
-        tr.setBrakeCode("XXXXX");
-        tr.setBrakes_dtpNumber("DTP111");
-        tr.setBrakes_loadSensingValve("1");
-        tr.setBrakes_antilockBrakingSystem("1");
+        tr.setTestCode("111");
+        tr.setTestNumber("A111B222");
+        tr.setCertificateNumber("A111B222");
+        tr.setSecondaryCertificateNumber("A111B222");
+        tr.setTestExpiryDate("2022-01-01");
+        tr.setTestAnniversaryDate("2022-01-01");
+        tr.setTestTypeStartTimestamp("2022-01-01 00:00:00.000000");
+        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00.000000");
+        tr.setNumberOfSeatbeltsFitted("2");
+        tr.setLastSeatbeltInstallationCheckDate("2022-01-01");
+        tr.setSeatbeltInstallationCheckDate("1");
+        tr.setTestResult("Auto Test");
+        tr.setReasonForAbandoning("Test Automation Run");
+        tr.setAdditionalNotesRecorded("Additional Test Notes");
+        tr.setAdditionalCommentsForAbandon("Additional Test Comments");
+        tr.setParticulateTrapFitted("Particulate Test");
+        tr.setParticulateTrapSerialNumber("ABC123");
+        tr.setModificationTypeUsed("Test Modification");
+        tr.setSmokeTestKLimitApplied("Smoke Test");
         tr.setCreatedByID(String.valueOf(identityPK));
         tr.setLastUpdatedByID(String.valueOf(identityPK));
-        tr.setUpdateType("AutoTest");
-        tr.setNumberOfSeatbelts("3");
-        tr.setSeatbeltInstallationApprovalDate("2021-01-01");
 
         return tr;
     }
 
-    private PSVBrakes newTestPSVBrakes() {
-        PSVBrakes psv = new PSVBrakes();
+    private Defect newTestDefect() {
+        Defect defect = new Defect();
 
-        psv.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        psv.setBrakeCodeOriginal("222");
-        psv.setBrakeCode("Test");
-        psv.setDataTrBrakeOne("Test Data");
-        psv.setDataTrBrakeTwo("Test Data");
-        psv.setDataTrBrakeThree("Test Data");
-        psv.setRetarderBrakeOne("Test Data");
-        psv.setRetarderBrakeTwo("Test Data");
-        psv.setServiceBrakeForceA("11");
-        psv.setSecondaryBrakeForceA("22");
-        psv.setParkingBrakeForceA("33");
-        psv.setServiceBrakeForceB("44");
-        psv.setSecondaryBrakeForceB("55");
-        psv.setParkingBrakeForceB("66");
+        defect.setImNumber("123");
+        defect.setImDescription("Test IM Description");
+        defect.setItemNumber("5555");
+        defect.setItemDescription("Test Item Description");
+        defect.setDeficiencyRef("Test Reference");
+        defect.setDeficiencyID("1");
+        defect.setDeficiencySubID("444");
+        defect.setDeficiencyCategory("Category");
+        defect.setDeficiencyText("Test Test");
+        defect.setStdForProhibition("1");
 
-        return psv;
+        return defect;
     }
 
-    private Axles newTestAxles() {
-        Axles axles = new Axles();
+    private Location newTestLocation() {
+        Location location = new Location();
 
-        axles.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        axles.setTyreID(String.valueOf(tyrePK));
-        axles.setAxleNumber("222");
-        axles.setParkingBrakeMrk("1");
-        axles.setKerbWeight("1200");
-        axles.setLadenWeight("1500");
-        axles.setGbWeight("1200");
-        axles.setEecWeight("1500");
-        axles.setDesignWeight("1200");
-        axles.setBrakeActuator("10");
-        axles.setLeverLength("10");
-        axles.setSpringBrakeParking("1");
+        location.setVertical("TestV");
+        location.setHorizontal("TestH");
+        location.setLateral("TestLat");
+        location.setLongitudinal("TestL");
+        location.setRowNumber("10");
+        location.setSeatNumber("20");
+        location.setAxleNumber("30");
 
-        return axles;
+        return location;
     }
 
-    private Tyre newTestTyre() {
-        Tyre tyre = new Tyre();
+    private TestDefect newTestTestDefect() {
+        TestDefect td = new TestDefect();
 
-        tyre.setTyreSize("456");
-        tyre.setPlyRating("10");
-        tyre.setFitmentCode("55555");
-        tyre.setDataTrAxles("Test Data");
-        tyre.setSpeedCategorySymbol("1");
-        tyre.setTyreCode("88888");
+        td.setTestResultID(String.valueOf(testResultPK));
+        td.setDefectID(String.valueOf(defectPK));
+        td.setLocationID(String.valueOf(locationPK));
+        td.setNotes("Test Notes");
+        td.setPrs("1");
+        td.setProhibitionIssued("1");
 
-        return tyre;
-    }
-
-    private AxleSpacing newTestAxleSpacing() {
-        AxleSpacing as = new AxleSpacing();
-
-        as.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        as.setAxles("Test");
-        as.setValue("120");
-
-        return as;
-    }
-
-    private Plate newTestPlate() {
-        Plate plate = new Plate();
-        plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        plate.setPlateSerialNumber("666666");
-        plate.setPlateIssueDate("2100-12-31");
-        plate.setPlateReasonForIssue("Test Reason");
-        plate.setPlateIssuer("Auto Test");
-
-        return plate;
+        return td;
     }
 
     private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
@@ -774,12 +760,14 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         };
     }
 
-    private Callable<Boolean> techRecordIsPresentInDatabase(String vehicleID) {
+    private Callable<Boolean> testResultIsPresentInDatabase(String vin) {
         return () -> {
-            List<vott.models.dao.TechnicalRecord> testResults = technicalRecordRepository.select(String.format(
-                    "SELECT *\n"
-                            + "FROM `technical_record`\n"
-                            + "WHERE `vehicle_id` = '%s'", vehicleID
+            List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
+                    "SELECT `test_result`.*\n"
+                            + "FROM `vehicle`\n"
+                            + "JOIN `test_result`\n"
+                            + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
+                            + "WHERE `vehicle`.`vin` = '%s'", vin
             ));
             return !testResults.isEmpty();
         };
