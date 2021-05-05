@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,6 +90,7 @@ public class DownloadMotCertificateImplicitTest {
         validTestNumber = getTestNumber(validVINNumber);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC1 - Happy Path - Download Test Certificate Using Implicit JWT Token")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
@@ -146,6 +148,7 @@ public class DownloadMotCertificateImplicitTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC2 - Download Test Certificate Using a bad implicit JWT Token")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
@@ -166,6 +169,7 @@ public class DownloadMotCertificateImplicitTest {
             body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC3 - Download Test Certificate without an implicit JWT token")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
@@ -187,6 +191,7 @@ public class DownloadMotCertificateImplicitTest {
                 body("message", equalTo("Unauthorized"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC4 - Download Test Certificate Using implicit JWT Token without providing a VIN")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
@@ -205,6 +210,7 @@ public class DownloadMotCertificateImplicitTest {
             statusCode(400);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC5 - Download Test Certificate Using implicit JWT Token without providing a test number")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
@@ -223,6 +229,7 @@ public class DownloadMotCertificateImplicitTest {
             statusCode(400);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC6 - Download Test Certificate Using Implicit JWT Token without providing an api key")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
@@ -243,6 +250,7 @@ public class DownloadMotCertificateImplicitTest {
             body("message", equalTo("Forbidden"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC7 - Download Test Certificate Using Implicit JWT Token with wrong api key")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
@@ -263,6 +271,7 @@ public class DownloadMotCertificateImplicitTest {
             body("message", equalTo("Forbidden"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC8 - Download Test Certificate Using Implicit JWT Token for a test number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
@@ -283,6 +292,7 @@ public class DownloadMotCertificateImplicitTest {
             body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC9 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
@@ -304,6 +314,7 @@ public class DownloadMotCertificateImplicitTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC10 - Download Test Certificate Using Implicit JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
@@ -324,6 +335,7 @@ public class DownloadMotCertificateImplicitTest {
             body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC11 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
@@ -345,6 +357,7 @@ public class DownloadMotCertificateImplicitTest {
                 body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC12 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
@@ -365,6 +378,7 @@ public class DownloadMotCertificateImplicitTest {
                 body(equalTo("VIN is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC13 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (containing special chars)")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
@@ -385,6 +399,7 @@ public class DownloadMotCertificateImplicitTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC14 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
@@ -403,6 +418,7 @@ public class DownloadMotCertificateImplicitTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC15 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
@@ -421,6 +437,7 @@ public class DownloadMotCertificateImplicitTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC16 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
@@ -439,6 +456,7 @@ public class DownloadMotCertificateImplicitTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC17 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {

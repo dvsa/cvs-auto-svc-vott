@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,6 +83,7 @@ public class PSVBrakesRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC35 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingIdenticalPSVBrakesReturnsSamePk() {
@@ -94,6 +96,7 @@ public class PSVBrakesRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC36 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingDifferentTechRecordIDReturnsDifferentPk() {
@@ -115,6 +118,7 @@ public class PSVBrakesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC37 - Testing psvbrakes unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {

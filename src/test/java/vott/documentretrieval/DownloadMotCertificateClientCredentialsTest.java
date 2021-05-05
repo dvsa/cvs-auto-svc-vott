@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,6 +89,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         validTestNumber = getTestNumber(validVINNumber);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC18 - Happy Path - Download Test Certificate Using Client Credentials generated JWT Token")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
@@ -144,6 +146,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC19 - Download Test Certificate Using a bad client creds JWT Token")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
@@ -164,6 +167,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC20 - Download Test Certificate without a client credentials generated token")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
@@ -185,6 +189,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Unauthorized"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC21 - Download Test Certificate Using Client Credentials generated JWT Token without providing a VIN")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
@@ -204,6 +209,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(400);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC22 - Download Test Certificate Using Client Credentials generated JWT Token without providing a test number")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
@@ -223,6 +229,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(400);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC23 - Download Test Certificate Using Client Credentials generated JWT Token without providing an api key")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
@@ -244,6 +251,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Forbidden"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC24 - Download Test Certificate Using Client Credentials generated JWT Token with wrong api key")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
@@ -264,6 +272,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body("message", equalTo("Forbidden"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC25 - Download Test Certificate Using Client Credentials generated JWT Token for a test number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
@@ -284,6 +293,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC26 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format test number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
@@ -305,6 +315,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC27 - Download Test Certificate Using Client Credentials generated JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
@@ -325,6 +336,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC28 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format vin number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
@@ -345,6 +357,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("NoSuchKey"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC29 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
@@ -366,6 +379,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("VIN is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC30 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format test number (containing special chars)")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
@@ -387,6 +401,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC31 - Test POST request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
@@ -406,6 +421,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC32 - Test PUT request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
@@ -424,6 +440,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC33 - Test PATCH request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
@@ -442,6 +459,7 @@ public class DownloadMotCertificateClientCredentialsTest {
                 statusCode(405);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC34 - Test DELETE request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {

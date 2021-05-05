@@ -1,4 +1,4 @@
-package vott.enquiryservicetests;
+package vott.enquiry;
 
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
