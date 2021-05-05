@@ -44,7 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class DownloadMotCertificateUserAuthTest {
+public class DownloadMotCertificateImplicitTest {
 
     // Variable + Constant Test Data Setup
     private VottConfiguration configuration = VottConfiguration.local();
@@ -89,7 +89,7 @@ public class DownloadMotCertificateUserAuthTest {
         validTestNumber = getTestNumber(validVINNumber);
     }
 
-    @Title("VOTT-5 - AC1 - TC1 - Happy Path - DownloadTestCertificateTest")
+    @Title("VOTT-5 - AC1 - TC1 - Happy Path - Download Test Certificate Using Implicit JWT Token")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
 
@@ -146,7 +146,7 @@ public class DownloadMotCertificateUserAuthTest {
         }
     }
 
-    @Title("VOTT-5 - AC1 - TC2 - DownloadTestCertificateBadJwtTokenTest")
+    @Title("VOTT-5 - AC1 - TC2 - Download Test Certificate Using a bad implicit JWT Token")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
 
@@ -166,7 +166,7 @@ public class DownloadMotCertificateUserAuthTest {
             body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
     }
 
-    @Title("VOTT-5 - AC1 - TC3 - DownloadTestCertificateNoJwtTokenTest")
+    @Title("VOTT-5 - AC1 - TC3 - Download Test Certificate without an implicit JWT token")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
 
@@ -187,7 +187,7 @@ public class DownloadMotCertificateUserAuthTest {
                 body("message", equalTo("Unauthorized"));
     }
 
-    @Title("VOTT-5 - AC1 - TC4 - DownloadTestCertificateNoVinNumberTest")
+    @Title("VOTT-5 - AC1 - TC4 - Download Test Certificate Using implicit JWT Token without providing a VIN")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
 
@@ -205,7 +205,7 @@ public class DownloadMotCertificateUserAuthTest {
             statusCode(400);
     }
 
-    @Title("VOTT-5 - AC1 - TC5 - DownloadTestCertificateNoTestNumberTest")
+    @Title("VOTT-5 - AC1 - TC5 - Download Test Certificate Using implicit JWT Token without providing a test number")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
 
@@ -223,7 +223,7 @@ public class DownloadMotCertificateUserAuthTest {
             statusCode(400);
     }
 
-    @Title("VOTT-5 - AC1 - TC6 - DownloadTestCertificateNoAPIKeyTest")
+    @Title("VOTT-5 - AC1 - TC6 - Download Test Certificate Using Implicit JWT Token without providing an api key")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
 
@@ -243,7 +243,7 @@ public class DownloadMotCertificateUserAuthTest {
             body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-5 - AC1 - TC7 - DownloadTestCertificateInvalidAPIKeyTest")
+    @Title("VOTT-5 - AC1 - TC7 - Download Test Certificate Using Implicit JWT Token with wrong api key")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
 
@@ -263,7 +263,7 @@ public class DownloadMotCertificateUserAuthTest {
             body("message", equalTo("Forbidden"));
     }
 
-    @Title("VOTT-5 - AC1 - TC8 - DownloadTestCertificateTestNumberDoesntExistTest")
+    @Title("VOTT-5 - AC1 - TC8 - Download Test Certificate Using Implicit JWT Token for a test number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
 
@@ -283,7 +283,7 @@ public class DownloadMotCertificateUserAuthTest {
             body(equalTo("NoSuchKey"));
     }
 
-    @Title("VOTT-5 - AC1 - TC9 - DownloadTestCertificateNumericTestNumberTest")
+    @Title("VOTT-5 - AC1 - TC9 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
 
@@ -304,7 +304,7 @@ public class DownloadMotCertificateUserAuthTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
-    @Title("VOTT-5 - AC1 - TC10 - DownloadTestCertificateVinNumberDoesntExistTest")
+    @Title("VOTT-5 - AC1 - TC10 - Download Test Certificate Using Implicit JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
 
@@ -324,7 +324,7 @@ public class DownloadMotCertificateUserAuthTest {
             body(equalTo("NoSuchKey"));
     }
 
-    @Title("VOTT-5 - AC1 - TC11 - DownloadTestCertificateNumericVINNumberTest")
+    @Title("VOTT-5 - AC1 - TC11 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
 
@@ -345,14 +345,14 @@ public class DownloadMotCertificateUserAuthTest {
                 body(equalTo("NoSuchKey"));
     }
 
-    @Title("VOTT-5 - AC1 - TC12 - DownloadTestCertificateVinNumberSpecialCharsTest")
+    @Title("VOTT-5 - AC1 - TC12 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
 
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
-                .queryParam("vinNumber", "T12765@!'") //https://www.oreilly.com/library/view/java-cookbook/0596001703/ch03s12.html
+                .queryParam("vinNumber", "T12765@!'")
                 .queryParam("testNumber", validTestNumber).
 
                 //send request
@@ -365,14 +365,14 @@ public class DownloadMotCertificateUserAuthTest {
                 body(equalTo("VIN is in incorrect format"));
     }
 
-    @Title("VOTT-5 - AC1 - TC13 - DownloadTestCertificateTestNumberSpecialCharsTest")
+    @Title("VOTT-5 - AC1 - TC13 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (containing special chars)")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
 
         //prep request
         givenAuth(token, xApiKey)
                 .header("content-type", "application/pdf")
-                .queryParam("vinNumber", validVINNumber) //https://www.oreilly.com/library/view/java-cookbook/0596001703/ch03s12.html
+                .queryParam("vinNumber", validVINNumber)
                 .queryParam("testNumber", "123Abc@!/").
 
                 //send request
@@ -385,7 +385,7 @@ public class DownloadMotCertificateUserAuthTest {
                 body(equalTo("Test number is in incorrect format"));
     }
 
-    @Title("VOTT-5 - AC1 - TC14 - DownloadTestCertificatePostRequestTest")
+    @Title("VOTT-5 - AC1 - TC14 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
 
@@ -403,7 +403,7 @@ public class DownloadMotCertificateUserAuthTest {
                 statusCode(405);
     }
 
-    @Title("VOTT-5 - AC1 - TC15 - DownloadTestCertificatePutRequestTest")
+    @Title("VOTT-5 - AC1 - TC15 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
 
@@ -421,7 +421,7 @@ public class DownloadMotCertificateUserAuthTest {
                 statusCode(405);
     }
 
-    @Title("VOTT-5 - AC1 - TC16 - DownloadTestCertificatePatchRequestTest")
+    @Title("VOTT-5 - AC1 - TC16 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
 
@@ -439,7 +439,7 @@ public class DownloadMotCertificateUserAuthTest {
                 statusCode(405);
     }
 
-    @Title("VOTT-5 - AC1 - TC17 - DownloadTestCertificateDeleteRequestTest")
+    @Title("VOTT-5 - AC1 - TC17 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
 
