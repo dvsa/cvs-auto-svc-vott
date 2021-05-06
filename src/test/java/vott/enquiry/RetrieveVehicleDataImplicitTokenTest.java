@@ -155,7 +155,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
     }
 
     @WithTag("Vott")
-    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vin")
+    @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data Using implicit token and a valid vin")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -326,7 +326,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
     }
 
     @WithTag("Vott")
-    @Title("VOTT-9 - AC1 - TC2 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vrm")
+    @Title("VOTT-9 - AC1 - TC2 - Happy Path - Retrieve Vehicle Data Using implicit token and a valid vrm")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
 
@@ -485,7 +485,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
     }
 
     @WithTag("Vott")
-    @Title("VOTT-9 - AC1 - TC3 - Retrieve Vehicle Data Using a bad client creds JWT Token")
+    @Title("VOTT-9 - AC1 - TC3 - Retrieve Vehicle Data Using a bad implicit JWT Token")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
 

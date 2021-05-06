@@ -500,7 +500,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
     }
 
     @WithTag("Vott")
-    @Title("VOTT-9 - AC1 - TC27 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
+    @Title("VOTT-9 - AC1 - TC27 - Retrieve Test History Using an implicit JWT Token and an invalid api key")
     @Test
     public void RetrieveTestHistoryInvalidAPIKey() {
 
