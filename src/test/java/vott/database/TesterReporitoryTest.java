@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Tester;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class TesterReporitoryTest {
     @Title("VOTT-8 - AC1 - TC47 - Testing tester unique index compound key")
     @Test
     public void upsertingIdenticalTesterReturnsSamePk() {
-        int primaryKey1 = testerRepository.partialUpsert(newTestTester());
-        int primaryKey2 = testerRepository.partialUpsert(newTestTester());
+        int primaryKey1 = testerRepository.partialUpsert(SeedData.newTestTester());
+        int primaryKey2 = testerRepository.partialUpsert(SeedData.newTestTester());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class TesterReporitoryTest {
     @Title("VOTT-8 - AC1 - TC48 - Testing tester unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Tester tester1 = newTestTester();
+        Tester tester1 = SeedData.newTestTester();
 
-        Tester tester2 = newTestTester();
+        Tester tester2 = SeedData.newTestTester();
         tester2.setName("Auto Test 2");
 
         int primaryKey1 = testerRepository.partialUpsert(tester1);
@@ -68,15 +69,5 @@ public class TesterReporitoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private Tester newTestTester() {
-        Tester tester = new Tester();
-
-        tester.setStaffID("1");
-        tester.setName("Auto Test");
-        tester.setEmailAddress("auto@test.com");
-
-        return tester;
     }
 }
