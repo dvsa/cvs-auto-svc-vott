@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,7 @@ public class IdentityRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC19 - Testing identity unique index compound key")
     @Test
     public void upsertingIdenticalIdentityReturnsSamePk() {
@@ -54,6 +56,7 @@ public class IdentityRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC20 - Testing identity unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {

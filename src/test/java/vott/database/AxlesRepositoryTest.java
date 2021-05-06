@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,6 +94,7 @@ public class AxlesRepositoryTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC5 - Testing axles unique index compound key")
     @Test
     public void upsertingIdenticalAxleReturnsSamePk() {
@@ -105,6 +107,7 @@ public class AxlesRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC6 - Testing axles unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
@@ -124,6 +127,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC7 - Testing axles unique index compound key")
     @Test
     public void upsertingNewTyreIDReturnsDifferentPk() {
@@ -143,6 +147,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC8 - Testing axles unique index compound key")
     @Test
     public void upsertingNewAxleNumberReturnsDifferentPk() {
@@ -160,6 +165,7 @@ public class AxlesRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC9 - Testing axles unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {

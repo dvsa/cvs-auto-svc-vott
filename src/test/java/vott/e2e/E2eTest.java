@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +72,8 @@ public class E2eTest {
         testResultRepository = new TestResultRepository(connectionFactory);
     }
 
-    @Title("VOTT-10 - AC1 - TC1 - e2eTestHgv")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC1 - End to End for HGV")
     @Test
     public void e2eTestHgv() {
         TechRecordPOST hgvTechRecord = hgvTechRecord();
@@ -80,7 +82,8 @@ public class E2eTest {
         e2eTest(hgvTechRecord, hgvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC2 - e2eTestPsv")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC2 - End to End Test for PSV")
     @Test
     public void e2eTestPsv() {
         TechRecordPOST psvTechRecord = psvTechRecord();
@@ -89,7 +92,8 @@ public class E2eTest {
         e2eTest(psvTechRecord, psvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC3 - e2eTestTrl")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC3 - End to End Test for Trailers ")
     @Test
     public void e2eTestTrl() {
         TechRecordPOST trlTechRecord = trlTechRecord();

@@ -6,6 +6,8 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,6 +87,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         validTestNumber = getTestNumber(validVIN);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC18 - Happy Path - Download Test Certificate Using Client Credentials generated JWT Token")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
@@ -130,49 +133,56 @@ public class DownloadMotCertificateClientCredentialsTest {
         }
     }
 
-    @Title("VOTT-5 - AC1 - TC19 - DownloadTestCertificateBadJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC19 - Download Test Certificate Using a bad client creds JWT Token")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(validVIN, validTestNumber, token+1);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC20 - DownloadTestCertificateNoJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC20 - Download Test Certificate without a client credentials generated token")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumberNoJWT(validVIN, validTestNumber);
         assertEquals(401, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC21 - DownloadTestCertificateNoVinNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC21 - Download Test Certificate Using Client Credentials generated JWT Token without providing a VIN")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingTestNumber(validTestNumber, token);
         assertEquals(400, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC22 - DownloadTestCertificateNoTestNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC22 - Download Test Certificate Using Client Credentials generated JWT Token without providing a test number")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVIN(validVIN, token);
         assertEquals(400, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC23 - DownloadTestCertificateNoAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC23 - Download Test Certificate Using Client Credentials generated JWT Token without providing an api key")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
         Response response = DocRetrievalAPI.getMOTCertNoAPIKey(validVIN, validTestNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC24 - DownloadTestCertificateInvalidAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC24 - Download Test Certificate Using Client Credentials generated JWT Token with wrong api key")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
         Response response = DocRetrievalAPI.getMOTCertInvalidAPIKey(validVIN, validTestNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC25 - DownloadTestCertificateTestNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC25 - Download Test Certificate Using Client Credentials generated JWT Token for a test number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
         String invalidTestNumber = "W00A00000";
@@ -181,7 +191,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC26 - DownloadTestCertificateNumericTestNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC26 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format test number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
         String numericTestNumber = "123456789";
@@ -190,7 +201,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("Test number is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC27 - DownloadTestCertificateVinNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC27 - Download Test Certificate Using Client Credentials generated JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
         String invalidVIN = "T123456789";
@@ -199,7 +211,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC28 - DownloadTestCertificateNumericVINNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC28 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format vin number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
         String numericVIN = "123456789";
@@ -208,7 +221,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC29 - DownloadTestCertificateVinNumberSpecialCharsTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC29 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
         String specialCharVIN = "T12765@!'";
@@ -217,7 +231,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("VIN is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC30 - DownloadTestCertificateTestNumberSpecialCharsTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC30 - Download Test Certificate Using Client Credentials generated JWT Token with a wrong format test number (containing special chars)")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
         String specialCharTestNumber = "T12765@!'";
@@ -226,28 +241,32 @@ public class DownloadMotCertificateClientCredentialsTest {
         assertEquals("Test number is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC31 - DownloadTestCertificatePostRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC31 - Test POST request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
         Response response = DocRetrievalAPI.postMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC32 - DownloadTestCertificatePutRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC32 - Test PUT request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
         Response response = DocRetrievalAPI.putMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC33 - DownloadTestCertificatePatchRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC33 - Test PATCH request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
         Response response = DocRetrievalAPI.patchMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC34 - DownloadTestCertificateDeleteRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC34 - Test DELETE request for document retrieval service using client creds token")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
         Response response = DocRetrievalAPI.deleteMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);

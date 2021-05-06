@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ import static org.junit.Assert.assertEquals;
 import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class DownloadMotCertificateUserAuthTest {
+public class DownloadMotCertificateImplicitTest {
 
     // Variable + Constant Test Data Setup
     private final VottConfiguration configuration = VottConfiguration.local();
@@ -89,7 +90,8 @@ public class DownloadMotCertificateUserAuthTest {
         validTestNumber = getTestNumber(validVIN);
     }
 
-    @Title("VOTT-5 - AC1 - TC1 - Happy Path - DownloadTestCertificateTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC1 - Happy Path - Download Test Certificate Using Implicit JWT Token")
     @Test
     public void DownloadTestCertificateTest() throws InterruptedException {
 
@@ -134,49 +136,56 @@ public class DownloadMotCertificateUserAuthTest {
         }
     }
 
-    @Title("VOTT-5 - AC1 - TC2 - DownloadTestCertificateBadJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC2 - Download Test Certificate Using a bad implicit JWT Token")
     @Test
     public void DownloadTestCertificateBadJwtTokenTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(validVIN, validTestNumber, token+1);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC3 - DownloadTestCertificateNoJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC3 - Download Test Certificate without an implicit JWT token")
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumberNoJWT(validVIN, validTestNumber);
         assertEquals(401, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC4 - DownloadTestCertificateNoVinNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC4 - Download Test Certificate Using implicit JWT Token without providing a VIN")
     @Test
     public void DownloadTestCertificateNoVinNumberTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingTestNumber(validTestNumber, token);
         assertEquals(400, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC5 - DownloadTestCertificateNoTestNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC5 - Download Test Certificate Using implicit JWT Token without providing a test number")
     @Test
     public void DownloadTestCertificateNoTestNumberTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVIN(validVIN, token);
         assertEquals(400, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC6 - DownloadTestCertificateNoAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC6 - Download Test Certificate Using Implicit JWT Token without providing an api key")
     @Test
     public void DownloadTestCertificateNoAPIKeyTest() {
         Response response = DocRetrievalAPI.getMOTCertNoAPIKey(validVIN, validTestNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC7 - DownloadTestCertificateInvalidAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC7 - Download Test Certificate Using Implicit JWT Token with wrong api key")
     @Test
     public void DownloadTestCertificateInvalidAPIKeyTest() {
         Response response = DocRetrievalAPI.getMOTCertInvalidAPIKey(validVIN, validTestNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC8 - DownloadTestCertificateTestNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC8 - Download Test Certificate Using Implicit JWT Token for a test number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateTestNumberDoesntExistTest() {
         String invalidTestNumber = "W11A11111";
@@ -185,7 +194,8 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC9 - DownloadTestCertificateNumericTestNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC9 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericTestNumberTest() {
         String numericTestNumber = "123456789";
@@ -194,7 +204,8 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("Test number is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC10 - DownloadTestCertificateVinNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC10 - Download Test Certificate Using Implicit JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
         String invalidVIN = "T123456789";
@@ -203,7 +214,8 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC11 - DownloadTestCertificateNumericVINNumberTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC11 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (numeric only)")
     @Test
     public void DownloadTestCertificateNumericVINNumberTest() {
         String numericVIN = "123456789";
@@ -212,7 +224,8 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("NoSuchKey", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC12 - DownloadTestCertificateVinNumberSpecialCharsTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC12 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
         String specialCharVIN = "T12765@!'";
@@ -221,7 +234,8 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("VIN is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC13 - DownloadTestCertificateTestNumberSpecialCharsTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC13 - Download Test Certificate Using Implicit JWT Token with a wrong format test number (containing special chars)")
     @Test
     public void DownloadTestCertificateTestNumberSpecialCharsTest() {
         String specialCharTestNumber = "T12765@!'";
@@ -230,28 +244,32 @@ public class DownloadMotCertificateUserAuthTest {
         assertEquals("Test number is in incorrect format", response.asString());
     }
 
-    @Title("VOTT-5 - AC1 - TC14 - DownloadTestCertificatePostRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC14 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePostRequestTest() {
         Response response = DocRetrievalAPI.postMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC15 - DownloadTestCertificatePutRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC15 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePutRequestTest() {
         Response response = DocRetrievalAPI.putMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC16 - DownloadTestCertificatePatchRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC16 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificatePatchRequestTest() {
         Response response = DocRetrievalAPI.patchMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
         assertEquals(405, response.statusCode());
     }
 
-    @Title("VOTT-5 - AC1 - TC17 - DownloadTestCertificateDeleteRequestTest")
+    @WithTag("Vott")
+    @Title("VOTT-5 - AC1 - TC17 - Test POST request for document retrieval service using implicit token")
     @Test
     public void DownloadTestCertificateDeleteRequestTest() {
         Response response = DocRetrievalAPI.deleteMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);

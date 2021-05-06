@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,7 @@ public class DefectRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC15 - Testing defect unique index compound key")
     @Test
     public void upsertingIdenticalDefectReturnsSamePk() {
@@ -54,6 +56,7 @@ public class DefectRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC16 - Testing defect unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {

@@ -1,4 +1,4 @@
-package vott.testhistory;
+package vott.enquiry;
 
 
 import com.google.gson.Gson;
@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,7 +147,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Vin Test With A Client Credentials Token")
+    @WithTag("Vott")
+    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vin")
     @Test
     public void RetrieveVehicleDataUsingVinTest() throws InterruptedException {
 
@@ -304,7 +306,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataUsingVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC12 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vrm")
     @Test
     public void RetrieveVehicleDataUsingVrmTest() throws InterruptedException {
 
@@ -462,14 +465,16 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataBadJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC13 - Retrieve Vehicle Data Using a bad client creds JWT Token")
     @Test
     public void RetrieveVehicleDataBadJwtTokenTest() {
         Response response = VehicleDataAPI.getVehicleDataUsingVIN(validVINNumber, token+1);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataNoParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC14 - Retrieve Vehicle Data Using a client creds JWT Token and no query params")
     @Test
     public void RetrieveVehicleDataNoParamsTest() {
         Response response = VehicleDataAPI.getVehicleDataNoParams(token);
@@ -477,7 +482,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("No parameter defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataBothVinAndVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC15 - Retrieve Vehicle Data Using a client creds JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveVehicleDataBothVinAndVrmTest() {
         Response response = VehicleDataAPI.getVehicleDataUsingVIN_VRM(validVINNumber, validVehicleRegMark, token);
@@ -485,21 +491,24 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Too many parameters defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataNoAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC16 - Retrieve Vehicle Data Using a client creds JWT Token and no api key")
     @Test
     public void RetrieveVehicleDataNoAPIKeyTest() {
         Response response = VehicleDataAPI.getVehicleDataNoAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataInvalidAPIKey")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC17 - Retrieve Vehicle Data Using a client creds JWT Token and an invalid api key")
     @Test
     public void RetrieveVehicleDataInvalidAPIKey() {
         Response response = VehicleDataAPI.getVehicleDataInvalidAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataVehicleRegMarkDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC18 - Retrieve Vehicle Data Using a client creds JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataVehicleRegMarkDoesntExistTest() {
         String invalidVehicleRegMark = "W01A00229";
@@ -508,7 +517,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataVinNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC19 - Retrieve Vehicle Data Using a client creds JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataVinNumberDoesntExistTest() {
         String invalidVINNumber = "A123456789";
@@ -517,7 +527,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataNonPrintableCharsParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC20 - Retrieve Vehicle Data Using a client creds JWT Token and non alpha numeric vrm")
     @Test
     public void RetrieveVehicleDataNonPrintableCharsParamsTest() {
         String nonAlphaVehicleMark = "!@/'";

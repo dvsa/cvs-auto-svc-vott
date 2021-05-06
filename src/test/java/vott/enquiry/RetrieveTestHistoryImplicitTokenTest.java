@@ -1,10 +1,11 @@
-package vott.testhistory;
+package vott.enquiry;
 
 
 import com.google.gson.Gson;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import static org.awaitility.Awaitility.with;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryPasswordTokenTest {
+public class RetrieveTestHistoryImplicitTokenTest {
 
     // Variable + Constant Test Data Setup
     private String token;
@@ -154,7 +155,8 @@ public class RetrieveTestHistoryPasswordTokenTest {
         locationRepository.delete(locationPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC21 - Happy Path - Retrieve Test History Using Vin Test With A Client Credentials Token")
+    @WithTag("Vott")
+    @Title ("VOTT-9 - AC1 - TC21 - Happy Path - Retrieve Test History Using Implicit token and a valid vin")
     @Test
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
@@ -268,7 +270,8 @@ public class RetrieveTestHistoryPasswordTokenTest {
 
     }
 
-    @Title("VOTT-9 - AC1 - TC22 - Happy Path - RetrieveTestHistoryUsingVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC22 - Happy Path - Retrieve Test History Using Implicit token and a valid vrm")
     @Test
     public void RetrieveTestHistoryUsingVrmTest() throws InterruptedException {
 
@@ -381,14 +384,16 @@ public class RetrieveTestHistoryPasswordTokenTest {
         }
     }
 
-    @Title("VOTT-9 - AC1 - TC23 - RetrieveTestHistoryBadJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC23 - Retrieve Test History Using a bad implicit JWT Token")
     @Test
     public void RetrieveTestHistoryBadJwtTokenTest() {
         Response response = TestHistoryAPI.getTestHistoryUsingVIN(validVINNumber,token+1);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC24 - RetrieveTestHistoryNoParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC24 - Retrieve Test History Using an implicit JWT Token and no query params")
     @Test
     public void RetrieveTestHistoryNoParamsTest() {
         Response response = TestHistoryAPI.getTestHistoryNoParams(token);
@@ -396,7 +401,8 @@ public class RetrieveTestHistoryPasswordTokenTest {
         assertEquals("No parameter defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC25 - RetrieveTestHistoryBothVinAndVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC25 - Retrieve Test History Using an implicit JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveTestHistoryBothVinAndVrmTest() {
         Response response = TestHistoryAPI.getTestHistoryUsingVIN_VRM(validVINNumber, validVehicleRegMark, token);
@@ -404,21 +410,24 @@ public class RetrieveTestHistoryPasswordTokenTest {
         assertEquals("Too many parameters defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC26 RetrieveTestHistoryNoAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC26 Retrieve Test History Using an implicit JWT Token and no api key")
     @Test
     public void RetrieveTestHistoryNoAPIKeyTest() {
         Response response = TestHistoryAPI.getTestHistoryNoAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC27 - RetrieveTestHistoryInvalidAPIKey")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC27 - Retrieve Test History Using an implicit JWT Token and an invalid api key")
     @Test
     public void RetrieveTestHistoryInvalidAPIKey() {
         Response response = TestHistoryAPI.getTestHistoryInvalidAPIKey(validVINNumber, token);
         assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC28 - RetrieveTestHistoryVehicleRegMarkDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC28 - Retrieve Test History Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVehicleRegMarkDoesntExistTest() {
         String invalidVehicleRegMark = "W01A00229";
@@ -427,7 +436,8 @@ public class RetrieveTestHistoryPasswordTokenTest {
         assertEquals("No tests found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC29 - RetrieveTestHistoryVinNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC29 - Retrieve Test History Using an implicit JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveTestHistoryVinNumberDoesntExistTest() {
         String invalidVINNumber = "A123456789";
@@ -436,7 +446,8 @@ public class RetrieveTestHistoryPasswordTokenTest {
         assertEquals("No tests found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC30 - RetrieveTestHistoryNonPrintableCharsParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC30 - Retrieve Test History Using an implicit and non alpha numeric vrm")
     @Test
     public void RetrieveTestHistoryNonPrintableCharsParamsTest() {
         String nonAlphaVehicleMark = "!@/'";

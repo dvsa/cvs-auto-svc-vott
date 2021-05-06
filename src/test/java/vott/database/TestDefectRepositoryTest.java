@@ -2,6 +2,7 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,6 +126,7 @@ public class TestDefectRepositoryTest {
         identityRepository.delete(identityPK);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC42 - Testing test defect unique index compound key")
     @Test
     public void upsertingIdenticalTestDefectReturnsSamePk() {
@@ -137,6 +139,7 @@ public class TestDefectRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC43 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewTestResultIDReturnsDifferentPk() {
@@ -156,6 +159,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC44 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewDefectIDReturnsDifferentPk() {
@@ -175,6 +179,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC45 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewLocationIDReturnsDifferentPk() {
@@ -194,6 +199,7 @@ public class TestDefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC46 - Testing test defect unique index compound key")
     @Test
     public void upsertingNewNonIndexDataSamePk() {
