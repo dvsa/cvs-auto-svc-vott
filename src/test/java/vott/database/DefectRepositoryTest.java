@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Defect;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class DefectRepositoryTest {
     @Title("VOTT-8 - AC1 - TC15 - Testing defect unique index compound key")
     @Test
     public void upsertingIdenticalDefectReturnsSamePk() {
-        int primaryKey1 = defectRepository.partialUpsert(newTestDefect());
-        int primaryKey2 = defectRepository.partialUpsert(newTestDefect());
+        int primaryKey1 = defectRepository.partialUpsert(SeedData.newTestDefect());
+        int primaryKey2 = defectRepository.partialUpsert(SeedData.newTestDefect());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class DefectRepositoryTest {
     @Title("VOTT-8 - AC1 - TC16 - Testing defect unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Defect defect1 = newTestDefect();
+        Defect defect1 = SeedData.newTestDefect();
 
-        Defect defect2 = newTestDefect();
+        Defect defect2 = SeedData.newTestDefect();
         defect2.setImNumber("456");
 
         int primaryKey1 = defectRepository.partialUpsert(defect1);
@@ -70,20 +71,4 @@ public class DefectRepositoryTest {
         assertNotEquals(primaryKey1, primaryKey2);
     }
 
-    private Defect newTestDefect() {
-        Defect defect = new Defect();
-
-        defect.setImNumber("123");
-        defect.setImDescription("Test IM Description");
-        defect.setItemNumber("5555");
-        defect.setItemDescription("Test Item Description");
-        defect.setDeficiencyRef("Test Reference");
-        defect.setDeficiencyID("1");
-        defect.setDeficiencySubID("444");
-        defect.setDeficiencyCategory("Category");
-        defect.setDeficiencyText("Test Test");
-        defect.setStdForProhibition("1");
-
-        return defect;
-    }
 }

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.FuelEmission;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class FuelEmissionRepositoryTest {
     @Title("VOTT-8 - AC1 - TC17 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingIdenticalFuelEmissionReturnsSamePk() {
-        int primaryKey1 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
-        int primaryKey2 = fuelEmissionRepository.partialUpsert(newTestFuelEmission());
+        int primaryKey1 = fuelEmissionRepository.partialUpsert(SeedData.newTestFuelEmission());
+        int primaryKey2 = fuelEmissionRepository.partialUpsert(SeedData.newTestFuelEmission());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class FuelEmissionRepositoryTest {
     @Title("VOTT-8 - AC1 - TC18 - Testing fuel emission unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        FuelEmission fe1 = newTestFuelEmission();
+        FuelEmission fe1 = SeedData.newTestFuelEmission();
 
-        FuelEmission fe2 = newTestFuelEmission();
+        FuelEmission fe2 = SeedData.newTestFuelEmission();
         fe2.setEmissionStandard("Another Standard");
 
         int primaryKey1 = fuelEmissionRepository.partialUpsert(fe1);
@@ -68,16 +69,5 @@ public class FuelEmissionRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private FuelEmission newTestFuelEmission() {
-        FuelEmission fe = new FuelEmission();
-
-        fe.setModTypeCode("a");
-        fe.setDescription("Test Description");
-        fe.setEmissionStandard("Test Standard");
-        fe.setFuelType("Petrol");
-
-        return fe;
     }
 }

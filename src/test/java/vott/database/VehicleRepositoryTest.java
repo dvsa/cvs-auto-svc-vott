@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Vehicle;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class VehicleRepositoryTest {
     @Title("VOTT-8 - AC1 - TC62 - Testing vehicle unique index compound key")
     @Test
     public void upsertingIdenticalVehicleReturnsSamePk() {
-        int primaryKey1 = vehicleRepository.fullUpsert(newTestVehicle());
-        int primaryKey2 = vehicleRepository.fullUpsert(newTestVehicle());
+        int primaryKey1 = vehicleRepository.fullUpsert(SeedData.newTestVehicle());
+        int primaryKey2 = vehicleRepository.fullUpsert(SeedData.newTestVehicle());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class VehicleRepositoryTest {
     @Title("VOTT-8 - AC1 - TC63 - Testing vehicle unique index compound key")
     @Test
     public void upsertingDifferentSystemNumberReturnsDifferentPk() {
-        Vehicle vehicle1 = newTestVehicle();
+        Vehicle vehicle1 = SeedData.newTestVehicle();
 
-        Vehicle vehicle2 = newTestVehicle();
+        Vehicle vehicle2 = SeedData.newTestVehicle();
         vehicle2.setSystemNumber("A B C D E F");
 
         int primaryKey1 = vehicleRepository.fullUpsert(vehicle1);
@@ -73,9 +74,9 @@ public class VehicleRepositoryTest {
     @Title("VOTT-8 - AC1 - TC64 - Testing vehicle unique index compound key")
     @Test
     public void upsertingDifferentVINReturnsDifferentPk() {
-        Vehicle vehicle1 = newTestVehicle();
+        Vehicle vehicle1 = SeedData.newTestVehicle();
 
-        Vehicle vehicle2 = newTestVehicle();
+        Vehicle vehicle2 = SeedData.newTestVehicle();
         vehicle2.setVin("Vin Updated");
 
         int primaryKey1 = vehicleRepository.fullUpsert(vehicle1);
@@ -90,9 +91,9 @@ public class VehicleRepositoryTest {
     @Title("VOTT-8 - AC1 - TC65 - Testing vehicle unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
-        Vehicle vehicle1 = newTestVehicle();
+        Vehicle vehicle1 = SeedData.newTestVehicle();
 
-        Vehicle vehicle2 = newTestVehicle();
+        Vehicle vehicle2 = SeedData.newTestVehicle();
         vehicle2.setVrm_trm("7777");
         vehicle2.setTrailerID("7777");
 
@@ -103,16 +104,5 @@ public class VehicleRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertEquals(primaryKey1, primaryKey2);
-    }
-
-    private Vehicle newTestVehicle() {
-        Vehicle vehicle = new Vehicle();
-
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("Test VIN");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
-
-        return vehicle;
     }
 }

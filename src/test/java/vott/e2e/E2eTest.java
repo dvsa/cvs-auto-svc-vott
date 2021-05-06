@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
+import vott.api.TestResultAPI;
+import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -17,6 +19,7 @@ import vott.config.VottConfiguration;
 import vott.database.TestResultRepository;
 import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
+import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
 import vott.models.dao.Vehicle;
 import vott.models.dto.enquiry.TestResult;
@@ -96,13 +99,13 @@ public class E2eTest {
     }
 
     private void e2eTest(TechRecordPOST techRecord, CompleteTestResults testResult) {
-        postTechRecord(techRecord);
-        postTestResult(testResult);
+        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(vin));
-        with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(vin));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         vott.models.dto.enquiry.Vehicle actualVehicle = retrieveVehicle(vin);
         List<TestResult> actualTestResults = retrieveTestResults(vin);
@@ -176,48 +179,6 @@ public class E2eTest {
         return testResult;
     }
 
-    private void postTechRecord(TechRecordPOST techRecord) {
-        String techRecordJson = gson.toJson(techRecord);
-
-        Response response;
-        int statusCode;
-
-        int tries = 0;
-        int maxRetries = 3;
-        do {
-            response = givenAuth(v1ImplicitTokens.getBearerToken())
-                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-                .body(techRecordJson)
-                .post("/vehicles")
-                .thenReturn();
-            statusCode = response.statusCode();
-            tries++;
-        } while (statusCode >= 500 && tries < maxRetries);
-
-        assertThat(response.statusCode()).isBetween(200, 300);
-    }
-
-    private void postTestResult(CompleteTestResults testResult) {
-        String testResultJson = gson.toJson(testResult);
-
-        Response response;
-        int statusCode;
-
-        int tries = 0;
-        int maxRetries = 3;
-        do {
-            response = givenAuth(v1ImplicitTokens.getBearerToken())
-                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-                .body(testResultJson)
-                .post("/test-results")
-                .thenReturn();
-            statusCode = response.statusCode();
-            tries++;
-        } while (statusCode >= 500 && tries < maxRetries);
-
-        assertThat(response.statusCode()).isBetween(200, 300);
-    }
-
     private vott.models.dto.enquiry.Vehicle retrieveVehicle(String vinNumber) {
         String bearerToken = v1ImplicitTokens.getBearerToken();
 
@@ -246,26 +207,5 @@ public class E2eTest {
         assertThat(response.statusCode()).isBetween(200, 300);
 
         return gson.fromJson(response.asString(), new TypeToken<List<TestResult>>(){}.getType());
-    }
-
-
-    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
-        return () -> {
-            List<Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
-            return !vehicles.isEmpty();
-        };
-    }
-
-    private Callable<Boolean> testResultIsPresentInDatabase(String vin) {
-        return () -> {
-            List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
-                "SELECT `test_result`.*\n"
-                + "FROM `vehicle`\n"
-                + "JOIN `test_result`\n"
-                + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
-                + "WHERE `vehicle`.`vin` = '%s'", vin
-            ));
-            return !testResults.isEmpty();
-        };
     }
 }

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Location;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class LocationRepositoryTest {
     @Title("VOTT-8 - AC1 - TC21 - Testing location unique index compound key")
     @Test
     public void upsertingIdenticalLocationReturnsSamePk() {
-        int primaryKey1 = locationRepository.partialUpsert(newTestLocation());
-        int primaryKey2 = locationRepository.partialUpsert(newTestLocation());
+        int primaryKey1 = locationRepository.partialUpsert(SeedData.newTestLocation());
+        int primaryKey2 = locationRepository.partialUpsert(SeedData.newTestLocation());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class LocationRepositoryTest {
     @Title("VOTT-8 - AC1 - TC22 - Testing location unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Location location1 = newTestLocation();
+        Location location1 = SeedData.newTestLocation();
 
-        Location location2 = newTestLocation();
+        Location location2 = SeedData.newTestLocation();
         location2.setVertical("Vert");
 
         int primaryKey1 = locationRepository.partialUpsert(location1);
@@ -68,19 +69,5 @@ public class LocationRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private Location newTestLocation() {
-        Location location = new Location();
-
-        location.setVertical("TestV");
-        location.setHorizontal("TestH");
-        location.setLateral("TestLat");
-        location.setLongitudinal("TestL");
-        location.setRowNumber("10");
-        location.setSeatNumber("20");
-        location.setAxleNumber("30");
-
-        return location;
     }
 }
