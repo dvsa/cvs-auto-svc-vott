@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.TestType;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class TestTypeRepositoryTest {
     @Title("VOTT-8 - AC1 - TC56 - Testing test type unique index compound key")
     @Test
     public void upsertingIdenticalTestTypeReturnsSamePk() {
-        int primaryKey1 = testTypeRepository.partialUpsert(newTestTestType());
-        int primaryKey2 = testTypeRepository.partialUpsert(newTestTestType());
+        int primaryKey1 = testTypeRepository.partialUpsert(SeedData.newTestTestType());
+        int primaryKey2 = testTypeRepository.partialUpsert(SeedData.newTestTestType());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class TestTypeRepositoryTest {
     @Title("VOTT-8 - AC1 - TC57 - Testing test type unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        TestType tt1 = newTestTestType();
+        TestType tt1 = SeedData.newTestTestType();
 
-        TestType tt2 = newTestTestType();
+        TestType tt2 = SeedData.newTestTestType();
         tt2.setTestTypeClassification("Auto Test Type");
 
         int primaryKey1 = testTypeRepository.partialUpsert(tt1);
@@ -68,14 +69,5 @@ public class TestTypeRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private TestType newTestTestType() {
-        TestType tt = new TestType();
-
-        tt.setTestTypeClassification("Test Test Type");
-        tt.setTestTypeName("Test Name");
-
-        return tt;
     }
 }

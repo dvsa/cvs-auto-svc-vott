@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.*;
 
 import java.util.ArrayList;
@@ -44,22 +45,22 @@ public class PlateRepositoryTest {
         plateRepository = new PlateRepository(connectionFactory);
 
         vehicleRepository = new VehicleRepository(connectionFactory);
-        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
+        vehiclePK = vehicleRepository.fullUpsert(SeedData.newTestVehicle());
 
         makeModelRepository = new MakeModelRepository(connectionFactory);
-        makeModelPK = makeModelRepository.partialUpsert(newTestMakeModel());
+        makeModelPK = makeModelRepository.partialUpsert(SeedData.newTestMakeModel());
 
         identityRepository = new IdentityRepository(connectionFactory);
-        identityPK = identityRepository.partialUpsert(newTestIdentity());
+        identityPK = identityRepository.partialUpsert(SeedData.newTestIdentity());
 
         contactDetailsRepository = new ContactDetailsRepository(connectionFactory);
-        contactDetailsPK = contactDetailsRepository.partialUpsert(newTestContactDetails());
+        contactDetailsPK = contactDetailsRepository.partialUpsert(SeedData.newTestContactDetails());
 
         vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+        vehicleClassPK = vehicleClassRepository.partialUpsert(SeedData.newTestVehicleClass());
 
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        technicalRecordPK = technicalRecordRepository.fullUpsert(newTestTechnicalRecord());
+        technicalRecordPK = technicalRecordRepository.fullUpsert(SeedData.newTestTechnicalRecord(vehiclePK, makeModelPK, vehicleClassPK, contactDetailsPK, identityPK));
 
         deleteOnExit = new ArrayList<>();
     }
@@ -84,8 +85,8 @@ public class PlateRepositoryTest {
     @Title("VOTT-8 - AC1 - TC28 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalPlateReturnsSamePk() {
-        int primaryKey1 = plateRepository.fullUpsert(newTestPlate());
-        int primaryKey2 = plateRepository.fullUpsert(newTestPlate());
+        int primaryKey1 = plateRepository.fullUpsert(SeedData.newTestPlate(technicalRecordPK));
+        int primaryKey2 = plateRepository.fullUpsert(SeedData.newTestPlate(technicalRecordPK));
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -96,13 +97,12 @@ public class PlateRepositoryTest {
     @Title("VOTT-8 - AC1 - TC29 - Testing plate unique index compound key")
     @Test
     public void upsertingNewTechRecordIDReturnsDifferentPk() {
-        Plate plate1 = newTestPlate();
-
-        Plate plate2 = newTestPlate();
-        TechnicalRecord tr2 = newTestTechnicalRecord();
+        TechnicalRecord tr2 = SeedData.newTestTechnicalRecord(vehiclePK, makeModelPK, vehicleClassPK, contactDetailsPK, identityPK);
         tr2.setCreatedAt("2021-12-31 00:00:00");
         technicalRecord2PK = technicalRecordRepository.fullUpsert(tr2);
-        plate2.setTechnicalRecordID(String.valueOf(technicalRecord2PK));
+
+        Plate plate1 = SeedData.newTestPlate(technicalRecordPK);
+        Plate plate2 = SeedData.newTestPlate(technicalRecord2PK);
 
         int primaryKey1 = plateRepository.fullUpsert(plate1);
         int primaryKey2 = plateRepository.fullUpsert(plate2);
@@ -116,9 +116,9 @@ public class PlateRepositoryTest {
     @Title("VOTT-8 - AC1 - TC30 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateSerialNumReturnsDifferentPk() {
-        Plate plate1 = newTestPlate();
+        Plate plate1 = SeedData.newTestPlate(technicalRecordPK);
 
-        Plate plate2 = newTestPlate();
+        Plate plate2 = SeedData.newTestPlate(technicalRecordPK);
         plate2.setPlateSerialNumber("777777");
 
         int primaryKey1 = plateRepository.fullUpsert(plate1);
@@ -133,9 +133,9 @@ public class PlateRepositoryTest {
     @Title("VOTT-8 - AC1 - TC31 - Testing plate unique index compound key")
     @Test
     public void upsertingNewPlateIssueDateReturnsDifferentPk() {
-        Plate plate1 = newTestPlate();
+        Plate plate1 = SeedData.newTestPlate(technicalRecordPK);
 
-        Plate plate2 = newTestPlate();
+        Plate plate2 = SeedData.newTestPlate(technicalRecordPK);
         plate2.setPlateIssueDate("2100-01-01");
 
         int primaryKey1 = plateRepository.fullUpsert(plate1);
@@ -150,9 +150,9 @@ public class PlateRepositoryTest {
     @Title("VOTT-8 - AC1 - TC32 - Testing plate unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
-        Plate plate1 = newTestPlate();
+        Plate plate1 = SeedData.newTestPlate(technicalRecordPK);
 
-        Plate plate2 = newTestPlate();
+        Plate plate2 = SeedData.newTestPlate(technicalRecordPK);
         plate2.setPlateIssuer("Test Update");
 
         int primaryKey1 = plateRepository.fullUpsert(plate1);
@@ -162,174 +162,5 @@ public class PlateRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertEquals(primaryKey1, primaryKey2);
-    }
-
-    private Plate newTestPlate() {
-        Plate plate = new Plate();
-
-        plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        plate.setPlateSerialNumber("666666");
-        plate.setPlateIssueDate("2100-12-31");
-        plate.setPlateReasonForIssue("Test Reason");
-        plate.setPlateIssuer("Auto Test");
-
-        return plate;
-    }
-
-    private Vehicle newTestVehicle() {
-        Vehicle vehicle = new Vehicle();
-
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("Test VIN");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
-
-        return vehicle;
-    }
-
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
-
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
-
-        return mm;
-    }
-
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
-
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
-
-        return identity;
-    }
-
-    private ContactDetails newTestContactDetails() {
-        ContactDetails cd = new ContactDetails();
-
-        cd.setName("Test Name");
-        cd.setAddress1("Test Address 1");
-        cd.setAddress2("Test Address 2");
-        cd.setPostTown("Test Post Town");
-        cd.setAddress3("Test Address 3");
-        cd.setEmailAddress("TestEmailAddress");
-        cd.setTelephoneNumber("8888888");
-        cd.setFaxNumber("99999999");
-
-        return cd;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
-    }
-
-    private TechnicalRecord newTestTechnicalRecord() {
-        TechnicalRecord tr = new TechnicalRecord();
-
-        tr.setVehicleID(String.valueOf(vehiclePK));
-        tr.setRecordCompleteness("Complete");
-        tr.setCreatedAt("2021-01-01 00:00:00");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00");
-        tr.setMakeModelID(String.valueOf(makeModelPK));
-        tr.setFunctionCode("A");
-        tr.setOffRoad("1");
-        tr.setNumberOfWheelsDriven("4");
-        tr.setEmissionsLimit("Test Emission Limit");
-        tr.setDepartmentalVehicleMarker("1");
-        tr.setAlterationMarker("1");
-        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
-        tr.setVariantVersionNumber("Test Variant Number");
-        tr.setGrossEecWeight("1200");
-        tr.setTrainEecWeight("1400");
-        tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
-        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufactureYear("2021");
-        tr.setRegnDate("2021-01-01");
-        tr.setFirstUseDate("2021-01-01");
-        tr.setCoifDate("2021-01-01");
-        tr.setNtaNumber("NTA Number");
-        tr.setCoifSerialNumber("55555");
-        tr.setCoifCertifierName("88888");
-        tr.setApprovalType("111");
-        tr.setApprovalTypeNumber("ABC11111");
-        tr.setVariantNumber("Test Variant");
-        tr.setConversionRefNo("10");
-        tr.setSeatsLowerDeck("2");
-        tr.setSeatsUpperDeck("3");
-        tr.setStandingCapacity("15");
-        tr.setSpeedRestriction("60");
-        tr.setSpeedLimiterMrk("1");
-        tr.setTachoExemptMrk("1");
-        tr.setDispensations("Test Dispensations");
-        tr.setRemarks("Automation Test Remarks");
-        tr.setReasonForCreation("Automation Test ");
-        tr.setStatusCode("B987");
-        tr.setUnladenWeight("1400");
-        tr.setGrossKerbWeight("1400");
-        tr.setGrossLadenWeight("1400");
-        tr.setGrossGbWeight("1400");
-        tr.setGrossDesignWeight("1400");
-        tr.setTrainGbWeight("1400");
-        tr.setTrainDesignWeight("1400");
-        tr.setMaxTrainGbWeight("1400");
-        tr.setMaxTrainDesignWeight("1400");
-        tr.setMaxLoadOnCoupling("1400");
-        tr.setFrameDescription("Test Automation");
-        tr.setTyreUseCode("A1");
-        tr.setRoadFriendly("1");
-        tr.setDrawbarCouplingFitted("1");
-        tr.setEuroStandard("Y555");
-        tr.setSuspensionType("Y");
-        tr.setCouplingType("B");
-        tr.setLength("100");
-        tr.setHeight("50");
-        tr.setWidth("50");
-        tr.setFrontAxleTo5thWheelCouplingMin("55");
-        tr.setFrontAxleTo5thWheelCouplingMax("65");
-        tr.setFrontAxleTo5thWheelCouplingMin("45");
-        tr.setFrontAxleTo5thWheelCouplingMax("65");
-        tr.setFrontAxleToRearAxle("15");
-        tr.setRearAxleToRearTrl("25");
-        tr.setCouplingCenterToRearAxleMin("25");
-        tr.setCouplingCenterToRearAxleMax("85");
-        tr.setCouplingCenterToRearAxleMin("25");
-        tr.setCouplingCenterToRearAxleMax("85");
-        tr.setCentreOfRearmostAxleToRearOfTrl("25");
-        tr.setNotes("Test Notes");
-        tr.setPurchaserNotes("Purchaser Notes");
-        tr.setManufacturerNotes("Manufactuer Notes");
-        tr.setNoOfAxles("3");
-        tr.setBrakeCode("XXXXX");
-        tr.setBrakes_dtpNumber("DTP111");
-        tr.setBrakes_loadSensingValve("1");
-        tr.setBrakes_antilockBrakingSystem("1");
-        tr.setCreatedByID(String.valueOf(identityPK));
-        tr.setLastUpdatedByID(String.valueOf(identityPK));
-        tr.setUpdateType("AutoTest");
-        tr.setNumberOfSeatbelts("3");
-        tr.setSeatbeltInstallationApprovalDate("2021-01-01");
-
-        return tr;
     }
 }

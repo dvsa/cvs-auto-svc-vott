@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Preparer;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class PreparerRepositoryTest {
     @Title("VOTT-8 - AC1 - TC33 - Testing preparer unique index compound key")
     @Test
     public void upsertingIdenticalPreparerReturnsSamePk() {
-        int primaryKey1 = preparerRepository.partialUpsert(newTestPreparer());
-        int primaryKey2 = preparerRepository.partialUpsert(newTestPreparer());
+        int primaryKey1 = preparerRepository.partialUpsert(SeedData.newTestPreparer());
+        int primaryKey2 = preparerRepository.partialUpsert(SeedData.newTestPreparer());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -56,9 +57,9 @@ public class PreparerRepositoryTest {
     @Title("VOTT-8 - AC1 - TC34 - Testing preparer unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Preparer preparer1 = newTestPreparer();
+        Preparer preparer1 = SeedData.newTestPreparer();
 
-        Preparer preparer2 = newTestPreparer();
+        Preparer preparer2 = SeedData.newTestPreparer();
         preparer2.setName("Auto Test Name");
 
         int primaryKey1 = preparerRepository.partialUpsert(preparer1);
@@ -68,14 +69,5 @@ public class PreparerRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private Preparer newTestPreparer() {
-        Preparer preparer = new Preparer();
-
-        preparer.setPreparerID("1");
-        preparer.setName("Test Name");
-
-        return preparer;
     }
 }

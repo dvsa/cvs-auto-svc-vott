@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.VehicleClass;
+import vott.database.seeddata.SeedData;
 
 import vott.models.dao.VehicleSubclass;
 
@@ -36,7 +36,7 @@ public class VehicleSubclassRepositoryTest {
         vehicleSubclassRepository = new VehicleSubclassRepository(connectionFactory);
 
         vehicleClassRepository = new VehicleClassRepository(connectionFactory);
-        vehicleClassPK = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+        vehicleClassPK = vehicleClassRepository.partialUpsert(SeedData.newTestVehicleClass());
 
         deleteOnExit = new ArrayList<>();
     }
@@ -53,8 +53,8 @@ public class VehicleSubclassRepositoryTest {
     @Title("VOTT-8 - AC1 - TC66 - Testing vehicle subclass index compound key")
     @Test
     public void upsertingIdenticalVehicleSubclassReturnsSamePk() {
-        int primaryKey1 = vehicleSubclassRepository.partialUpsert(newTestVehicleSubclass());
-        int primaryKey2 = vehicleSubclassRepository.partialUpsert(newTestVehicleSubclass());
+        int primaryKey1 = vehicleSubclassRepository.partialUpsert(SeedData.newTestVehicleSubclass(vehicleClassPK));
+        int primaryKey2 = vehicleSubclassRepository.partialUpsert(SeedData.newTestVehicleSubclass(vehicleClassPK));
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -65,9 +65,9 @@ public class VehicleSubclassRepositoryTest {
     @Title("VOTT-8 - AC1 - TC67 - Testing vehicle subclass index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        VehicleSubclass vs1 = newTestVehicleSubclass();
+        VehicleSubclass vs1 = SeedData.newTestVehicleSubclass(vehicleClassPK);
 
-        VehicleSubclass vs2 = newTestVehicleSubclass();
+        VehicleSubclass vs2 = SeedData.newTestVehicleSubclass(vehicleClassPK);
         vs2.setSubclass("y");
 
         int primaryKey1 = vehicleSubclassRepository.partialUpsert(vs1);
@@ -77,27 +77,5 @@ public class VehicleSubclassRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private VehicleSubclass newTestVehicleSubclass() {
-        VehicleSubclass vs = new VehicleSubclass();
-
-        vs.setVehicleClassID(String.valueOf(vehicleClassPK));
-        vs.setSubclass("z");
-
-        return vs;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
     }
 }
