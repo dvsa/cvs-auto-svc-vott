@@ -107,16 +107,16 @@ public class DownloadMotCertificateUserAuthTest {
                             .queryParam("testNumber", validTestNumber).
 
                             //send request
-                                    when().//log().all().
+                                    when().log().all().
                             get().
 
                             //verification
-                                    then().//log().all().
+                                    then().log().all().
                             extract().response();
             statusCode = response.statusCode();
             pdf = response.asByteArray();
             tries++;
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } while (statusCode >= 400 && tries < maxRetries);
 
         assertEquals(200, statusCode);

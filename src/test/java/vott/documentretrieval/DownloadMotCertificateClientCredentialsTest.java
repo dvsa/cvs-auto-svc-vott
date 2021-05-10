@@ -114,7 +114,7 @@ public class DownloadMotCertificateClientCredentialsTest {
             statusCode = response.statusCode();
             pdf = response.asByteArray();
             tries++;
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } while (statusCode >= 400 && tries < maxRetries);
 
         assertEquals(200, statusCode);
