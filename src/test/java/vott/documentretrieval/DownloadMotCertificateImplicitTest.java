@@ -145,7 +145,7 @@ public class DownloadMotCertificateUserAuthTest {
     @Test
     public void DownloadTestCertificateNoJwtTokenTest() {
         Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumberNoJWT(validVIN, validTestNumber);
-        assertEquals(401, response.statusCode());
+        assertEquals(403, response.statusCode());
     }
 
     @Title("VOTT-5 - AC1 - TC4 - DownloadTestCertificateNoVinNumberTest")
