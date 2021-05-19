@@ -43,3 +43,6 @@ out/
 
 ### Node modules ###
 node_modules/
+
+### Config ###
+src/main/resources/config.json

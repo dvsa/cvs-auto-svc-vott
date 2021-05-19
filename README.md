@@ -7,19 +7,25 @@ These instructions will get you up and running with the automation framework.
 
 ### Prerequisites
 - Browserstack credentials
-- Jenkins access
-- Java 1.8 SDK
+- Jenkins access (provided by DevOps)
+- Permissions for RDS DB to access the LDAP (provided by DevOps)
+- Java 11 or above
 - Maven
 - Git
 - IntelliJ
 
 ###Running Locally
-In order to run the test locally your will need to complete the following steps:
+In order to run the test locally your will need to complete the following steps once the LDAP access (with the relevant role) has been provided:
 - Connect to Jenkins VPN (required for database access)
-- Populate the template config file: src>main>resources>config.json  
- !!Ensure only the template is committed to Git!!  
-  
+- Create config file in `src/main/resources/config.json` with the relevant values.
 - Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
+
+It is recommended to use a java version manager such as [jenv](https://github.com/jenv/jenv) and package manager such as [brew](https://brew.sh/) (Mac OS) for example to run this repository since it will require Java 11+ and other CVS services run on Java8.
+You will need to install the relevant jdk and configure your project accordingly. Please refer to the following documentation:
+- [Managing jenv](https://www.jenv.be/)
+- [brew and JDK](https://gist.github.com/tomysmile/a9a7aee85ff73454bd57e198ad90e614)
+
+Once installed, you can run `jenv help` for its documentation.
 
 ## Running the Tests
 Pull the repo  
