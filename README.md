@@ -14,6 +14,16 @@ These instructions will get you up and running with the automation framework.
 - Git
 - IntelliJ
 
+You will need to install the DVSA security tools - [repo-security-scanner](https://github.com/UKHomeOffice/repo-security-scanner) - on your machine as well as [git-secrets](https://github.com/awslabs/git-secrets) for AWS.
+Then create a pre-commit hook:
+```shell
+echo 'git secrets --scan && git log -p | scanrepo' > .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# You can check that the hook is present
+cat .git/hooks/pre-commit
+```
+
+This hook will run every time you commit code and checks for aws secrets and dvsa secrets/patterns.
+
 ###Running Locally
 In order to run the test locally your will need to complete the following steps once the LDAP access (with the relevant role) has been provided:
 - Connect to Jenkins VPN (required for database access)
