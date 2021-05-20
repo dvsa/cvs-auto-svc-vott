@@ -192,9 +192,6 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTester().getStaffId()).isEqualTo(tester.getStaffID());
             assertThat(testResult.getTester().getEmailAddress()).isEqualTo(tester.getEmailAddress());
 
-//        assertThat(testResult.getPreparer().getName()).isEqualTo(preparer.getName());
-//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(preparer.getPreparerID());
-
             assertThat(testResult.getRegnDate()).isEqualTo(tr.getRegnDate());
             assertThat(testResult.getTestCode()).isEqualTo(tr.getTestCode());
 
@@ -306,9 +303,6 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTester().getStaffId()).isEqualTo(tester.getStaffID());
             assertThat(testResult.getTester().getEmailAddress()).isEqualTo(tester.getEmailAddress());
 
-//        assertThat(testResult.getPreparer().getName()).isEqualTo(preparer.getName());
-//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(preparer.getPreparerID());
-
             assertThat(testResult.getRegnDate()).isEqualTo(tr.getRegnDate());
             assertThat(testResult.getTestCode()).isEqualTo(tr.getTestCode());
 
@@ -419,9 +413,6 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTester().getName()).isEqualTo(tester.getName());
             assertThat(testResult.getTester().getStaffId()).isEqualTo(tester.getStaffID());
             assertThat(testResult.getTester().getEmailAddress()).isEqualTo(tester.getEmailAddress());
-
-//        assertThat(testResult.getPreparer().getName()).isEqualTo(preparer.getName());
-//        assertThat(testResult.getPreparer().getPreparerId()).isEqualTo(preparer.getPreparerID());
 
             assertThat(testResult.getRegnDate()).isEqualTo(tr.getRegnDate());
             assertThat(testResult.getTestCode()).isEqualTo(tr.getTestCode());
