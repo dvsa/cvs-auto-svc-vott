@@ -29,6 +29,15 @@ In order to run the test locally your will need to complete the following steps 
 - Connect to Jenkins VPN (required for database access)
 - Create config file in `src/main/resources/config.json` with the relevant values.
 - Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
+- To test on specific branch locally change following in your config.json:
+  
+  "databaseName": "CVSNOP[branch]"
+  
+  "branch": "[branch]"
+  
+  "apiKeys": {
+  "enquiryService": "xxxxxxxxxxxxxxxxxxx-[branch]"
+  }
 
 It is recommended to use a java version manager such as [jenv](https://github.com/jenv/jenv) and package manager such as [brew](https://brew.sh/) (Mac OS) for example to run this repository since it will require Java 11+ and other CVS services run on Java8.
 You will need to install the relevant jdk and configure your project accordingly. Please refer to the following documentation:
