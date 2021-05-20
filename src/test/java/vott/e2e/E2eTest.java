@@ -125,27 +125,27 @@ public class E2eTest {
     }
 
     private TechRecordPOST hgvTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_hgv.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_hgv.json"));
     }
 
     private TechRecordPOST psvTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_psv.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_psv.json"));
     }
 
     private TechRecordPOST trlTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_trl.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_trl.json"));
     }
 
     private CompleteTestResults hgvTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_hgv.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_hgv.json"));
     }
 
     private CompleteTestResults psvTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_psv.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_psv.json"));
     }
 
     private CompleteTestResults trlTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_trl.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_trl.json"));
     }
 
     @SneakyThrows(IOException.class)

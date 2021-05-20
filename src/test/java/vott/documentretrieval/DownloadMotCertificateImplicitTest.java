@@ -259,11 +259,11 @@ public class DownloadMotCertificateUserAuthTest {
     }
 
     private CompleteTestResults testResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results-user-auth-doc-retrieval.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results-user-auth-doc-retrieval.json"));
     }
 
     private TechRecordPOST techRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-record-user-auth-doc-retrieval.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-record-user-auth-doc-retrieval.json"));
     }
 
     private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
