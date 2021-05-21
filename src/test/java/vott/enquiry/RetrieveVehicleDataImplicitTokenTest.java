@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -142,6 +143,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title ("VOTT-9 - AC1 - TC1 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vin")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
@@ -300,6 +302,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC2 - Happy Path - Retrieve Vehicle Data Using Client Creds token and a valid vrm")
     @Test
     public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() throws InterruptedException {
@@ -458,6 +461,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC3 - Retrieve Vehicle Data Using a bad client creds JWT Token")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
@@ -465,6 +469,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC4 - Retrieve Vehicle Data Using an implicit JWT Token and no query params")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
@@ -473,6 +478,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals("No parameter defined", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC5 - Retrieve Vehicle Data Using an implicit JWT Token and both vin and vrm as query params")
     @Test
     public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
@@ -481,6 +487,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals("Too many parameters defined", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC6 - Retrieve Vehicle Data Using an implicit JWT Token and no api key")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
@@ -488,6 +495,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC7 - Retrieve Vehicle Data Using an implicit JWT Token and an invalid api key")
     @Test
     public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
@@ -495,6 +503,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC8 - Retrieve Vehicle Data Using an implicit JWT Token and vrm that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
@@ -504,6 +513,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC9 - Retrieve Vehicle Data Using an implicit JWT Token and vin that doesn't exist in db")
     @Test
     public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
@@ -513,6 +523,7 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC10 - Retrieve Vehicle Data Using an implicit JWT Token and non alpha numeric vrm")
     @Test
     public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
