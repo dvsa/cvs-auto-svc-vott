@@ -21,15 +21,15 @@ public abstract class AbstractRepository<T> {
     public int partialUpsert(T entity) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                sqlGenerator.generatePartialUpsertSql(getTableDetails()),
-                Statement.RETURN_GENERATED_KEYS
+                    sqlGenerator.generatePartialUpsertSql(getTableDetails()),
+                    Statement.RETURN_GENERATED_KEYS
             );
 
             setParameters(preparedStatement, entity);
 
             return upsert(
-                preparedStatement,
-                entity
+                    preparedStatement,
+                    entity
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -39,15 +39,15 @@ public abstract class AbstractRepository<T> {
     public int fullUpsert(T entity) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                sqlGenerator.generateFullUpsertSql(getTableDetails()),
-                Statement.RETURN_GENERATED_KEYS
+                    sqlGenerator.generateFullUpsertSql(getTableDetails()),
+                    Statement.RETURN_GENERATED_KEYS
             );
 
             setParametersFull(preparedStatement, entity);
 
             return upsert(
-                preparedStatement,
-                entity
+                    preparedStatement,
+                    entity
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -57,7 +57,7 @@ public abstract class AbstractRepository<T> {
     public T select(int primaryKey) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                sqlGenerator.generateSelectSql(getTableDetails(), primaryKey)
+                    sqlGenerator.generateSelectSql(getTableDetails(), primaryKey)
             );
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -99,7 +99,7 @@ public abstract class AbstractRepository<T> {
     public void delete(int primaryKey) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                sqlGenerator.generateDeleteSql(getTableDetails(), primaryKey)
+                    sqlGenerator.generateDeleteSql(getTableDetails(), primaryKey)
             );
 
             preparedStatement.executeUpdate();

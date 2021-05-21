@@ -6,10 +6,13 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
+import vott.api.TestResultAPI;
+import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -17,6 +20,7 @@ import vott.config.VottConfiguration;
 import vott.database.TestResultRepository;
 import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
+import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
 import vott.models.dao.Vehicle;
 import vott.models.dto.enquiry.TestResult;
@@ -68,7 +72,8 @@ public class E2eTest {
         testResultRepository = new TestResultRepository(connectionFactory);
     }
 
-    @Title("VOTT-10 - AC1 - TC1 - e2eTestHgv")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC1 - End to End for HGV")
     @Test
     public void e2eTestHgv() {
         TechRecordPOST hgvTechRecord = hgvTechRecord();
@@ -77,7 +82,8 @@ public class E2eTest {
         e2eTest(hgvTechRecord, hgvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC2 - e2eTestPsv")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC2 - End to End Test for PSV")
     @Test
     public void e2eTestPsv() {
         TechRecordPOST psvTechRecord = psvTechRecord();
@@ -86,7 +92,8 @@ public class E2eTest {
         e2eTest(psvTechRecord, psvTestResult);
     }
 
-    @Title("VOTT-10 - AC1 - TC3 - e2eTestTrl")
+    @WithTag("Vott")
+    @Title("VOTT-10 - AC1 - TC3 - End to End Test for Trailers ")
     @Test
     public void e2eTestTrl() {
         TechRecordPOST trlTechRecord = trlTechRecord();
@@ -96,13 +103,13 @@ public class E2eTest {
     }
 
     private void e2eTest(TechRecordPOST techRecord, CompleteTestResults testResult) {
-        postTechRecord(techRecord);
-        postTestResult(testResult);
+        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(vin));
-        with().timeout(Duration.ofSeconds(30)).await().until(testResultIsPresentInDatabase(vin));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         vott.models.dto.enquiry.Vehicle actualVehicle = retrieveVehicle(vin);
         List<TestResult> actualTestResults = retrieveTestResults(vin);
@@ -118,27 +125,27 @@ public class E2eTest {
     }
 
     private TechRecordPOST hgvTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_hgv.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_hgv.json"));
     }
 
     private TechRecordPOST psvTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_psv.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_psv.json"));
     }
 
     private TechRecordPOST trlTechRecord() {
-        return randomizeKeys(readTechRecord("src/test/resources/technical-records_trl.json"));
+        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_trl.json"));
     }
 
     private CompleteTestResults hgvTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_hgv.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_hgv.json"));
     }
 
     private CompleteTestResults psvTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_psv.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_psv.json"));
     }
 
     private CompleteTestResults trlTestResult(TechRecordPOST techRecord) {
-        return matchKeys(techRecord, readTestResult("src/test/resources/test-results_trl.json"));
+        return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_trl.json"));
     }
 
     @SneakyThrows(IOException.class)
@@ -176,48 +183,6 @@ public class E2eTest {
         return testResult;
     }
 
-    private void postTechRecord(TechRecordPOST techRecord) {
-        String techRecordJson = gson.toJson(techRecord);
-
-        Response response;
-        int statusCode;
-
-        int tries = 0;
-        int maxRetries = 3;
-        do {
-            response = givenAuth(v1ImplicitTokens.getBearerToken())
-                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-                .body(techRecordJson)
-                .post("/vehicles")
-                .thenReturn();
-            statusCode = response.statusCode();
-            tries++;
-        } while (statusCode >= 500 && tries < maxRetries);
-
-        assertThat(response.statusCode()).isBetween(200, 300);
-    }
-
-    private void postTestResult(CompleteTestResults testResult) {
-        String testResultJson = gson.toJson(testResult);
-
-        Response response;
-        int statusCode;
-
-        int tries = 0;
-        int maxRetries = 3;
-        do {
-            response = givenAuth(v1ImplicitTokens.getBearerToken())
-                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-                .body(testResultJson)
-                .post("/test-results")
-                .thenReturn();
-            statusCode = response.statusCode();
-            tries++;
-        } while (statusCode >= 500 && tries < maxRetries);
-
-        assertThat(response.statusCode()).isBetween(200, 300);
-    }
-
     private vott.models.dto.enquiry.Vehicle retrieveVehicle(String vinNumber) {
         String bearerToken = v1ImplicitTokens.getBearerToken();
 
@@ -246,26 +211,5 @@ public class E2eTest {
         assertThat(response.statusCode()).isBetween(200, 300);
 
         return gson.fromJson(response.asString(), new TypeToken<List<TestResult>>(){}.getType());
-    }
-
-
-    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
-        return () -> {
-            List<Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
-            return !vehicles.isEmpty();
-        };
-    }
-
-    private Callable<Boolean> testResultIsPresentInDatabase(String vin) {
-        return () -> {
-            List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
-                "SELECT `test_result`.*\n"
-                + "FROM `vehicle`\n"
-                + "JOIN `test_result`\n"
-                + "ON `test_result`.`vehicle_id` = `vehicle`.`id`\n"
-                + "WHERE `vehicle`.`vin` = '%s'", vin
-            ));
-            return !testResults.isEmpty();
-        };
     }
 }

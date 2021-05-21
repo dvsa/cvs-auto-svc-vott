@@ -2,12 +2,14 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.VehicleClass;
 
 import java.util.ArrayList;
@@ -40,11 +42,12 @@ public class VehicleClassRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC60 - Testing vehicle class unique index compound key")
     @Test
     public void upsertingIdenticalVehicleClassReturnsSamePk() {
-        int primaryKey1 = vehicleClassRepository.partialUpsert(newTestVehicleClass());
-        int primaryKey2 = vehicleClassRepository.partialUpsert(newTestVehicleClass());
+        int primaryKey1 = vehicleClassRepository.partialUpsert(SeedData.newTestVehicleClass());
+        int primaryKey2 = vehicleClassRepository.partialUpsert(SeedData.newTestVehicleClass());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -52,12 +55,13 @@ public class VehicleClassRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC61 - Testing vehicle class unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        VehicleClass vc1 = newTestVehicleClass();
+        VehicleClass vc1 = SeedData.newTestVehicleClass();
 
-        VehicleClass vc2 = newTestVehicleClass();
+        VehicleClass vc2 = SeedData.newTestVehicleClass();
         vc2.setVehicleSize("88888");
 
         int primaryKey1 = vehicleClassRepository.partialUpsert(vc1);
@@ -67,18 +71,5 @@ public class VehicleClassRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
     }
 }

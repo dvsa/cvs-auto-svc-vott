@@ -3,21 +3,23 @@ package vott.testhistory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import vott.api.VehicleDataAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
+import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
 import vott.models.dao.*;
 import vott.models.dto.enquiry.TechnicalRecord;
@@ -25,28 +27,19 @@ import vott.models.dto.enquiry.Vehicle;
 import vott.database.VehicleRepository;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
-public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
+public class RetrieveVehicleDataClientCredsTokenTest {
 
     // Variable + Constant Test Data Setup
-    private VottConfiguration configuration = VottConfiguration.local();
     private String token;
-    private final String xApiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
+
     private String validVINNumber = "";
     private String validVehicleRegMark = "";
-    private String nonAlphaVehicleMark = "!@/'";
-
-    private final String invalidVINNumber = "A123456789";
-    private final String invalidVehicleRegMark = "W01A00229";
 
     //Test Data Variables
     private Integer vehiclePK;
@@ -73,13 +66,13 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     private PlateRepository plateRepository;
     private AxleSpacingRepository axleSpacingRepository;
 
-    vott.models.dao.Vehicle vehicleUpsert = newTestVehicle();
-    MakeModel mm = newTestMakeModel();
-    VehicleClass vc = newTestVehicleClass();
-    ContactDetails cd = newTestContactDetails();
-    Identity identity = newTestIdentity();
+    vott.models.dao.Vehicle vehicleUpsert = SeedData.newTestVehicle();
+    MakeModel mm = SeedData.newTestMakeModel();
+    VehicleClass vc = SeedData.newTestVehicleClass();
+    ContactDetails cd = SeedData.newTestContactDetails();
+    Identity identity = SeedData.newTestIdentity();
+    Tyre tyre = SeedData.newTestTyre();
     vott.models.dao.TechnicalRecord tr;
-    Tyre tyre = newTestTyre();
     PSVBrakes psv;
     Axles axles;
     Plate plate;
@@ -88,16 +81,13 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
     @Before
     public void Setup() {
 
-        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v1/enquiry/vehicle";
         this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
 
         //Connect to DB
-        ConnectionFactory connectionFactory = new ConnectionFactory(
-                VottConfiguration.local()
-        );
+        ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
 
         vehicleRepository = new VehicleRepository(connectionFactory);
-        vehiclePK = vehicleRepository.fullUpsert(newTestVehicle());
+        vehiclePK = vehicleRepository.fullUpsert(vehicleUpsert);
 
         makeModelRepository = new MakeModelRepository(connectionFactory);
         makeModelPK = makeModelRepository.partialUpsert(mm);
@@ -112,33 +102,33 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         vehicleClassPK = vehicleClassRepository.partialUpsert(vc);
 
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
-        tr = newTestTechnicalRecord();
+        tr = SeedData.newTestTechnicalRecord(vehiclePK, makeModelPK, vehicleClassPK, contactDetailsPK, identityPK);
         technicalRecordPK = technicalRecordRepository.fullUpsert(tr);
 
         psvBrakesRepository = new PSVBrakesRepository(connectionFactory);
-        psv = newTestPSVBrakes();
+        psv = SeedData.newTestPSVBrakes(technicalRecordPK);
         psvBrakesPK = psvBrakesRepository.fullUpsert(psv);
 
         tyreRepository = new TyreRepository(connectionFactory);
         tyrePK = tyreRepository.partialUpsert(tyre);
 
         axlesRepository = new AxlesRepository(connectionFactory);
-        axles = newTestAxles();
+        axles = SeedData.newTestAxles(technicalRecordPK, tyrePK);
         axlesPK = axlesRepository.fullUpsert(axles);
 
         plateRepository = new PlateRepository(connectionFactory);
-        plate = newTestPlate();
+        plate = SeedData.newTestPlate(technicalRecordPK);
         platePK = plateRepository.fullUpsert(plate);
 
         axleSpacingRepository = new AxleSpacingRepository(connectionFactory);
-        as = newTestAxleSpacing();
+        as = SeedData.newTestAxleSpacing(technicalRecordPK);
         axleSpacingPK = axleSpacingRepository.fullUpsert(as);
 
         validVINNumber = vehicleUpsert.getVin();
         validVehicleRegMark = vehicleUpsert.getVrm_trm();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(vehicleIsPresentInDatabase(validVINNumber));
-        with().timeout(Duration.ofSeconds(30)).await().until(techRecordIsPresentInDatabase(String.valueOf(vehiclePK)));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.techRecordIsPresentInDatabase(String.valueOf(vehiclePK), technicalRecordRepository));
     }
 
     @After
@@ -157,29 +147,18 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
-    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data And Test History Using Vin Test With A Client Credentials Token")
+    @WithTag("Vott")
+    @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Vin Test With A Client Credentials Token")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVinTest() throws InterruptedException {
+    public void RetrieveVehicleDataUsingVinTest() throws InterruptedException {
 
         int tries = 0;
         int maxRetries = 20;
         int statusCode;
         Response response;
 
-        //Retrieve and save test certificate (pdf) as byteArray
         do {
-            response =
-                    givenAuth(token, xApiKey)
-                            .header("content-type", "application/json")
-                            .queryParam("vinNumber", validVINNumber).
-
-                            //send request
-                                    when().//log().all().
-                            get().
-
-                            //verification
-                                    then().//log().all().
-                            extract().response();
+            response = VehicleDataAPI.getVehicleDataUsingVIN(validVINNumber, token);
             statusCode = response.statusCode();
             tries++;
             Thread.sleep(1000);
@@ -325,30 +304,30 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateIssueDate()).isEqualTo(plate.getPlateIssueDate());
         assertThat(technicalRecord.getPlates().get(0).getPlateSerialNumber()).isEqualTo(plate.getPlateSerialNumber());
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
-
     }
 
-    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataAndTestHistoryUsingVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataUsingVrmTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryUsingVrmTest() {
+    public void RetrieveVehicleDataUsingVrmTest() throws InterruptedException {
 
-        String response =
-                givenAuth(token, xApiKey)
-                        .header("content-type", "application/json")
-                        .queryParam("VehicleRegMark", validVehicleRegMark).
+        int tries = 0;
+        int maxRetries = 20;
+        int statusCode;
+        Response response;
 
-                        //send request
-                                when().//log().all().
-                        get().
+        do {
+            response = VehicleDataAPI.getVehicleDataUsingVRM(validVehicleRegMark, token);
+            statusCode = response.statusCode();
+            tries++;
+            Thread.sleep(1000);
+        } while (statusCode >= 400 && tries < maxRetries);
 
-                        //verification
-                                then().//log().all().
-                        statusCode(200).
-                        extract().response().asString();
+        assertEquals(200, statusCode);
 
         Gson gson = new GsonBuilder().create();
 
-        Vehicle vehicle = gson.fromJson(response, Vehicle.class);
+        Vehicle vehicle = gson.fromJson(response.asString(), Vehicle.class);
 
         TechnicalRecord technicalRecord = vehicle.getTechnicalrecords().get(0);
 
@@ -486,404 +465,75 @@ public class RetrieveTestHistoryAndVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
-    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataAndTestHistoryBadJwtTokenTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataBadJwtTokenTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryBadJwtTokenTest() {
-
-        //prep request
-        givenAuth(token + 1, xApiKey)
-                .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", validVINNumber).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(403).
-                body("message", equalTo("User is not authorized to access this resource with an explicit deny"));
+    public void RetrieveVehicleDataBadJwtTokenTest() {
+        Response response = VehicleDataAPI.getVehicleDataUsingVIN(validVINNumber, token+1);
+        assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataAndTestHistoryNoParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataNoParamsTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNoParamsTest() {
-
-        //prep request
-        givenAuth(token, xApiKey)
-                .header("content-type", "application/json").
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(400).
-                body(equalTo("No parameter defined"));
+    public void RetrieveVehicleDataNoParamsTest() {
+        Response response = VehicleDataAPI.getVehicleDataNoParams(token);
+        assertEquals(400, response.statusCode());
+        assertEquals("No parameter defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataBothVinAndVrmTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryBothVinAndVrmTest() {
-
-        //prep request
-        givenAuth(token, xApiKey)
-                .header("content-type", "application/json")
-                .queryParam("vinNumber", validVINNumber)
-                .queryParam("VehicleRegMark", validVINNumber).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(400).
-                body(equalTo("Too many parameters defined"));
+    public void RetrieveVehicleDataBothVinAndVrmTest() {
+        Response response = VehicleDataAPI.getVehicleDataUsingVIN_VRM(validVINNumber, validVehicleRegMark, token);
+        assertEquals(400, response.statusCode());
+        assertEquals("Too many parameters defined", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataAndTestHistoryNoAPIKeyTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataNoAPIKeyTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNoAPIKeyTest() {
-
-        //prep request
-        givenAuth(token)
-                .header("content-type", "application/json")
-                .queryParam("vinNumber", validVINNumber).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(403).
-                body("message", equalTo("Forbidden"));
+    public void RetrieveVehicleDataNoAPIKeyTest() {
+        Response response = VehicleDataAPI.getVehicleDataNoAPIKey(validVINNumber, token);
+        assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataAndTestHistoryInvalidAPIKey")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataInvalidAPIKey")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryInvalidAPIKey() {
-
-        //prep request
-        givenAuth(token, xApiKey + "badkey")
-                .header("content-type", "application/json")
-                .queryParam("vinNumber", validVINNumber).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(403).
-                body("message", equalTo("Forbidden"));
+    public void RetrieveVehicleDataInvalidAPIKey() {
+        Response response = VehicleDataAPI.getVehicleDataInvalidAPIKey(validVINNumber, token);
+        assertEquals(403, response.statusCode());
     }
 
-    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataVehicleRegMarkDoesntExistTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryVehicleRegMarkDoesntExistTest() {
-
-        //prep request
-        givenAuth(token, xApiKey)
-                .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", invalidVehicleRegMark).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(404).
-                body(equalTo("Vehicle was not found"));
+    public void RetrieveVehicleDataVehicleRegMarkDoesntExistTest() {
+        String invalidVehicleRegMark = "W01A00229";
+        Response response = VehicleDataAPI.getVehicleDataUsingVRM(invalidVehicleRegMark, token);
+        assertEquals(404, response.statusCode());
+        assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataVinNumberDoesntExistTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryVinNumberDoesntExistTest() {
-
-        //prep request
-        givenAuth(token, xApiKey)
-                .header("content-type", "application/json")
-                .queryParam("vinNumber", invalidVINNumber).
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(404).
-                body(equalTo("Vehicle was not found"));
+    public void RetrieveVehicleDataVinNumberDoesntExistTest() {
+        String invalidVINNumber = "A123456789";
+        Response response = VehicleDataAPI.getVehicleDataUsingVIN(invalidVINNumber, token);
+        assertEquals(404, response.statusCode());
+        assertEquals("Vehicle was not found", response.asString());
     }
 
-    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest")
+    @WithTag("Vott")
+    @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataNonPrintableCharsParamsTest")
     @Test
-    public void RetrieveVehicleDataAndTestHistoryNonPrintableCharsParamsTest() {
-
-        //prep request
-        givenAuth(token, xApiKey)
-                .header("content-type", "application/json")
-                .queryParam("VehicleRegMark", nonAlphaVehicleMark). // todo create a var with non print chars and pass it as VehicleRegMark
-
-                //send request
-                        when().//log().all().
-                get().
-
-                //verification
-                        then().//log().all().
-                statusCode(500).
-                body(equalTo("Vehicle identifier is invalid"));
-    }
-
-    private vott.models.dao.Vehicle newTestVehicle() {
-        vott.models.dao.Vehicle vehicle = new vott.models.dao.Vehicle();
-
-        vehicle.setSystemNumber("SYSTEM-NUMBER");
-        vehicle.setVin("A12345");
-        vehicle.setVrm_trm("999999999");
-        vehicle.setTrailerID("88888888");
-
-        return vehicle;
-    }
-
-    private MakeModel newTestMakeModel() {
-        MakeModel mm = new MakeModel();
-
-        mm.setMake("Test Make");
-        mm.setModel("Test Model");
-        mm.setChassisMake("Test Chassis Make");
-        mm.setChassisModel("Test Chassis Model");
-        mm.setBodyMake("Test Body Make");
-        mm.setBodyModel("Test Body Model");
-        mm.setModelLiteral("Test Model Literal");
-        mm.setBodyTypeCode("1");
-        mm.setBodyTypeDescription("Test Description");
-        mm.setFuelPropulsionSystem("Test Fuel");
-        mm.setDtpCode("888888");
-
-        return mm;
-    }
-
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
-
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
-
-        return identity;
-    }
-
-    private ContactDetails newTestContactDetails() {
-        ContactDetails cd = new ContactDetails();
-
-        cd.setName("Test Name");
-        cd.setAddress1("Test Address 1");
-        cd.setAddress2("Test Address 2");
-        cd.setPostTown("Test Post Town");
-        cd.setAddress3("Test Address 3");
-        cd.setEmailAddress("TestEmailAddress");
-        cd.setTelephoneNumber("8888888");
-        cd.setFaxNumber("99999999");
-
-        return cd;
-    }
-
-    private VehicleClass newTestVehicleClass() {
-        VehicleClass vc = new VehicleClass();
-
-        vc.setCode("1");
-        vc.setDescription("Test Description");
-        vc.setVehicleType("Test Type");
-        vc.setVehicleSize("55555");
-        vc.setVehicleConfiguration("Test Configuration");
-        vc.setEuVehicleCategory("ABC");
-
-        return vc;
-    }
-
-    private vott.models.dao.TechnicalRecord newTestTechnicalRecord() {
-        vott.models.dao.TechnicalRecord tr = new vott.models.dao.TechnicalRecord();
-
-        tr.setVehicleID(String.valueOf(vehiclePK));
-        tr.setRecordCompleteness("Complete");
-        tr.setCreatedAt("2021-01-01 00:00:00.000000");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
-        tr.setMakeModelID(String.valueOf(makeModelPK));
-        tr.setFunctionCode("A");
-        tr.setOffRoad("1");
-        tr.setNumberOfWheelsDriven("4");
-        tr.setEmissionsLimit("Test Emission Limit");
-        tr.setDepartmentalVehicleMarker("1");
-        tr.setAlterationMarker("1");
-        tr.setVehicleClassID(String.valueOf(vehicleClassPK));
-        tr.setVariantVersionNumber("Test Variant Number");
-        tr.setGrossEecWeight("1200");
-        tr.setTrainEecWeight("1400");
-        tr.setMaxTrainEecWeight("1400");
-        tr.setApplicantDetailID(String.valueOf(contactDetailsPK));
-        tr.setPurchaserDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufacturerDetailID(String.valueOf(contactDetailsPK));
-        tr.setManufactureYear("2021");
-        tr.setRegnDate("2021-01-01");
-        tr.setFirstUseDate("2021-01-01");
-        tr.setCoifDate("2021-01-01");
-        tr.setNtaNumber("NTA Number");
-        tr.setCoifSerialNumber("55555");
-        tr.setCoifCertifierName("88888");
-        tr.setApprovalType("111");
-        tr.setApprovalTypeNumber("ABC11111");
-        tr.setVariantNumber("Test Variant");
-        tr.setConversionRefNo("10");
-        tr.setSeatsLowerDeck("2");
-        tr.setSeatsUpperDeck("3");
-        tr.setStandingCapacity("15");
-        tr.setSpeedRestriction("60");
-        tr.setSpeedLimiterMrk("1");
-        tr.setTachoExemptMrk("1");
-        tr.setDispensations("Test Dispensations");
-        tr.setRemarks("Automation Test Remarks");
-        tr.setReasonForCreation("Automation Test ");
-        tr.setStatusCode("B987");
-        tr.setUnladenWeight("1400");
-        tr.setGrossKerbWeight("1400");
-        tr.setGrossLadenWeight("1400");
-        tr.setGrossGbWeight("1400");
-        tr.setGrossDesignWeight("1400");
-        tr.setTrainGbWeight("1400");
-        tr.setTrainDesignWeight("1400");
-        tr.setMaxTrainGbWeight("1400");
-        tr.setMaxTrainDesignWeight("1400");
-        tr.setMaxLoadOnCoupling("1400");
-        tr.setFrameDescription("Test Automation");
-        tr.setTyreUseCode("A1");
-        tr.setRoadFriendly("1");
-        tr.setDrawbarCouplingFitted("1");
-        tr.setEuroStandard("Y555");
-        tr.setSuspensionType("Y");
-        tr.setCouplingType("B");
-        tr.setLength("100");
-        tr.setHeight("50");
-        tr.setWidth("50");
-        tr.setFrontAxleTo5thWheelCouplingMin("55");
-        tr.setFrontAxleTo5thWheelCouplingMax("65");
-        tr.setFrontAxleTo5thWheelMin("45");
-        tr.setFrontAxleTo5thWheelMax("65");
-        tr.setFrontAxleToRearAxle("15");
-        tr.setRearAxleToRearTrl("25");
-        tr.setCouplingCenterToRearAxleMin("25");
-        tr.setCouplingCenterToRearAxleMax("85");
-        tr.setCouplingCenterToRearTrlMin("25");
-        tr.setCouplingCenterToRearTrlMax("85");
-        tr.setCentreOfRearmostAxleToRearOfTrl("25");
-        tr.setNotes("Test Notes");
-        tr.setPurchaserNotes("Purchaser Notes");
-        tr.setManufacturerNotes("Manufactuer Notes");
-        tr.setNoOfAxles("3");
-        tr.setBrakeCode("XXXXX");
-        tr.setBrakes_dtpNumber("DTP111");
-        tr.setBrakes_loadSensingValve("1");
-        tr.setBrakes_antilockBrakingSystem("1");
-        tr.setCreatedByID(String.valueOf(identityPK));
-        tr.setLastUpdatedByID(String.valueOf(identityPK));
-        tr.setUpdateType("AutoTest");
-        tr.setNumberOfSeatbelts("3");
-        tr.setSeatbeltInstallationApprovalDate("2021-01-01");
-
-        return tr;
-    }
-
-    private PSVBrakes newTestPSVBrakes() {
-        PSVBrakes psv = new PSVBrakes();
-
-        psv.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        psv.setBrakeCodeOriginal("222");
-        psv.setBrakeCode("Test");
-        psv.setDataTrBrakeOne("Test Data");
-        psv.setDataTrBrakeTwo("Test Data");
-        psv.setDataTrBrakeThree("Test Data");
-        psv.setRetarderBrakeOne("Test Data");
-        psv.setRetarderBrakeTwo("Test Data");
-        psv.setServiceBrakeForceA("11");
-        psv.setSecondaryBrakeForceA("22");
-        psv.setParkingBrakeForceA("33");
-        psv.setServiceBrakeForceB("44");
-        psv.setSecondaryBrakeForceB("55");
-        psv.setParkingBrakeForceB("66");
-
-        return psv;
-    }
-
-    private Axles newTestAxles() {
-        Axles axles = new Axles();
-
-        axles.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        axles.setTyreID(String.valueOf(tyrePK));
-        axles.setAxleNumber("222");
-        axles.setParkingBrakeMrk("1");
-        axles.setKerbWeight("1200");
-        axles.setLadenWeight("1500");
-        axles.setGbWeight("1200");
-        axles.setEecWeight("1500");
-        axles.setDesignWeight("1200");
-        axles.setBrakeActuator("10");
-        axles.setLeverLength("10");
-        axles.setSpringBrakeParking("1");
-
-        return axles;
-    }
-
-    private Tyre newTestTyre() {
-        Tyre tyre = new Tyre();
-
-        tyre.setTyreSize("456");
-        tyre.setPlyRating("10");
-        tyre.setFitmentCode("55555");
-        tyre.setDataTrAxles("Test Data");
-        tyre.setSpeedCategorySymbol("1");
-        tyre.setTyreCode("88888");
-
-        return tyre;
-    }
-
-    private AxleSpacing newTestAxleSpacing() {
-        AxleSpacing as = new AxleSpacing();
-
-        as.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        as.setAxles("Test");
-        as.setValue("120");
-
-        return as;
-    }
-
-    private Plate newTestPlate() {
-        Plate plate = new Plate();
-        plate.setTechnicalRecordID(String.valueOf(technicalRecordPK));
-        plate.setPlateSerialNumber("666666");
-        plate.setPlateIssueDate("2100-12-31");
-        plate.setPlateReasonForIssue("Test Reason");
-        plate.setPlateIssuer("Auto Test");
-
-        return plate;
-    }
-
-    private Callable<Boolean> vehicleIsPresentInDatabase(String vin) {
-        return () -> {
-            List<vott.models.dao.Vehicle> vehicles = vehicleRepository.select(String.format("SELECT * FROM `vehicle` WHERE `vin` = '%s'", vin));
-            return !vehicles.isEmpty();
-        };
-    }
-
-    private Callable<Boolean> techRecordIsPresentInDatabase(String vehicleID) {
-        return () -> {
-            List<vott.models.dao.TechnicalRecord> testResults = technicalRecordRepository.select(String.format(
-                    "SELECT *\n"
-                            + "FROM `technical_record`\n"
-                            + "WHERE `vehicle_id` = '%s'", vehicleID
-            ));
-            return !testResults.isEmpty();
-        };
+    public void RetrieveVehicleDataNonPrintableCharsParamsTest() {
+        String nonAlphaVehicleMark = "!@/'";
+        Response response = VehicleDataAPI.getVehicleDataUsingVRM(nonAlphaVehicleMark, token);
+        assertEquals(500, response.statusCode());
+        assertEquals("Vehicle identifier is invalid", response.asString());
     }
 }

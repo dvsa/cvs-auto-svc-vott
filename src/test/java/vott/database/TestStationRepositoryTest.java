@@ -2,12 +2,14 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.TestStation;
 
 import java.util.ArrayList;
@@ -40,11 +42,12 @@ public class TestStationRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC54 - Testing test station unique index compound key")
     @Test
     public void upsertingIdenticalTestStationReturnsSamePk() {
-        int primaryKey1 = testStationRepository.partialUpsert(newTestTestStation());
-        int primaryKey2 = testStationRepository.partialUpsert(newTestTestStation());
+        int primaryKey1 = testStationRepository.partialUpsert(SeedData.newTestTestStation());
+        int primaryKey2 = testStationRepository.partialUpsert(SeedData.newTestTestStation());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -52,12 +55,13 @@ public class TestStationRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC55 - Testing test station unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        TestStation ts1 = newTestTestStation();
+        TestStation ts1 = SeedData.newTestTestStation();
 
-        TestStation ts2 = newTestTestStation();
+        TestStation ts2 = SeedData.newTestTestStation();
         ts2.setPNumber("123456789");
 
         int primaryKey1 = testStationRepository.partialUpsert(ts1);
@@ -67,15 +71,5 @@ public class TestStationRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private TestStation newTestTestStation() {
-        TestStation ts = new TestStation();
-
-        ts.setPNumber("987654321");
-        ts.setName("Test Test Station");
-        ts.setType("Test");
-
-        return ts;
     }
 }

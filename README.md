@@ -7,19 +7,44 @@ These instructions will get you up and running with the automation framework.
 
 ### Prerequisites
 - Browserstack credentials
-- Jenkins access
-- Java 1.8 SDK
+- Jenkins access (provided by DevOps)
+- Permissions for RDS DB to access the LDAP (provided by DevOps)
+- Java 11 or above
 - Maven
 - Git
 - IntelliJ
 
+You will need to install the DVSA security tools - [repo-security-scanner](https://github.com/UKHomeOffice/repo-security-scanner) - on your machine as well as [git-secrets](https://github.com/awslabs/git-secrets) for AWS.
+Then create a pre-commit hook:
+```shell
+echo 'git secrets --scan && git log -p | scanrepo' > .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# You can check that the hook is present
+cat .git/hooks/pre-commit
+```
+
+This hook will run every time you commit code and checks for aws secrets and dvsa secrets/patterns.
+
 ###Running Locally
-In order to run the test locally your will need to complete the following steps:
+In order to run the test locally your will need to complete the following steps once the LDAP access (with the relevant role) has been provided:
 - Connect to Jenkins VPN (required for database access)
-- Populate the template config file: src>main>resources>config.json  
- !!Ensure only the template is committed to Git!!  
+- Create config file in `src/main/resources/config.json` with the relevant values.
+- Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
+- To test on specific branch locally change following in your config.json:
   
-- Running can be triggered from IntelliJ and command line using `mvn test`
+  "databaseName": "CVSNOP[branch]"
+  
+  "branch": "[branch]"
+  
+  "apiKeys": {
+  "enquiryService": "xxxxxxxxxxxxxxxxxxx-[branch]"
+  }
+
+It is recommended to use a java version manager such as [jenv](https://github.com/jenv/jenv) and package manager such as [brew](https://brew.sh/) (Mac OS) for example to run this repository since it will require Java 11+ and other CVS services run on Java8.
+You will need to install the relevant jdk and configure your project accordingly. Please refer to the following documentation:
+- [Managing jenv](https://www.jenv.be/)
+- [brew and JDK](https://gist.github.com/tomysmile/a9a7aee85ff73454bd57e198ad90e614)
+
+Once installed, you can run `jenv help` for its documentation.
 
 ## Running the Tests
 Pull the repo  

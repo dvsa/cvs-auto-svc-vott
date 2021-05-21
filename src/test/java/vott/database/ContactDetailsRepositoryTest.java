@@ -2,12 +2,14 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.ContactDetails;
 
 import java.util.ArrayList;
@@ -41,11 +43,12 @@ public class ContactDetailsRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC10 - Testing contact details unique index compound key")
     @Test
     public void upsertingIdenticalContactDetailsReturnsSamePk() {
-        int primaryKey1 = contactDetailsRepository.partialUpsert(newTestContactDetails());
-        int primaryKey2 = contactDetailsRepository.partialUpsert(newTestContactDetails());
+        int primaryKey1 = contactDetailsRepository.partialUpsert(SeedData.newTestContactDetails());
+        int primaryKey2 = contactDetailsRepository.partialUpsert(SeedData.newTestContactDetails());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -53,12 +56,13 @@ public class ContactDetailsRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC11 - Testing contact details unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        ContactDetails cd1 = newTestContactDetails();
+        ContactDetails cd1 = SeedData.newTestContactDetails();
 
-        ContactDetails cd2 = newTestContactDetails();
+        ContactDetails cd2 = SeedData.newTestContactDetails();
         cd2.setName("Test Change Name");
         cd2.setAddress1("Test Change Address 1");
 
@@ -69,20 +73,5 @@ public class ContactDetailsRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private ContactDetails newTestContactDetails() {
-        ContactDetails cd = new ContactDetails();
-
-        cd.setName("Test Name");
-        cd.setAddress1("Test Address 1");
-        cd.setAddress2("Test Address 2");
-        cd.setPostTown("Test Post Town");
-        cd.setAddress3("Test Address 3");
-        cd.setEmailAddress("TestEmailAddress");
-        cd.setTelephoneNumber("8888888");
-        cd.setFaxNumber("99999999");
-
-        return cd;
     }
 }
