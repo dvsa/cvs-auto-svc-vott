@@ -1,0 +1,9 @@
+src/main/java/vott/aws/SecretsManagerClient.java
+src/test/java/vott/testhistory/RetrieveTestHistoryPasswordTokenTest.java
+src/test/java/vott/testhistory/RetrieveTestHistoryAndVehicleDataPasswordTokenTest.java
+src/test/java/vott/documentretrieval/DownloadMotCertificateClientCredentialsTest.java
+src/test/java/vott/documentretrieval/DownloadMotCertificateClientCredentials.java
+src/main/java/vott/aws/SecretsManagerClient.java
+src/test/java/vott/TestHistory/RetrieveTestHistoryAndVehicleDataPasswordTokenTest.java
+src/test/java/vott/testhistory/RetrieveVehicleDataPasswordTokenTest.java
+src/main/java/vott/config/ClientCredentialsGrantProperties.java

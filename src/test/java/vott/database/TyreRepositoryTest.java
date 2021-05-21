@@ -2,12 +2,14 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Tyre;
 
 import java.util.ArrayList;
@@ -41,11 +43,12 @@ public class TyreRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC58 - Testing tyre unique index compound key")
     @Test
     public void upsertingIdenticalTyreReturnsSamePk() {
-        int primaryKey1 = tyreRepository.partialUpsert(newTestTyre());
-        int primaryKey2 = tyreRepository.partialUpsert(newTestTyre());
+        int primaryKey1 = tyreRepository.partialUpsert(SeedData.newTestTyre());
+        int primaryKey2 = tyreRepository.partialUpsert(SeedData.newTestTyre());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -53,12 +56,13 @@ public class TyreRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC59 - Testing tyre unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Tyre tyre1 = newTestTyre();
+        Tyre tyre1 = SeedData.newTestTyre();
 
-        Tyre tyre2 = newTestTyre();
+        Tyre tyre2 = SeedData.newTestTyre();
         tyre2.setTyreSize("222");
 
         int primaryKey1 = tyreRepository.partialUpsert(tyre1);
@@ -68,18 +72,5 @@ public class TyreRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private Tyre newTestTyre() {
-        Tyre tyre = new Tyre();
-
-        tyre.setTyreSize("456");
-        tyre.setPlyRating("10");
-        tyre.setFitmentCode("55555");
-        tyre.setDataTrAxles("Test Data");
-        tyre.setSpeedCategorySymbol("1");
-        tyre.setTyreCode("88888");
-
-        return tyre;
     }
 }

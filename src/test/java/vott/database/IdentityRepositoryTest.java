@@ -2,12 +2,14 @@ package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.models.dao.Identity;
 
 import java.util.ArrayList;
@@ -41,11 +43,12 @@ public class IdentityRepositoryTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC19 - Testing identity unique index compound key")
     @Test
     public void upsertingIdenticalIdentityReturnsSamePk() {
-        int primaryKey1 = identityRepository.partialUpsert(newTestIdentity());
-        int primaryKey2 = identityRepository.partialUpsert(newTestIdentity());
+        int primaryKey1 = identityRepository.partialUpsert(SeedData.newTestIdentity());
+        int primaryKey2 = identityRepository.partialUpsert(SeedData.newTestIdentity());
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -53,12 +56,13 @@ public class IdentityRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
+    @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC20 - Testing identity unique index compound key")
     @Test
     public void upsertingNewDataReturnsDifferentPk() {
-        Identity identity1 = newTestIdentity();
+        Identity identity1 = SeedData.newTestIdentity();
 
-        Identity identity2 = newTestIdentity();
+        Identity identity2 = SeedData.newTestIdentity();
         identity1.setName("Another Name");
 
         int primaryKey1 = identityRepository.partialUpsert(identity1);
@@ -68,15 +72,6 @@ public class IdentityRepositoryTest {
         deleteOnExit.add(primaryKey2);
 
         assertNotEquals(primaryKey1, primaryKey2);
-    }
-
-    private Identity newTestIdentity() {
-        Identity identity = new Identity();
-
-        identity.setIdentityID("55555");
-        identity.setName("Test Name");
-
-        return identity;
     }
 }
 
