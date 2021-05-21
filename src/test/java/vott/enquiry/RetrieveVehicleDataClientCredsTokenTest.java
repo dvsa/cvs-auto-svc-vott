@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,6 +147,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         vehicleClassRepository.delete(vehicleClassPK);
     }
 
+    @WithTag("Vott")
     @Title ("VOTT-9 - AC1 - TC11 - Happy Path - Retrieve Vehicle Data Using Vin Test With A Client Credentials Token")
     @Test
     public void RetrieveVehicleDataUsingVinTest() throws InterruptedException {
@@ -304,6 +306,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC12 - Happy Path - RetrieveVehicleDataUsingVrmTest")
     @Test
     public void RetrieveVehicleDataUsingVrmTest() throws InterruptedException {
@@ -462,6 +465,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertThat(technicalRecord.getPlates().get(0).getPlateReasonForIssue()).isEqualTo(plate.getPlateReasonForIssue());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC13 - RetrieveVehicleDataBadJwtTokenTest")
     @Test
     public void RetrieveVehicleDataBadJwtTokenTest() {
@@ -469,6 +473,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC14 - RetrieveVehicleDataNoParamsTest")
     @Test
     public void RetrieveVehicleDataNoParamsTest() {
@@ -477,6 +482,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("No parameter defined", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC15 - RetrieveVehicleDataBothVinAndVrmTest")
     @Test
     public void RetrieveVehicleDataBothVinAndVrmTest() {
@@ -485,6 +491,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Too many parameters defined", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC16 RetrieveVehicleDataNoAPIKeyTest")
     @Test
     public void RetrieveVehicleDataNoAPIKeyTest() {
@@ -492,6 +499,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC17 - RetrieveVehicleDataInvalidAPIKey")
     @Test
     public void RetrieveVehicleDataInvalidAPIKey() {
@@ -499,6 +507,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals(403, response.statusCode());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC18 - RetrieveVehicleDataVehicleRegMarkDoesntExistTest")
     @Test
     public void RetrieveVehicleDataVehicleRegMarkDoesntExistTest() {
@@ -508,6 +517,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC19 - RetrieveVehicleDataVinNumberDoesntExistTest")
     @Test
     public void RetrieveVehicleDataVinNumberDoesntExistTest() {
@@ -517,6 +527,7 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         assertEquals("Vehicle was not found", response.asString());
     }
 
+    @WithTag("Vott")
     @Title("VOTT-9 - AC1 - TC20 - RetrieveVehicleDataNonPrintableCharsParamsTest")
     @Test
     public void RetrieveVehicleDataNonPrintableCharsParamsTest() {
