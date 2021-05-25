@@ -12,4 +12,5 @@ public class ApiKeys extends HashMap<String, String> {
     public String getEnquiryServiceApiKey() {
         return this.get("enquiryService");
     }
+    public String getDocumentRetrievalApiKey() { return this.get("documentRetrieval"); }
 }
