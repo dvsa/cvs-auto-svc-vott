@@ -10,7 +10,7 @@ import static io.restassured.RestAssured.given;
 public class DocRetrievalAPI{
 
     private static VottConfiguration configuration = VottConfiguration.local();
-    private static String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
+    private static String apiKey = configuration.getApiKeys().getDocumentRetrievalApiKey();
 
     public static Response getMOTCertUsingVINTestNumber(String vin, String testNumber, String token){
         RESTAssuredBaseURI();
