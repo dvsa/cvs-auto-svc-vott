@@ -9,8 +9,8 @@ These instructions will get you up and running with the automation framework.
 - Browserstack credentials
 - Jenkins access (provided by DevOps)
 - Permissions for RDS DB to access the LDAP (provided by DevOps)
-- Java 11 or above
-- Maven
+- Java 11 or above (Known issues with the connector, test runner will work with Java 11)
+- Maven (will require Java 15)
 - Git
 - IntelliJ
 
@@ -28,16 +28,24 @@ This hook will run every time you commit code and checks for aws secrets and dvs
 In order to run the test locally your will need to complete the following steps once the LDAP access (with the relevant role) has been provided:
 - Connect to Jenkins VPN (required for database access)
 - Create config file in `src/main/resources/config.json` with the relevant values.
-- Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
+
+Run the following command to create the config
+
+```shell
+cp src/main/resources/config-placeholder.json src/main/resources/config.json
+```
 - To test on specific branch locally change following in your config.json:
-  
-  "databaseName": "CVSNOP[branch]"
-  
-  "branch": "[branch]"
-  
+```json
+{
+  "databaseName": "CVSNOP[branch]",
+  "branch": "[branch]",
   "apiKeys": {
-  "enquiryService": "xxxxxxxxxxxxxxxxxxx-[branch]"
+    "enquiryService": "xxxxxxxxxxxxxxxxxxx-[branch]",
+    "documentRetrieval": "INSERT API KEY"
   }
+}
+```
+Or get the relevant [config file here]().
 
 It is recommended to use a java version manager such as [jenv](https://github.com/jenv/jenv) and package manager such as [brew](https://brew.sh/) (Mac OS) for example to run this repository since it will require Java 11+ and other CVS services run on Java8.
 You will need to install the relevant jdk and configure your project accordingly. Please refer to the following documentation:
