@@ -1,0 +1,34 @@
+{
+  "databaseProperties": {
+    "engine": "",
+    "host": "",
+    "port": 1234,
+    "username": "",
+    "password": "",
+    "databaseName": "",
+    "databaseClusterIdentifier": ""
+  },
+  "oAuthProperties": {
+    "implicit": {
+      "grantType": "",
+      "clientId": "",
+      "username": "",
+      "password": "",
+      "resource": ""
+    },
+    "clientCredentials": {
+      "grantType": "",
+      "clientId": "",
+      "scope": "",
+      "clientSecret": ""
+    }
+  },
+  "apiProperties": {
+    "baseUrl": "",
+    "branch": ""
+  },
+  "apiKeys": {
+    "enquiryService": "",
+    "documentRetrieval": ""
+  }
+}
