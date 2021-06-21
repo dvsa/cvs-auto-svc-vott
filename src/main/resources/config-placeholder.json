@@ -2,7 +2,7 @@
   "databaseProperties": {
     "engine": "",
     "host": "",
-    "port": 0,
+    "port": 1234,
     "username": "",
     "password": "",
     "databaseName": "",
