@@ -1,6 +1,6 @@
 # cvs-auto-svc-vott
 
-This is the project for creating and managing the VOTT services automated tests
+This is the project for creating and managing the VOTT services automated tests.
 
 ## Getting Started
 These instructions will get you up and running with the automation framework.
@@ -29,12 +29,14 @@ In order to run the test locally your will need to complete the following steps 
 - Connect to Jenkins VPN (required for database access)
 - Create config file in `src/main/resources/config.json` with the relevant values.
 
-Run the following command to create the config
+- Run the following command to create the config or get the relevant config file [to get started](https://wiki.dvsacloud.uk/pages/viewpage.action?pageId=105156173).
 
 ```shell
 cp src/main/resources/config-placeholder.json src/main/resources/config.json
 ```
-- To test on specific branch locally change following in your config.json:
+
+
+To test on specific branch locally change following in your `config.json`:
 ```json
 {
   "databaseName": "CVSNOP[branch]",
@@ -45,10 +47,10 @@ cp src/main/resources/config-placeholder.json src/main/resources/config.json
   }
 }
 ```
-Or get the relevant [config file here]().
 
 It is recommended to use a java version manager such as [jenv](https://github.com/jenv/jenv) and package manager such as [brew](https://brew.sh/) (Mac OS) for example to run this repository since it will require Java 11+ and other CVS services run on Java8.
-You will need to install the relevant jdk and configure your project accordingly. Please refer to the following documentation:
+You will need to install the relevant jdk and configure your project accordingly.
+Please refer to the following documentation:
 - [Managing jenv](https://www.jenv.be/)
 - [brew and JDK](https://gist.github.com/tomysmile/a9a7aee85ff73454bd57e198ad90e614)
 
@@ -56,11 +58,11 @@ Once installed, you can run `jenv help` for its documentation.
 
 ## Running the Tests
 Pull the repo  
-Run each test individually in each of the following folders  
-Database integrity tests (src/test/java/vott/database)  
-Document retrieval service (src/test/java/vott/documentretrieval)  
-Enquiry service (src/test/java/vott/testhistory)  
-E2E tests (src/test/java/vott/e2e/E2eTest.java)  
+Run each test individually in each of the following folders if you decide not use `maven`:
+- Database integrity tests (src/test/java/vott/database)  
+- Document retrieval service (src/test/java/vott/documentretrieval)  
+- Enquiry service (src/test/java/vott/testhistory)  
+- E2E tests (src/test/java/vott/e2e/E2eTest.java)  
 
 ## Adding Additional Service and APIKey support
 The current config file (src/main/resources/config.json) is configured with the following sections:
