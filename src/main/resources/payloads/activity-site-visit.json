@@ -1,0 +1,13 @@
+{
+  "activityType": "visit",
+  "testStationName": "Test Test Station",
+  "testStationPNumber": "987654321",
+  "testStationEmail": "Test.Station@test.com",
+  "testStationType": "gvts",
+  "testerName": "Auto Test",
+  "testerStaffId": "99999",
+  "testerEmail": "auto@test.com",
+  "startTime": "2021-06-22T11:48:00.934Z",
+  "endTime": null,
+  "notes": "This is a Test Site Visit For the VOTT automation suite."
+}
