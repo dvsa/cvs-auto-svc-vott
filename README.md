@@ -9,7 +9,7 @@ These instructions will get you up and running with the automation framework.
 - Browserstack credentials
 - Jenkins access (provided by DevOps)
 - Permissions for RDS DB to access the LDAP (provided by DevOps)
-- Java 11 or above
+- Java 15 
 - Maven
 - Git
 - IntelliJ
