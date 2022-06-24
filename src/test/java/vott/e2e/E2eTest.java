@@ -11,29 +11,32 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
+import vott.api.ActivitiesAPI;
 import vott.api.TestResultAPI;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.config.VottConfiguration;
-import vott.database.TestResultRepository;
-import vott.database.VehicleRepository;
+import vott.database.*;
 import vott.database.connection.ConnectionFactory;
+import vott.database.seeddata.SeedData;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
-import vott.models.dao.Vehicle;
 import vott.models.dto.enquiry.TestResult;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.testresults.CompleteTestResults;
+import vott.models.dto.activities.Activity;
+
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -54,7 +57,13 @@ public class E2eTest {
 
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
-
+    private ActivityRepository activityRepository;
+    private TesterRepository testerRepository;
+    private TestStationRepository testStationRepository;
+    private Integer testerId;
+    private Integer staffId;
+    private String parentId = "1";
+    private Integer testStationId;
     @Before
     public void setUp() throws Exception {
         configuration = VottConfiguration.local();
@@ -70,6 +79,19 @@ public class E2eTest {
         vehicleRepository = new VehicleRepository(connectionFactory);
 
         testResultRepository = new TestResultRepository(connectionFactory);
+
+        activityRepository = new ActivityRepository(connectionFactory);
+
+        testerRepository = new TesterRepository(connectionFactory);
+
+        testStationRepository = new TestStationRepository(connectionFactory);
+
+        Random rand = new Random();
+        staffId = rand.nextInt(99999);
+        testerId = testerRepository.fullUpsert(SeedData.newTestTester(staffId.toString()));
+
+        testStationId = testStationRepository.fullUpsert(SeedData.newTestTestStation());
+
     }
 
     @WithTag("Vott")
@@ -102,6 +124,25 @@ public class E2eTest {
         e2eTest(trlTechRecord, trlTestResult);
     }
 
+    @WithTag("Vott")
+    @Title("VOTT-999 - AC1 - TC3 - End to End Test for Trailers ")
+    @Test
+    public void e2eActivities() {
+        Activity activity = siteVistActivity();
+        activity.setTesterStaffId(staffId.toString());
+        e2eTest(activity);
+
+        activity = waitTimeActivity();
+        activity.setTesterStaffId(staffId.toString());
+        activity.setParentId(parentId);
+        e2eTest(activity);
+
+        activity = unallocatedTimeActivity();
+        activity.setTesterStaffId(staffId.toString());
+        activity.setParentId(parentId);
+        e2eTest(activity);
+    }
+
     private void e2eTest(TechRecordPOST techRecord, CompleteTestResults testResult) {
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
@@ -122,6 +163,29 @@ public class E2eTest {
 
         // match on arbitrary field tester name, which we have previously set to a UUID in matchKeys
         assertEquals(testResult.getTesterName(), actualTestResults.get(0).getTester().getName());
+    }
+
+    private void e2eTest(Activity activity) {
+
+        ActivitiesAPI.postActivity(activity, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(30)).await().until(
+                SqlGenerator.activityIsPresentInDatabase(testerId.toString(), activityRepository));
+        vott.models.dao.Activity dbData =
+                activityRepository.select("tester_id", testerId.toString(), "activityType", activity.getActivityType().toString());
+
+        assertEquals(dbData.getTesterID(), testerId.toString());
+        assertEquals(dbData.getTestStationID(), testStationId.toString());
+        assertEquals(dbData.getActivityType(), activity.getActivityType().toString());
+        assertEquals(dbData.getNotes(), activity.getNotes());
+        assertNotNull(dbData.getActivityID());
+
+        if (activity.getActivityType() == Activity.ActivityTypeEnum.VISIT){
+            parentId = dbData.getActivityID();
+        }
+        else
+        {
+            assertEquals(dbData.getParentID(), parentId);
+        }
     }
 
     private TechRecordPOST hgvTechRecord() {
@@ -148,6 +212,18 @@ public class E2eTest {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_trl.json"));
     }
 
+    private Activity siteVistActivity() {
+        return randomizeKeys(readActivityRecord("src/main/resources/payloads/activity-site-visit.json"));
+    }
+
+    private Activity unallocatedTimeActivity () {
+        return randomizeKeys(readActivityRecord("src/main/resources/payloads/activity-unallocated.json"));
+    }
+
+    private Activity waitTimeActivity () {
+        return randomizeKeys(readActivityRecord("src/main/resources/payloads/activity-wait-time.json"));
+    }
+
     @SneakyThrows(IOException.class)
     private TechRecordPOST readTechRecord(String path) {
         return gson.fromJson(
@@ -164,12 +240,28 @@ public class E2eTest {
         );
     }
 
+    @SneakyThrows(IOException.class)
+    private Activity readActivityRecord(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                Activity.class
+        );
+    }
+
     private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
         String vin = fieldGenerator.randomVin();
 
         techRecord.setVin(vin);
 
         return techRecord;
+    }
+
+    private Activity randomizeKeys(Activity activity) {
+        String activityID = fieldGenerator.randomActivityID();
+
+        //activity.setActivityID(activityID);
+
+        return activity;
     }
 
     private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {

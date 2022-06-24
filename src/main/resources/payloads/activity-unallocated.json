@@ -1,0 +1,12 @@
+{
+  "activityType": "unaccountable time",
+  "testStationName": "Test Test Station",
+  "testStationPNumber": "987654321",
+  "testStationEmail": "Test.Station@test.com",
+  "testStationType": "gvts",
+  "testerName": "Auto Test",
+  "testerStaffId": "99999",
+  "startTime": "2021-06-22T14:00:00.934Z",
+  "endTime": "2021-06-22T15:00:00.000Z",
+  "notes": "This is a Test Site Visit For the VOTT automation suite."
+}

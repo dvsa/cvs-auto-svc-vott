@@ -3,6 +3,7 @@ package vott.e2e;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.util.UUID;
 
 public class FieldGenerator {
 
@@ -25,6 +26,11 @@ public class FieldGenerator {
         int length = ThreadLocalRandom.current().nextInt(3, 8 + 1);
 
         return randomAlphanumeric(length); // min VRM length = 3, max VRM length = 8
+    }
+
+    public String randomActivityID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
     private String randomAlphanumeric(int length) {

@@ -36,20 +36,28 @@ public class SeedData {
         return fe;
     }
 
-    public static TestStation newTestTestStation() {
+    public static TestStation newTestTestStation(String pNumber) {
         TestStation ts = new TestStation();
 
-        ts.setPNumber("987654321");
+        ts.setPNumber(pNumber);
         ts.setName("Test Test Station");
-        ts.setType("Test");
+        ts.setType("gvts");
 
         return ts;
     }
+    public static TestStation newTestTestStation()
+    {
+        return newTestTestStation("P98765432");
+    }
 
     public static Tester newTestTester() {
-        Tester tester = new Tester();
+        return newTestTester("99999");
+    }
 
-        tester.setStaffID("1");
+    public static Tester newTestTester(String testerId) {
+        Tester tester = new Tester();
+        tester.setStaffID(testerId);
+
         tester.setName("Auto Test");
         tester.setEmailAddress("auto@test.com");
 
@@ -404,4 +412,48 @@ public class SeedData {
         return vs;
     }
 
+    public static Activity newVisitActivity(String testerId, String parentId, String testStationID, boolean populateEndTime) {
+        Activity activity = new Activity();
+
+        activity.setTestStationID(testStationID);
+        activity.setTesterID(testerId);
+        activity.setActivityID("122");
+        activity.setParentID(parentId);
+        activity.setActivityType("visit");
+        activity.setStartTime("2015-02-13 10:00:41.000");
+        if (populateEndTime) { activity.setEndTime("2015-02-13 16:00:40.562");}
+        activity.setNotes("This is a test site visit. Hello :-) ");
+
+        return activity;
+    }
+
+    public static Activity newWaitActivity(String testerId, String parentId, String testStationID, boolean populateEndTime) {
+        Activity activity = new Activity();
+
+        activity.setTestStationID(testStationID);
+        activity.setTesterID(testerId);
+        activity.setActivityID("122");
+        activity.setParentID(parentId);
+        activity.setActivityType("wait");
+        activity.setStartTime("2015-02-13 10:00:41.000");
+        if (populateEndTime) { activity.setEndTime("2015-02-13 16:00:40.562");}
+        activity.setNotes("This is a wait test activity. Hello :-) ");
+
+        return activity;
+    }
+
+    public static Activity newUnaccountableActivity(String testerId, String parentId, String testStationID, boolean populateEndTime){
+    Activity activity = new Activity();
+
+        activity.setTestStationID(testStationID);
+        activity.setTesterID(testerId);
+        activity.setActivityID("122");
+        activity.setParentID(parentId);
+        activity.setActivityType("unaccountable time");
+        activity.setStartTime("2015-02-13 10:00:41.000");
+        if (populateEndTime) { activity.setEndTime("2015-02-13 16:00:40.562");}
+        activity.setNotes("This is a unaccountable activity. Hello :-) ");
+
+        return activity;
+    }
 }

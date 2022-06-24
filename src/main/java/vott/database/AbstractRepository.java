@@ -78,6 +78,31 @@ public abstract class AbstractRepository<T> {
         }
     }
 
+    public T select(String columnName, String columnValue, String columnName2, String columnValue2) {
+        try (Connection connection = connectionFactory.getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    sqlGenerator.generateSelectSql(getTableDetails(), columnName, columnValue, columnName2, columnValue2)
+            );
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            List<T> entities = new ArrayList<>();
+
+            while (rs.next()) {
+                entities.add(mapToEntity(rs));
+            }
+
+            if (entities.size() != 1) {
+                throw new RuntimeException("Expected exactly 1 entity, got " + entities.size());
+            }
+
+            return entities.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException("DELETE failed", e);
+        }
+    }
+
     public List<T> select(String query) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);

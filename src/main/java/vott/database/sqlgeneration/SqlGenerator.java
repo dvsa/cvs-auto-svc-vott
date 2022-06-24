@@ -1,5 +1,6 @@
 package vott.database.sqlgeneration;
 
+import vott.database.ActivityRepository;
 import vott.database.TechnicalRecordRepository;
 import vott.database.TestResultRepository;
 import vott.database.VehicleRepository;
@@ -26,6 +27,23 @@ public class SqlGenerator {
             tableDetails.getPrimaryKeyColumnName(),
             primaryKey
         );
+    }
+
+    public String generateSelectSql(TableDetails tableDetails, String columnName,  String columnValue, String columnName2, String columnValue2) {
+        List<String> columnNames = Arrays.stream(tableDetails.getColumnNames())
+                .map(c -> '`' + c + '`')
+                .collect(Collectors.toList());
+
+        columnNames.add(0, "`" + tableDetails.getPrimaryKeyColumnName() + "`");
+
+        return String.format(
+                "SELECT %s FROM `%s` WHERE `%s` = %s AND `%s` = '%s'" ,
+                String.join(", ", columnNames),
+                tableDetails.getTableName(),
+                columnName,
+                columnValue,
+                columnName2,
+                columnValue2);
     }
 
     public String generateDeleteSql(TableDetails tableDetails, int primaryKey) {
@@ -126,6 +144,17 @@ public class SqlGenerator {
                             + "WHERE `vehicle_id` = '%s'", vehicleID
             ));
             return !testResults.isEmpty();
+        };
+    }
+
+    public static Callable<Boolean> activityIsPresentInDatabase(String testerID, ActivityRepository activityRepository) {
+        return () -> {
+            List<vott.models.dao.Activity> activities = activityRepository.select(String.format(
+                    "SELECT *\n"
+                            + "FROM `activity`\n"
+                            + "WHERE `tester_id` = '%s'", testerID
+            ));
+            return !activities.isEmpty();
         };
     }
 }
