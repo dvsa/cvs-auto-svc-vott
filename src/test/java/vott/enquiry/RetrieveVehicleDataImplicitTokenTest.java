@@ -1,4 +1,4 @@
-package vott.testhistory;
+package vott.enquiry;
 
 import com.google.gson.Gson;
 import net.serenitybdd.junit.runners.SerenityRunner;
