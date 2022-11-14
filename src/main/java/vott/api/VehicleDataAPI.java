@@ -29,7 +29,7 @@ public class VehicleDataAPI {
         return response;
     }
 
-    public static Vehicle getVehicleObjectUsingVIN(String vin, String token){
+    public static Vehicle getVehicleByVIN(String vin, String token){
         Response response = getVehicleDataUsingVIN(vin, token);
 
         Gson gson = GsonInstance.get();

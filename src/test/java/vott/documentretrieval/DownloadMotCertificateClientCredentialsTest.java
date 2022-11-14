@@ -67,7 +67,7 @@ public class DownloadMotCertificateClientCredentialsTest {
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         validVIN = techRecord.getVin();
         with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
-        Vehicle vehicle = VehicleDataAPI.getVehicleObjectUsingVIN(validVIN, v1ImplicitTokens.getBearerToken());
+        Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
         techRecord.setSystemNumber(vehicle.getSystemNumber()); 
 
         CompleteTestResults testResult = testResult(techRecord);
