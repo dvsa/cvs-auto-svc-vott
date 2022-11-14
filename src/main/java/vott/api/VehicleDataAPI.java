@@ -1,9 +1,12 @@
 package vott.api;
 
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import vott.config.VottConfiguration;
+import vott.json.GsonInstance;
+import vott.models.dto.enquiry.Vehicle;
 
 import static io.restassured.RestAssured.given;
 
@@ -24,6 +27,13 @@ public class VehicleDataAPI {
                                 then().extract().response();
 
         return response;
+    }
+
+    public static Vehicle getVehicleObjectUsingVIN(String vin, String token){
+        Response response = getVehicleDataUsingVIN(vin, token);
+
+        Gson gson = GsonInstance.get();
+        return gson.fromJson(response.asString(), Vehicle.class);
     }
 
     public static Response getVehicleDataUsingVRM(String vrm, String token){
