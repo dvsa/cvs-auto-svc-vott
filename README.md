@@ -27,7 +27,7 @@ This hook will run every time you commit code and checks for aws secrets and dvs
 ###Running Locally
 In order to run the test locally your will need to complete the following steps once the LDAP access (with the relevant role) has been provided:
 - Connect to Jenkins VPN (required for database access)
-- Create config file in `src/main/resources/config.json` with the relevant values.
+- Create config file in `src/main/resources/config.json` with the relevant values. An empty config.example.json file has been created to help.
 - Running can be triggered from IntelliJ and command line using `mvn verify` or `mvn clean verify`
 - To test on specific branch locally change following in your config.json:
   

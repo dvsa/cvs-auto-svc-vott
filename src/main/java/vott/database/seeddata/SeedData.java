@@ -115,16 +115,16 @@ public class SeedData {
         tr.setNoOfAxles("4");
         tr.setRegnDate("2100-12-31");
         tr.setFirstUseDate("2100-12-31");
-        tr.setCreatedAt("2021-01-01 00:00:00.000000");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
+        tr.setCreatedAt("2021-01-01 00:00:00");
+        tr.setLastUpdatedAt("2021-01-01 00:00:00");
         tr.setTestCode("111");
         tr.setTestNumber("A111B222");
         tr.setCertificateNumber("A111B222");
         tr.setSecondaryCertificateNumber("A111B222");
         tr.setTestExpiryDate("2022-01-01");
         tr.setTestAnniversaryDate("2022-01-01");
-        tr.setTestTypeStartTimestamp("2022-01-01 00:00:00.000000");
-        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00.000000");
+        tr.setTestTypeStartTimestamp("2022-01-01 00:00:00");
+        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00");
         tr.setNumberOfSeatbeltsFitted("2");
         tr.setLastSeatbeltInstallationCheckDate("2022-01-01");
         tr.setSeatbeltInstallationCheckDate("1");
@@ -224,8 +224,8 @@ public class SeedData {
 
         tr.setVehicleID(String.valueOf(vehiclePK));
         tr.setRecordCompleteness("Complete");
-        tr.setCreatedAt("2021-01-01 00:00:00.000000");
-        tr.setLastUpdatedAt("2021-01-01 00:00:00.000000");
+        tr.setCreatedAt("2021-01-01 00:00:00");
+        tr.setLastUpdatedAt("2021-01-01 00:00:00");
         tr.setMakeModelID(String.valueOf(makeModelPK));
         tr.setFunctionCode("A");
         tr.setOffRoad("1");
