@@ -12,7 +12,7 @@ public class FieldGenerator {
     private static final int NINE = 57;
 
     public String randomVin() {
-        int length = ThreadLocalRandom.current().nextInt(5, 21 + 1); // min VIN length = 1, max VIN length = 21
+        int length = ThreadLocalRandom.current().nextInt(9, 22); // min VIN length = 9, max VIN length = 21
 
         return randomAlphanumeric(length);
     }
@@ -22,7 +22,7 @@ public class FieldGenerator {
     }
 
     public String randomVrm() {
-        int length = ThreadLocalRandom.current().nextInt(3, 8 + 1);
+        int length = ThreadLocalRandom.current().nextInt(3, 9);
 
         return randomAlphanumeric(length); // min VRM length = 3, max VRM length = 8
     }

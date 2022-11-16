@@ -28,6 +28,9 @@ public class TechRecordPOST {
   @SerializedName("msUserDetails")
   private TechRecordArchiveAndProvisionalPayloadMsUserDetails msUserDetails = null;
 
+  @SerializedName("systemNumber")
+  private String systemNumber = null;
+
   @SerializedName("vin")
   private String vin = null;
 
@@ -65,17 +68,29 @@ public class TechRecordPOST {
     return this;
   }
 
-   /**
-   * Used for all vehicle types - PSV, HGV, TRL, car, lgv, motorcycle
-   * @return vin
-  **/
-    public String getVin() {
-    return vin;
-  }
+  /**
+  * Used for all vehicle types - PSV, HGV, TRL, car, lgv, motorcycle
+  * @return systemNumber
+ **/
+   public String getSystemNumber() {
+   return systemNumber;
+ }
 
-  public void setVin(String vin) {
-    this.vin = vin;
-  }
+ public void setSystemNumber(String systemNumber) {
+   this.systemNumber = systemNumber;
+ }
+
+ /**
+ * Used for all vehicle types - PSV, HGV, TRL, car, lgv, motorcycle
+ * @return vin
+**/
+  public String getVin() {
+  return vin;
+}
+
+public void setVin(String vin) {
+  this.vin = vin;
+}
 
   public TechRecordPOST primaryVrm(String primaryVrm) {
     this.primaryVrm = primaryVrm;

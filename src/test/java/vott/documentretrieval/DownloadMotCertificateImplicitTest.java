@@ -1,18 +1,17 @@
 package vott.documentretrieval;
 
 import com.google.gson.Gson;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import net.thucydides.core.annotations.WithTag;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.api.DocRetrievalAPI;
 import vott.api.TestResultAPI;
+import vott.api.VehicleDataAPI;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
@@ -23,7 +22,7 @@ import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
-import vott.models.dao.*;
+import vott.models.dto.enquiry.Vehicle;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.testresults.CompleteTestResults;
 
@@ -35,57 +34,45 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
 public class DownloadMotCertificateImplicitTest {
 
     // Variable + Constant Test Data Setup
-    private final VottConfiguration configuration = VottConfiguration.local();
     private String token;
 
     private String validVIN = "";
     private String validTestNumber = "";
 
-    private Gson gson;
-    private FieldGenerator fieldGenerator;
+    private Gson gson = GsonInstance.get();
+    private FieldGenerator fieldGenerator = new FieldGenerator();
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
-    private TestResultRepository testResultRepository;
-    private VehicleRepository vehicleRepository;
+    private ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
+    private TestResultRepository testResultRepository = new TestResultRepository(connectionFactory);
+    private VehicleRepository vehicleRepository = new VehicleRepository(connectionFactory);
 
     @Before
     public void Setup() {
 
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
-        gson = GsonInstance.get();
-        fieldGenerator = new FieldGenerator();
-
         TechRecordPOST techRecord = techRecord();
-        CompleteTestResults testResult = testResult(techRecord);
-
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        validVIN = techRecord.getVin();
+        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
+        Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
+        techRecord.setSystemNumber(vehicle.getSystemNumber()); 
+
+        CompleteTestResults testResult = testResult(techRecord);
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
-        ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
-        vehicleRepository = new VehicleRepository(connectionFactory);
-        testResultRepository = new TestResultRepository(connectionFactory);
-
-        validVIN = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
         with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVIN, testResultRepository));
         validTestNumber = getTestNumber(validVIN);
     }
@@ -296,6 +283,7 @@ public class DownloadMotCertificateImplicitTest {
         testResult.setTestResultId(UUID.randomUUID().toString());
         testResult.setTesterName(UUID.randomUUID().toString());
         testResult.setVin(techRecord.getVin());
+        testResult.setSystemNumber(techRecord.getSystemNumber());
 
         return testResult;
     }
