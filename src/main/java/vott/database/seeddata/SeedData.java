@@ -106,6 +106,7 @@ public class SeedData {
         tr.setPreparerID(String.valueOf(preparerPK));
         tr.setVehicleClassID(String.valueOf(vehicleClassPK));
         tr.setTestTypeID(String.valueOf(testTypePK));
+        tr.setTestResultId("1111-1111-1111-1111");
         tr.setTestStatus("Test Pass");
         tr.setReasonForCancellation("Automation Test Run");
         tr.setNumberOfSeats("3");
