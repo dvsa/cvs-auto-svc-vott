@@ -43,6 +43,9 @@ public class TestResult {
   @SerializedName("customDefect")
   private CustomDefects customDefect = null;
 
+  @SerializedName("testResultId")
+  private String testResultId = null;
+
   @SerializedName("testStatus")
   private String testStatus = null;
 
@@ -265,6 +268,23 @@ public class TestResult {
 
   public void setTestStatus(String testStatus) {
     this.testStatus = testStatus;
+  }
+
+  public TestResult testResultId(String testResultId) {
+    this.testResultId = testResultId;
+    return this;
+  }
+
+   /**
+   * Get testResultId
+   * @return testResultId
+  **/
+  public String getTestResultId() {
+    return testResultId;
+  }
+
+  public void setTestResultId(String testResultId) {
+    this.testResultId = testResultId;
   }
 
   public TestResult reasonForCancellation(String reasonForCancellation) {
@@ -869,6 +889,7 @@ public class TestResult {
         Objects.equals(this.vehicleClass, testResult.vehicleClass) &&
         Objects.equals(this.testType, testResult.testType) &&
         Objects.equals(this.customDefect, testResult.customDefect) &&
+        Objects.equals(this.testResultId, testResult.testResultId) &&
         Objects.equals(this.testStatus, testResult.testStatus) &&
         Objects.equals(this.reasonForCancellation, testResult.reasonForCancellation) &&
         Objects.equals(this.numberOfSeats, testResult.numberOfSeats) &&
@@ -908,7 +929,7 @@ public class TestResult {
 
   @Override
   public int hashCode() {
-    return Objects.hash(fuelEmission, testStation, tester, vehicleClass, testType, customDefect, testStatus, reasonForCancellation, numberOfSeats, odometerReading, odometerReadingUnits, countryOfRegistration, noOfAxles, regnDate, firstUseDate, createdAt, lastUpdatedAt, testCode, testNumber, certificateNumber, secondaryCertificateNumber, testExpiryDate, testAnniversaryDate, testTypeStartTimestamp, testTypeEndTimestamp, numberOfSeatbeltsFitted, lastSeatbeltInstallationCheckDate, seatbeltInstallationCheckDate, testResult, reasonForAbandoning, additionalNotesRecorded, additionalCommentsForAbandon, particulateTrapFitted, particulateTrapSerialNumber, modificationTypeUsed, smokeTestKLimitApplied, createdById, createdByName, lastUpdatedById, lastUpdatedByName, defects);
+    return Objects.hash(fuelEmission, testStation, tester, vehicleClass, testType, customDefect, testResultId, testStatus, reasonForCancellation, numberOfSeats, odometerReading, odometerReadingUnits, countryOfRegistration, noOfAxles, regnDate, firstUseDate, createdAt, lastUpdatedAt, testCode, testNumber, certificateNumber, secondaryCertificateNumber, testExpiryDate, testAnniversaryDate, testTypeStartTimestamp, testTypeEndTimestamp, numberOfSeatbeltsFitted, lastSeatbeltInstallationCheckDate, seatbeltInstallationCheckDate, testResult, reasonForAbandoning, additionalNotesRecorded, additionalCommentsForAbandon, particulateTrapFitted, particulateTrapSerialNumber, modificationTypeUsed, smokeTestKLimitApplied, createdById, createdByName, lastUpdatedById, lastUpdatedByName, defects);
   }
 
 
@@ -923,6 +944,7 @@ public class TestResult {
     sb.append("    vehicleClass: ").append(toIndentedString(vehicleClass)).append("\n");
     sb.append("    testType: ").append(toIndentedString(testType)).append("\n");
     sb.append("    customDefect: ").append(toIndentedString(customDefect)).append("\n");
+    sb.append("    testResultId: ").append(toIndentedString(testResultId)).append("\n");
     sb.append("    testStatus: ").append(toIndentedString(testStatus)).append("\n");
     sb.append("    reasonForCancellation: ").append(toIndentedString(reasonForCancellation)).append("\n");
     sb.append("    numberOfSeats: ").append(toIndentedString(numberOfSeats)).append("\n");

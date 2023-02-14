@@ -144,7 +144,7 @@ public class TestDefectRepositoryTest {
     @Test
     public void upsertingNewTestResultIDReturnsDifferentPk() {
         TestResult tr2 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
-        tr2.setCreatedAt("2022-01-01 00:00:00");
+        tr2.setTestResultId("2222-2222-2222-2222");
         testResult2PK = testResultRepository.fullUpsert(tr2);
 
         TestDefect td1 = SeedData.newTestTestDefect(testResultPK, testDefectPK,locationPK);
