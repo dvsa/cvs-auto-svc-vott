@@ -26,6 +26,7 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
                 "preparer_id",
                 "vehicle_class_id",
                 "test_type_id",
+                "testResultId",
                 "testStatus",
                 "reasonForCancellation",
                 "numberOfSeats",
@@ -73,83 +74,85 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
         preparedStatement.setString(5, entity.getPreparerID());
         preparedStatement.setString(6, entity.getVehicleClassID());
         preparedStatement.setString(7, entity.getTestTypeID());
-        preparedStatement.setString(8, entity.getTestStatus());
-        preparedStatement.setString(9, entity.getReasonForCancellation());
-        preparedStatement.setString(10, entity.getNumberOfSeats());
-        preparedStatement.setString(11, entity.getOdometerReading());
-        preparedStatement.setString(12, entity.getOdometerReadingUnits());
-        preparedStatement.setString(13, entity.getCountryOfRegistration());
-        preparedStatement.setString(14, entity.getNoOfAxles());
-        preparedStatement.setString(15, entity.getRegnDate());
-        preparedStatement.setString(16, entity.getFirstUseDate());
-        preparedStatement.setString(17, entity.getCreatedAt());
-        preparedStatement.setString(18, entity.getLastUpdatedAt());
-        preparedStatement.setString(19, entity.getTestCode());
-        preparedStatement.setString(20, entity.getTestNumber());
-        preparedStatement.setString(21, entity.getCertificateNumber());
-        preparedStatement.setString(22, entity.getSecondaryCertificateNumber());
-        preparedStatement.setString(23, entity.getTestExpiryDate());
-        preparedStatement.setString(24, entity.getTestAnniversaryDate());
-        preparedStatement.setString(25, entity.getTestTypeStartTimestamp());
-        preparedStatement.setString(26, entity.getTestTypeEndTimestamp());
-        preparedStatement.setString(27, entity.getNumberOfSeatbeltsFitted());
-        preparedStatement.setString(28, entity.getLastSeatbeltInstallationCheckDate());
-        preparedStatement.setString(29, entity.getSeatbeltInstallationCheckDate());
-        preparedStatement.setString(30, entity.getTestResult());
-        preparedStatement.setString(31, entity.getReasonForAbandoning());
-        preparedStatement.setString(32, entity.getAdditionalNotesRecorded());
-        preparedStatement.setString(33, entity.getAdditionalCommentsForAbandon());
-        preparedStatement.setString(34, entity.getParticulateTrapFitted());
-        preparedStatement.setString(35, entity.getParticulateTrapSerialNumber());
-        preparedStatement.setString(36, entity.getModificationTypeUsed());
-        preparedStatement.setString(37, entity.getSmokeTestKLimitApplied());
-        preparedStatement.setString(38, entity.getCreatedByID());
-        preparedStatement.setString(39, entity.getLastUpdatedByID());
+        preparedStatement.setString(8, entity.getTestResultId());
+        preparedStatement.setString(9, entity.getTestStatus());
+        preparedStatement.setString(10, entity.getReasonForCancellation());
+        preparedStatement.setString(11, entity.getNumberOfSeats());
+        preparedStatement.setString(12, entity.getOdometerReading());
+        preparedStatement.setString(13, entity.getOdometerReadingUnits());
+        preparedStatement.setString(14, entity.getCountryOfRegistration());
+        preparedStatement.setString(15, entity.getNoOfAxles());
+        preparedStatement.setString(16, entity.getRegnDate());
+        preparedStatement.setString(17, entity.getFirstUseDate());
+        preparedStatement.setString(18, entity.getCreatedAt());
+        preparedStatement.setString(19, entity.getLastUpdatedAt());
+        preparedStatement.setString(20, entity.getTestCode());
+        preparedStatement.setString(21, entity.getTestNumber());
+        preparedStatement.setString(22, entity.getCertificateNumber());
+        preparedStatement.setString(23, entity.getSecondaryCertificateNumber());
+        preparedStatement.setString(24, entity.getTestExpiryDate());
+        preparedStatement.setString(25, entity.getTestAnniversaryDate());
+        preparedStatement.setString(26, entity.getTestTypeStartTimestamp());
+        preparedStatement.setString(27, entity.getTestTypeEndTimestamp());
+        preparedStatement.setString(28, entity.getNumberOfSeatbeltsFitted());
+        preparedStatement.setString(29, entity.getLastSeatbeltInstallationCheckDate());
+        preparedStatement.setString(30, entity.getSeatbeltInstallationCheckDate());
+        preparedStatement.setString(31, entity.getTestResult());
+        preparedStatement.setString(32, entity.getReasonForAbandoning());
+        preparedStatement.setString(33, entity.getAdditionalNotesRecorded());
+        preparedStatement.setString(34, entity.getAdditionalCommentsForAbandon());
+        preparedStatement.setString(35, entity.getParticulateTrapFitted());
+        preparedStatement.setString(36, entity.getParticulateTrapSerialNumber());
+        preparedStatement.setString(37, entity.getModificationTypeUsed());
+        preparedStatement.setString(38, entity.getSmokeTestKLimitApplied());
+        preparedStatement.setString(39, entity.getCreatedByID());
+        preparedStatement.setString(40, entity.getLastUpdatedByID());
     }
 
     @Override
     protected void setParametersFull(PreparedStatement preparedStatement, TestResult entity) throws SQLException {
         setParameters(preparedStatement, entity);
 
-        preparedStatement.setString(40, entity.getVehicleID());
-        preparedStatement.setString(41, entity.getFuelEmissionID());
-        preparedStatement.setString(42, entity.getTestStationID());
-        preparedStatement.setString(43, entity.getTesterID());
-        preparedStatement.setString(44, entity.getPreparerID());
-        preparedStatement.setString(45, entity.getVehicleClassID());
-        preparedStatement.setString(46, entity.getTestTypeID());
-        preparedStatement.setString(47, entity.getTestStatus());
-        preparedStatement.setString(48, entity.getReasonForCancellation());
-        preparedStatement.setString(49, entity.getNumberOfSeats());
-        preparedStatement.setString(50, entity.getOdometerReading());
-        preparedStatement.setString(51, entity.getOdometerReadingUnits());
-        preparedStatement.setString(52, entity.getCountryOfRegistration());
-        preparedStatement.setString(53, entity.getNoOfAxles());
-        preparedStatement.setString(54, entity.getRegnDate());
-        preparedStatement.setString(55, entity.getFirstUseDate());
-        preparedStatement.setString(56, entity.getCreatedAt());
-        preparedStatement.setString(57, entity.getLastUpdatedAt());
-        preparedStatement.setString(58, entity.getTestCode());
-        preparedStatement.setString(59, entity.getTestNumber());
-        preparedStatement.setString(60, entity.getCertificateNumber());
-        preparedStatement.setString(61, entity.getSecondaryCertificateNumber());
-        preparedStatement.setString(62, entity.getTestExpiryDate());
-        preparedStatement.setString(63, entity.getTestAnniversaryDate());
-        preparedStatement.setString(64, entity.getTestTypeStartTimestamp());
-        preparedStatement.setString(65, entity.getTestTypeEndTimestamp());
-        preparedStatement.setString(66, entity.getNumberOfSeatbeltsFitted());
-        preparedStatement.setString(67, entity.getLastSeatbeltInstallationCheckDate());
-        preparedStatement.setString(68, entity.getSeatbeltInstallationCheckDate());
-        preparedStatement.setString(69, entity.getTestResult());
-        preparedStatement.setString(70, entity.getReasonForAbandoning());
-        preparedStatement.setString(71, entity.getAdditionalNotesRecorded());
-        preparedStatement.setString(72, entity.getAdditionalCommentsForAbandon());
-        preparedStatement.setString(73, entity.getParticulateTrapFitted());
-        preparedStatement.setString(74, entity.getParticulateTrapSerialNumber());
-        preparedStatement.setString(75, entity.getModificationTypeUsed());
-        preparedStatement.setString(76, entity.getSmokeTestKLimitApplied());
-        preparedStatement.setString(77, entity.getCreatedByID());
-        preparedStatement.setString(78, entity.getLastUpdatedByID());
+        preparedStatement.setString(41, entity.getVehicleID());
+        preparedStatement.setString(42, entity.getFuelEmissionID());
+        preparedStatement.setString(43, entity.getTestStationID());
+        preparedStatement.setString(44, entity.getTesterID());
+        preparedStatement.setString(45, entity.getPreparerID());
+        preparedStatement.setString(46, entity.getVehicleClassID());
+        preparedStatement.setString(47, entity.getTestTypeID());
+        preparedStatement.setString(48, entity.getTestResultId());
+        preparedStatement.setString(49, entity.getTestStatus());
+        preparedStatement.setString(50, entity.getReasonForCancellation());
+        preparedStatement.setString(51, entity.getNumberOfSeats());
+        preparedStatement.setString(52, entity.getOdometerReading());
+        preparedStatement.setString(53, entity.getOdometerReadingUnits());
+        preparedStatement.setString(54, entity.getCountryOfRegistration());
+        preparedStatement.setString(55, entity.getNoOfAxles());
+        preparedStatement.setString(56, entity.getRegnDate());
+        preparedStatement.setString(57, entity.getFirstUseDate());
+        preparedStatement.setString(58, entity.getCreatedAt());
+        preparedStatement.setString(59, entity.getLastUpdatedAt());
+        preparedStatement.setString(60, entity.getTestCode());
+        preparedStatement.setString(61, entity.getTestNumber());
+        preparedStatement.setString(62, entity.getCertificateNumber());
+        preparedStatement.setString(63, entity.getSecondaryCertificateNumber());
+        preparedStatement.setString(64, entity.getTestExpiryDate());
+        preparedStatement.setString(65, entity.getTestAnniversaryDate());
+        preparedStatement.setString(66, entity.getTestTypeStartTimestamp());
+        preparedStatement.setString(67, entity.getTestTypeEndTimestamp());
+        preparedStatement.setString(68, entity.getNumberOfSeatbeltsFitted());
+        preparedStatement.setString(69, entity.getLastSeatbeltInstallationCheckDate());
+        preparedStatement.setString(70, entity.getSeatbeltInstallationCheckDate());
+        preparedStatement.setString(71, entity.getTestResult());
+        preparedStatement.setString(72, entity.getReasonForAbandoning());
+        preparedStatement.setString(73, entity.getAdditionalNotesRecorded());
+        preparedStatement.setString(74, entity.getAdditionalCommentsForAbandon());
+        preparedStatement.setString(75, entity.getParticulateTrapFitted());
+        preparedStatement.setString(76, entity.getParticulateTrapSerialNumber());
+        preparedStatement.setString(77, entity.getModificationTypeUsed());
+        preparedStatement.setString(78, entity.getSmokeTestKLimitApplied());
+        preparedStatement.setString(79, entity.getCreatedByID());
+        preparedStatement.setString(80, entity.getLastUpdatedByID());
     }
 
     @Override
@@ -163,6 +166,7 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
         tr.setPreparerID(rs.getString("preparer_id"));
         tr.setVehicleClassID(rs.getString("vehicle_class_id"));
         tr.setTestTypeID(rs.getString("test_type_id"));
+        tr.setTestResultId(rs.getString("testResultId"));
         tr.setTestStatus(rs.getString("testStatus"));
         tr.setReasonForCancellation(rs.getString("reasonForCancellation"));
         tr.setNumberOfSeats(rs.getString("numberOfSeats"));

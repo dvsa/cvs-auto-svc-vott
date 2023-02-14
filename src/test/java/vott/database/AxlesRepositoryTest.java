@@ -85,7 +85,7 @@ public class AxlesRepositoryTest {
         }
         tyreRepository.delete(tyrePK);
         if (tyre2PK != null){
-            technicalRecordRepository.delete(tyre2PK);
+            tyreRepository.delete(tyre2PK);
         }
         vehicleRepository.delete(vehiclePK);
         makeModelRepository.delete(makeModelPK);

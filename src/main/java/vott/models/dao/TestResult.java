@@ -12,6 +12,7 @@ public class TestResult {
     private String preparerID;
     private String vehicleClassID;
     private String testTypeID;
+    private String testResultId;
     private String testStatus;
     private String reasonForCancellation;
     private String numberOfSeats;

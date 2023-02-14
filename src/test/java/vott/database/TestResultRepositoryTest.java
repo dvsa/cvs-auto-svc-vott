@@ -136,14 +136,10 @@ public class TestResultRepositoryTest {
     @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC51 - Testing test result unique index compound key")
     @Test
-    public void upsertingNewTestTypeIDReturnsDifferentPk() {
-        TestType tt2 = SeedData.newTestTestType();
-        tt2.setTestTypeClassification("Auto Test Type");
-
-        testType2PK = testTypeRepository.partialUpsert(tt2);
-
+    public void upsertingNewTestNumberReturnsDifferentPk() {
         TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testType2PK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        tr2.setTestNumber("B222A111");
 
         int primaryKey1 = testResultRepository.fullUpsert(tr1);
         int primaryKey2 = testResultRepository.fullUpsert(tr2);
@@ -157,11 +153,10 @@ public class TestResultRepositoryTest {
     @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC52 - Testing test result unique index compound key")
     @Test
-    public void upsertingNewCreatedAtReturnsDifferentPk() {
+    public void upsertingNewTestResultIdReturnsDifferentPk() {
         TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-
         TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        tr2.setCreatedAt("2021-12-31 00:00:00");
+        tr2.setTestResultId("2222-2222-2222-2222");
 
         int primaryKey1 = testResultRepository.fullUpsert(tr1);
         int primaryKey2 = testResultRepository.fullUpsert(tr2);
@@ -175,11 +170,27 @@ public class TestResultRepositoryTest {
     @WithTag("Vott")
     @Title("VOTT-8 - AC1 - TC53 - Testing test result unique index compound key")
     @Test
+    public void upsertingNewTestTypeEndTimestampReturnsDifferentPk() {
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        tr2.setTestTypeEndTimestamp("2022-01-02 00:00:00");
+
+        int primaryKey1 = testResultRepository.fullUpsert(tr1);
+        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+
+        deleteOnExit.add(primaryKey1);
+        deleteOnExit.add(primaryKey2);
+
+        assertNotEquals(primaryKey1, primaryKey2);
+    }
+
+    @WithTag("Vott")
+    @Title("VOTT-8 - AC1 - TC54 - Testing test result unique index compound key")
+    @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
         TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-
         TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        tr2.setTestNumber("55555");
+        tr2.setTestResult("Test Fail");
 
         int primaryKey1 = testResultRepository.fullUpsert(tr1);
         int primaryKey2 = testResultRepository.fullUpsert(tr2);
