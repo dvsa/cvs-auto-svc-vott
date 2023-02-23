@@ -113,7 +113,7 @@ public class TestDefectRepositoryTest {
 
         locationRepository.delete(locationPK);
         if (location2PK != null){
-            defectRepository.delete(location2PK);
+            locationRepository.delete(location2PK);
         }
 
         vehicleRepository.delete(vehiclePK);
