@@ -282,8 +282,8 @@ public class SeedData {
         tr.setLength("100");
         tr.setHeight("50");
         tr.setWidth("50");
-        tr.setFrontAxleTo5thWheelCouplingMin("55");
-        tr.setFrontAxleTo5thWheelCouplingMax("65");
+        tr.setFrontVehicleTo5thWheelCouplingMin("55");
+        tr.setFrontVehicleTo5thWheelCouplingMax("65");
         tr.setFrontAxleTo5thWheelMin("45");
         tr.setFrontAxleTo5thWheelMax("65");
         tr.setFrontAxleToRearAxle("15");

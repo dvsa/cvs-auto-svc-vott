@@ -245,11 +245,11 @@ public class TechnicalRecord {
   @SerializedName("frontAxleTo5thWheelMax")
   private Integer frontAxleTo5thWheelMax = null;
 
-  @SerializedName("frontAxleTo5thWheelCouplingMin")
-  private Integer frontAxleTo5thWheelCouplingMin = null;
+  @SerializedName("frontVehicleTo5thWheelCouplingMin")
+  private Integer frontVehicleTo5thWheelCouplingMin = null;
 
-  @SerializedName("frontAxleTo5thWheelCouplingMax")
-  private Integer frontAxleTo5thWheelCouplingMax = null;
+  @SerializedName("frontVehicleTo5thWheelCouplingMax")
+  private Integer frontVehicleTo5thWheelCouplingMax = null;
 
   @SerializedName("frontAxleToRearAxle")
   private Integer frontAxleToRearAxle = null;
@@ -1300,38 +1300,38 @@ public class TechnicalRecord {
     this.frontAxleTo5thWheelMax = frontAxleTo5thWheelMax;
   }
 
-  public TechnicalRecord frontAxleTo5thWheelCouplingMin(Integer frontAxleTo5thWheelCouplingMin) {
-    this.frontAxleTo5thWheelCouplingMin = frontAxleTo5thWheelCouplingMin;
+  public TechnicalRecord frontVehicleTo5thWheelCouplingMin(Integer frontVehicleTo5thWheelCouplingMin) {
+    this.frontVehicleTo5thWheelCouplingMin = frontVehicleTo5thWheelCouplingMin;
     return this;
   }
 
    /**
    * HGV
-   * @return frontAxleTo5thWheelCouplingMin
+   * @return frontVehicleTo5thWheelCouplingMin
   **/
-  public Integer getFrontAxleTo5thWheelCouplingMin() {
-    return frontAxleTo5thWheelCouplingMin;
+  public Integer getFrontVehicleTo5thWheelCouplingMin() {
+    return frontVehicleTo5thWheelCouplingMin;
   }
 
-  public void setFrontAxleTo5thWheelCouplingMin(Integer frontAxleTo5thWheelCouplingMin) {
-    this.frontAxleTo5thWheelCouplingMin = frontAxleTo5thWheelCouplingMin;
+  public void setFrontVehicleTo5thWheelCouplingMin(Integer frontVehicleTo5thWheelCouplingMin) {
+    this.frontVehicleTo5thWheelCouplingMin = frontVehicleTo5thWheelCouplingMin;
   }
 
-  public TechnicalRecord frontAxleTo5thWheelCouplingMax(Integer frontAxleTo5thWheelCouplingMax) {
-    this.frontAxleTo5thWheelCouplingMax = frontAxleTo5thWheelCouplingMax;
+  public TechnicalRecord frontVehicleTo5thWheelCouplingMax(Integer frontVehicleTo5thWheelCouplingMax) {
+    this.frontVehicleTo5thWheelCouplingMax = frontVehicleTo5thWheelCouplingMax;
     return this;
   }
 
    /**
    * HGV
-   * @return frontAxleTo5thWheelCouplingMax
+   * @return frontVehicleTo5thWheelCouplingMax
   **/
-  public Integer getFrontAxleTo5thWheelCouplingMax() {
-    return frontAxleTo5thWheelCouplingMax;
+  public Integer getFrontVehicleTo5thWheelCouplingMax() {
+    return frontVehicleTo5thWheelCouplingMax;
   }
 
-  public void setFrontAxleTo5thWheelCouplingMax(Integer frontAxleTo5thWheelCouplingMax) {
-    this.frontAxleTo5thWheelCouplingMax = frontAxleTo5thWheelCouplingMax;
+  public void setFrontVehicleTo5thWheelCouplingMax(Integer frontVehicleTo5thWheelCouplingMax) {
+    this.frontVehicleTo5thWheelCouplingMax = frontVehicleTo5thWheelCouplingMax;
   }
 
   public TechnicalRecord frontAxleToRearAxle(Integer frontAxleToRearAxle) {
@@ -1791,8 +1791,8 @@ public class TechnicalRecord {
         Objects.equals(this.width, technicalRecord.width) &&
         Objects.equals(this.frontAxleTo5thWheelMin, technicalRecord.frontAxleTo5thWheelMin) &&
         Objects.equals(this.frontAxleTo5thWheelMax, technicalRecord.frontAxleTo5thWheelMax) &&
-        Objects.equals(this.frontAxleTo5thWheelCouplingMin, technicalRecord.frontAxleTo5thWheelCouplingMin) &&
-        Objects.equals(this.frontAxleTo5thWheelCouplingMax, technicalRecord.frontAxleTo5thWheelCouplingMax) &&
+        Objects.equals(this.frontVehicleTo5thWheelCouplingMin, technicalRecord.frontVehicleTo5thWheelCouplingMin) &&
+        Objects.equals(this.frontVehicleTo5thWheelCouplingMax, technicalRecord.frontVehicleTo5thWheelCouplingMax) &&
         Objects.equals(this.frontAxleToRearAxle, technicalRecord.frontAxleToRearAxle) &&
         Objects.equals(this.rearAxleToRearTrl, technicalRecord.rearAxleToRearTrl) &&
         Objects.equals(this.couplingCenterToRearAxleMin, technicalRecord.couplingCenterToRearAxleMin) &&
@@ -1818,7 +1818,7 @@ public class TechnicalRecord {
 
   @Override
   public int hashCode() {
-    return Objects.hash(recordtype, createdAt, lastUpdatedAt, makeModel, functionCode, offRoad, numberOfWheelsDriven, emissionsLimit, departmentalVehicleMarker, alterationMarker, vehicleClass, variantVersionNumber, grossEecWeight, trainEecWeight, maxTrainEecWeight, manufactureYear, regnDate, firstUseDate, coifDate, ntaNumber, coifSerialNumber, coifCertifierName, approvalType, approvalTypeNumber, variantNumber, conversionRefNo, seatsLowerDeck, seatsUpperDeck, standingCapacity, speedRestriction, speedLimiterMrk, tachoExemptMrk, dispensations, remarks, reasonForCreation, statusCode, unladenWeight, grossKerbWeight, grossLadenWeight, grossGbWeight, grossDesignWeight, trainGbWeight, trainDesignWeight, maxTrainGbWeight, maxTrainDesignWeight, maxLoadOnCoupling, frameDescription, tyreUseCode, roadFriendly, drawbarCouplingFitted, euroStandard, suspensionType, couplingType, length, height, width, frontAxleTo5thWheelMin, frontAxleTo5thWheelMax, frontAxleTo5thWheelCouplingMin, frontAxleTo5thWheelCouplingMax, frontAxleToRearAxle, rearAxleToRearTrl, couplingCenterToRearAxleMin, couplingCenterToRearAxleMax, couplingCenterToRearTrlMin, couplingCenterToRearTrlMax, centreOfRearmostAxleToRearOfTrl, notes, purchaserNotes, manufacturerNotes, noOfAxles, brakeCode, numberOfSeatbelts, seatbeltInstallationApprovalDate, psvBrakes, axles, axlespacing, plates, dtpNumber, loadSensingValve, antilockBrakingSystem);
+    return Objects.hash(recordtype, createdAt, lastUpdatedAt, makeModel, functionCode, offRoad, numberOfWheelsDriven, emissionsLimit, departmentalVehicleMarker, alterationMarker, vehicleClass, variantVersionNumber, grossEecWeight, trainEecWeight, maxTrainEecWeight, manufactureYear, regnDate, firstUseDate, coifDate, ntaNumber, coifSerialNumber, coifCertifierName, approvalType, approvalTypeNumber, variantNumber, conversionRefNo, seatsLowerDeck, seatsUpperDeck, standingCapacity, speedRestriction, speedLimiterMrk, tachoExemptMrk, dispensations, remarks, reasonForCreation, statusCode, unladenWeight, grossKerbWeight, grossLadenWeight, grossGbWeight, grossDesignWeight, trainGbWeight, trainDesignWeight, maxTrainGbWeight, maxTrainDesignWeight, maxLoadOnCoupling, frameDescription, tyreUseCode, roadFriendly, drawbarCouplingFitted, euroStandard, suspensionType, couplingType, length, height, width, frontAxleTo5thWheelMin, frontAxleTo5thWheelMax, frontVehicleTo5thWheelCouplingMin, frontVehicleTo5thWheelCouplingMax, frontAxleToRearAxle, rearAxleToRearTrl, couplingCenterToRearAxleMin, couplingCenterToRearAxleMax, couplingCenterToRearTrlMin, couplingCenterToRearTrlMax, centreOfRearmostAxleToRearOfTrl, notes, purchaserNotes, manufacturerNotes, noOfAxles, brakeCode, numberOfSeatbelts, seatbeltInstallationApprovalDate, psvBrakes, axles, axlespacing, plates, dtpNumber, loadSensingValve, antilockBrakingSystem);
   }
 
 
@@ -1885,8 +1885,8 @@ public class TechnicalRecord {
     sb.append("    width: ").append(toIndentedString(width)).append("\n");
     sb.append("    frontAxleTo5thWheelMin: ").append(toIndentedString(frontAxleTo5thWheelMin)).append("\n");
     sb.append("    frontAxleTo5thWheelMax: ").append(toIndentedString(frontAxleTo5thWheelMax)).append("\n");
-    sb.append("    frontAxleTo5thWheelCouplingMin: ").append(toIndentedString(frontAxleTo5thWheelCouplingMin)).append("\n");
-    sb.append("    frontAxleTo5thWheelCouplingMax: ").append(toIndentedString(frontAxleTo5thWheelCouplingMax)).append("\n");
+    sb.append("    frontVehicleTo5thWheelCouplingMin: ").append(toIndentedString(frontVehicleTo5thWheelCouplingMin)).append("\n");
+    sb.append("    frontVehicleTo5thWheelCouplingMax: ").append(toIndentedString(frontVehicleTo5thWheelCouplingMax)).append("\n");
     sb.append("    frontAxleToRearAxle: ").append(toIndentedString(frontAxleToRearAxle)).append("\n");
     sb.append("    rearAxleToRearTrl: ").append(toIndentedString(rearAxleToRearTrl)).append("\n");
     sb.append("    couplingCenterToRearAxleMin: ").append(toIndentedString(couplingCenterToRearAxleMin)).append("\n");

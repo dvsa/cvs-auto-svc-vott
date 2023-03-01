@@ -67,8 +67,8 @@ public class TechnicalRecord {
     private String width;
     private String frontAxleTo5thWheelMin;
     private String frontAxleTo5thWheelMax;
-    private String frontAxleTo5thWheelCouplingMin;
-    private String frontAxleTo5thWheelCouplingMax;
+    private String frontVehicleTo5thWheelCouplingMin;
+    private String frontVehicleTo5thWheelCouplingMax;
     private String frontAxleToRearAxle;
     private String rearAxleToRearTrl;
     private String couplingCenterToRearAxleMin;

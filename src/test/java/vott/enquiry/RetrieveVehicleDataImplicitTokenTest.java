@@ -261,8 +261,8 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertThat(technicalRecord.getCouplingCenterToRearTrlMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMin()));
         assertThat(technicalRecord.getCouplingCenterToRearAxleMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMax()));
         assertThat(technicalRecord.getCouplingCenterToRearAxleMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMin()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMin()));
+        assertThat(technicalRecord.getFrontVehicleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontVehicleTo5thWheelCouplingMax()));
+        assertThat(technicalRecord.getFrontVehicleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontVehicleTo5thWheelCouplingMin()));
         assertThat(technicalRecord.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(Integer.parseInt(tr.getCentreOfRearmostAxleToRearOfTrl()));
         assertThat(technicalRecord.getSeatbeltInstallationApprovalDate()).isEqualTo(tr.getSeatbeltInstallationApprovalDate());
         assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(psv.getBrakeCode());
@@ -420,8 +420,8 @@ public class RetrieveVehicleDataImplicitTokenTest {
         assertThat(technicalRecord.getCouplingCenterToRearTrlMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearTrlMin()));
         assertThat(technicalRecord.getCouplingCenterToRearAxleMax()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMax()));
         assertThat(technicalRecord.getCouplingCenterToRearAxleMin()).isEqualTo(Integer.parseInt(tr.getCouplingCenterToRearAxleMin()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMax()));
-        assertThat(technicalRecord.getFrontAxleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontAxleTo5thWheelCouplingMin()));
+        assertThat(technicalRecord.getFrontVehicleTo5thWheelCouplingMax()).isEqualTo(Integer.parseInt(tr.getFrontVehicleTo5thWheelCouplingMax()));
+        assertThat(technicalRecord.getFrontVehicleTo5thWheelCouplingMin()).isEqualTo(Integer.parseInt(tr.getFrontVehicleTo5thWheelCouplingMin()));
         assertThat(technicalRecord.getCentreOfRearmostAxleToRearOfTrl()).isEqualTo(Integer.parseInt(tr.getCentreOfRearmostAxleToRearOfTrl()));
         assertThat(technicalRecord.getSeatbeltInstallationApprovalDate()).isEqualTo(tr.getSeatbeltInstallationApprovalDate());
         assertThat(technicalRecord.getPsvBrakes().get(0).getBrakeCode()).isEqualTo(psv.getBrakeCode());
