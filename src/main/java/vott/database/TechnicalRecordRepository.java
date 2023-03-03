@@ -80,8 +80,8 @@ public class TechnicalRecordRepository extends AbstractRepository<TechnicalRecor
                 "width",
                 "frontAxleTo5thWheelMin",
                 "frontAxleTo5thWheelMax",
-                "frontAxleTo5thWheelCouplingMin",
-                "frontAxleTo5thWheelCouplingMax",
+                "frontVehicleTo5thWheelCouplingMin",
+                "frontVehicleTo5thWheelCouplingMax",
                 "frontAxleToRearAxle",
                 "rearAxleToRearTrl",
                 "couplingCenterToRearAxleMin",
@@ -172,8 +172,8 @@ public class TechnicalRecordRepository extends AbstractRepository<TechnicalRecor
         preparedStatement.setString(60, entity.getWidth());
         preparedStatement.setString(61, entity.getFrontAxleTo5thWheelMin());
         preparedStatement.setString(62, entity.getFrontAxleTo5thWheelMax());
-        preparedStatement.setString(63, entity.getFrontAxleTo5thWheelCouplingMin());
-        preparedStatement.setString(64, entity.getFrontAxleTo5thWheelCouplingMax());
+        preparedStatement.setString(63, entity.getFrontVehicleTo5thWheelCouplingMin());
+        preparedStatement.setString(64, entity.getFrontVehicleTo5thWheelCouplingMax());
         preparedStatement.setString(65, entity.getFrontAxleToRearAxle());
         preparedStatement.setString(66, entity.getRearAxleToRearTrl());
         preparedStatement.setString(67, entity.getCouplingCenterToRearAxleMin());
@@ -263,8 +263,8 @@ public class TechnicalRecordRepository extends AbstractRepository<TechnicalRecor
         preparedStatement.setString(144, entity.getWidth());
         preparedStatement.setString(145, entity.getFrontAxleTo5thWheelMin());
         preparedStatement.setString(146, entity.getFrontAxleTo5thWheelMax());
-        preparedStatement.setString(147, entity.getFrontAxleTo5thWheelCouplingMin());
-        preparedStatement.setString(148, entity.getFrontAxleTo5thWheelCouplingMax());
+        preparedStatement.setString(147, entity.getFrontVehicleTo5thWheelCouplingMin());
+        preparedStatement.setString(148, entity.getFrontVehicleTo5thWheelCouplingMax());
         preparedStatement.setString(149, entity.getFrontAxleToRearAxle());
         preparedStatement.setString(150, entity.getRearAxleToRearTrl());
         preparedStatement.setString(151, entity.getCouplingCenterToRearAxleMin());
@@ -351,10 +351,10 @@ public class TechnicalRecordRepository extends AbstractRepository<TechnicalRecor
         tr.setLength(rs.getString("length"));
         tr.setHeight(rs.getString("height"));
         tr.setWidth(rs.getString("width"));
-        tr.setFrontAxleTo5thWheelCouplingMin(rs.getString("frontAxleTo5thWheelMin"));
-        tr.setFrontAxleTo5thWheelCouplingMax(rs.getString("frontAxleTo5thWheelMax"));
-        tr.setFrontAxleTo5thWheelCouplingMin(rs.getString("frontAxleTo5thWheelCouplingMin"));
-        tr.setFrontAxleTo5thWheelCouplingMax(rs.getString("frontAxleTo5thWheelCouplingMax"));
+        tr.setFrontVehicleTo5thWheelCouplingMin(rs.getString("frontAxleTo5thWheelMin"));
+        tr.setFrontVehicleTo5thWheelCouplingMax(rs.getString("frontAxleTo5thWheelMax"));
+        tr.setFrontVehicleTo5thWheelCouplingMin(rs.getString("frontVehicleTo5thWheelCouplingMin"));
+        tr.setFrontVehicleTo5thWheelCouplingMax(rs.getString("frontVehicleTo5thWheelCouplingMax"));
         tr.setFrontAxleToRearAxle(rs.getString("frontAxleToRearAxle"));
         tr.setRearAxleToRearTrl(rs.getString("rearAxleToRearTrl"));
         tr.setCouplingCenterToRearAxleMin(rs.getString("couplingCenterToRearAxleMin"));

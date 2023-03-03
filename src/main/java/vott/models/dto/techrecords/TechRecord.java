@@ -483,11 +483,11 @@ public class TechRecord {
   @SerializedName("frontAxleTo5thWheelMax")
   private BigDecimal frontAxleTo5thWheelMax = null;
 
-  @SerializedName("frontAxleTo5thWheelCouplingMin")
-  private BigDecimal frontAxleTo5thWheelCouplingMin = null;
+  @SerializedName("frontVehicleTo5thWheelCouplingMin")
+  private BigDecimal frontVehicleTo5thWheelCouplingMin = null;
 
-  @SerializedName("frontAxleTo5thWheelCouplingMax")
-  private BigDecimal frontAxleTo5thWheelCouplingMax = null;
+  @SerializedName("frontVehicleTo5thWheelCouplingMax")
+  private BigDecimal frontVehicleTo5thWheelCouplingMax = null;
 
   @SerializedName("frontAxleToRearAxle")
   private BigDecimal frontAxleToRearAxle = null;
@@ -1973,40 +1973,40 @@ public class TechRecord {
     this.frontAxleTo5thWheelMax = frontAxleTo5thWheelMax;
   }
 
-  public TechRecord frontAxleTo5thWheelCouplingMin(BigDecimal frontAxleTo5thWheelCouplingMin) {
-    this.frontAxleTo5thWheelCouplingMin = frontAxleTo5thWheelCouplingMin;
+  public TechRecord frontVehicleTo5thWheelCouplingMin(BigDecimal frontVehicleTo5thWheelCouplingMin) {
+    this.frontVehicleTo5thWheelCouplingMin = frontVehicleTo5thWheelCouplingMin;
     return this;
   }
 
    /**
    * Used only for HGV. Optional for HGV
    * maximum: 99999
-   * @return frontAxleTo5thWheelCouplingMin
+   * @return frontVehicleTo5thWheelCouplingMin
   **/
-    public BigDecimal getFrontAxleTo5thWheelCouplingMin() {
-    return frontAxleTo5thWheelCouplingMin;
+    public BigDecimal getFrontVehicleTo5thWheelCouplingMin() {
+    return frontVehicleTo5thWheelCouplingMin;
   }
 
-  public void setFrontAxleTo5thWheelCouplingMin(BigDecimal frontAxleTo5thWheelCouplingMin) {
-    this.frontAxleTo5thWheelCouplingMin = frontAxleTo5thWheelCouplingMin;
+  public void setFrontVehicleTo5thWheelCouplingMin(BigDecimal frontVehicleTo5thWheelCouplingMin) {
+    this.frontVehicleTo5thWheelCouplingMin = frontVehicleTo5thWheelCouplingMin;
   }
 
-  public TechRecord frontAxleTo5thWheelCouplingMax(BigDecimal frontAxleTo5thWheelCouplingMax) {
-    this.frontAxleTo5thWheelCouplingMax = frontAxleTo5thWheelCouplingMax;
+  public TechRecord frontVehicleTo5thWheelCouplingMax(BigDecimal frontVehicleTo5thWheelCouplingMax) {
+    this.frontVehicleTo5thWheelCouplingMax = frontVehicleTo5thWheelCouplingMax;
     return this;
   }
 
    /**
    * Used only for HGV. Optional for HGV
    * maximum: 99999
-   * @return frontAxleTo5thWheelCouplingMax
+   * @return frontVehicleTo5thWheelCouplingMax
   **/
-    public BigDecimal getFrontAxleTo5thWheelCouplingMax() {
-    return frontAxleTo5thWheelCouplingMax;
+    public BigDecimal getFrontVehicleTo5thWheelCouplingMax() {
+    return frontVehicleTo5thWheelCouplingMax;
   }
 
-  public void setFrontAxleTo5thWheelCouplingMax(BigDecimal frontAxleTo5thWheelCouplingMax) {
-    this.frontAxleTo5thWheelCouplingMax = frontAxleTo5thWheelCouplingMax;
+  public void setFrontVehicleTo5thWheelCouplingMax(BigDecimal frontVehicleTo5thWheelCouplingMax) {
+    this.frontVehicleTo5thWheelCouplingMax = frontVehicleTo5thWheelCouplingMax;
   }
 
   public TechRecord frontAxleToRearAxle(BigDecimal frontAxleToRearAxle) {
@@ -2548,8 +2548,8 @@ public class TechRecord {
         Objects.equals(this.dimensions, techRecord.dimensions) &&
         Objects.equals(this.frontAxleTo5thWheelMin, techRecord.frontAxleTo5thWheelMin) &&
         Objects.equals(this.frontAxleTo5thWheelMax, techRecord.frontAxleTo5thWheelMax) &&
-        Objects.equals(this.frontAxleTo5thWheelCouplingMin, techRecord.frontAxleTo5thWheelCouplingMin) &&
-        Objects.equals(this.frontAxleTo5thWheelCouplingMax, techRecord.frontAxleTo5thWheelCouplingMax) &&
+        Objects.equals(this.frontVehicleTo5thWheelCouplingMin, techRecord.frontVehicleTo5thWheelCouplingMin) &&
+        Objects.equals(this.frontVehicleTo5thWheelCouplingMax, techRecord.frontVehicleTo5thWheelCouplingMax) &&
         Objects.equals(this.frontAxleToRearAxle, techRecord.frontAxleToRearAxle) &&
         Objects.equals(this.rearAxleToRearTrl, techRecord.rearAxleToRearTrl) &&
         Objects.equals(this.couplingCenterToRearAxleMin, techRecord.couplingCenterToRearAxleMin) &&
@@ -2580,7 +2580,7 @@ public class TechRecord {
 
   @Override
   public int hashCode() {
-    return Objects.hash(recordCompleteness, createdAt, lastUpdatedAt, make, model, functionCode, fuelPropulsionSystem, offRoad, numberOfWheelsDriven, euVehicleCategory, emissionsLimit, departmentalVehicleMarker, authIntoService, lettersOfAuth, alterationMarker, approvalType, approvalTypeNumber, variantNumber, variantVersionNumber, grossEecWeight, trainEecWeight, maxTrainEecWeight, applicantDetails, purchaserDetails, manufacturerDetails, microfilm, plates, chassisMake, chassisModel, bodyMake, bodyModel, modelLiteral, bodyType, manufactureYear, regnDate, firstUseDate, coifDate, ntaNumber, coifSerialNumber, coifCertifierName, conversionRefNo, seatsLowerDeck, seatsUpperDeck, standingCapacity, speedRestriction, speedLimiterMrk, tachoExemptMrk, dispensations, remarks, reasonForCreation, statusCode, unladenWeight, grossKerbWeight, grossLadenWeight, grossGbWeight, grossDesignWeight, trainGbWeight, trainDesignWeight, maxTrainGbWeight, maxTrainDesignWeight, maxLoadOnCoupling, frameDescription, tyreUseCode, roadFriendly, drawbarCouplingFitted, euroStandard, suspensionType, couplingType, dimensions, frontAxleTo5thWheelMin, frontAxleTo5thWheelMax, frontAxleTo5thWheelCouplingMin, frontAxleTo5thWheelCouplingMax, frontAxleToRearAxle, rearAxleToRearTrl, couplingCenterToRearAxleMin, couplingCenterToRearAxleMax, couplingCenterToRearTrlMin, couplingCenterToRearTrlMax, centreOfRearmostAxleToRearOfTrl, notes, noOfAxles, brakeCode, adrDetails, createdByName, createdById, lastUpdatedByName, lastUpdatedById, updateType, vehicleClass, vehicleSubclass, vehicleType, vehicleSize, numberOfSeatbelts, seatbeltInstallationApprovalDate, vehicleConfiguration, brakes, axles, dda);
+    return Objects.hash(recordCompleteness, createdAt, lastUpdatedAt, make, model, functionCode, fuelPropulsionSystem, offRoad, numberOfWheelsDriven, euVehicleCategory, emissionsLimit, departmentalVehicleMarker, authIntoService, lettersOfAuth, alterationMarker, approvalType, approvalTypeNumber, variantNumber, variantVersionNumber, grossEecWeight, trainEecWeight, maxTrainEecWeight, applicantDetails, purchaserDetails, manufacturerDetails, microfilm, plates, chassisMake, chassisModel, bodyMake, bodyModel, modelLiteral, bodyType, manufactureYear, regnDate, firstUseDate, coifDate, ntaNumber, coifSerialNumber, coifCertifierName, conversionRefNo, seatsLowerDeck, seatsUpperDeck, standingCapacity, speedRestriction, speedLimiterMrk, tachoExemptMrk, dispensations, remarks, reasonForCreation, statusCode, unladenWeight, grossKerbWeight, grossLadenWeight, grossGbWeight, grossDesignWeight, trainGbWeight, trainDesignWeight, maxTrainGbWeight, maxTrainDesignWeight, maxLoadOnCoupling, frameDescription, tyreUseCode, roadFriendly, drawbarCouplingFitted, euroStandard, suspensionType, couplingType, dimensions, frontAxleTo5thWheelMin, frontAxleTo5thWheelMax, frontVehicleTo5thWheelCouplingMin, frontVehicleTo5thWheelCouplingMax, frontAxleToRearAxle, rearAxleToRearTrl, couplingCenterToRearAxleMin, couplingCenterToRearAxleMax, couplingCenterToRearTrlMin, couplingCenterToRearTrlMax, centreOfRearmostAxleToRearOfTrl, notes, noOfAxles, brakeCode, adrDetails, createdByName, createdById, lastUpdatedByName, lastUpdatedById, updateType, vehicleClass, vehicleSubclass, vehicleType, vehicleSize, numberOfSeatbelts, seatbeltInstallationApprovalDate, vehicleConfiguration, brakes, axles, dda);
   }
 
 
@@ -2660,8 +2660,8 @@ public class TechRecord {
     sb.append("    dimensions: ").append(toIndentedString(dimensions)).append("\n");
     sb.append("    frontAxleTo5thWheelMin: ").append(toIndentedString(frontAxleTo5thWheelMin)).append("\n");
     sb.append("    frontAxleTo5thWheelMax: ").append(toIndentedString(frontAxleTo5thWheelMax)).append("\n");
-    sb.append("    frontAxleTo5thWheelCouplingMin: ").append(toIndentedString(frontAxleTo5thWheelCouplingMin)).append("\n");
-    sb.append("    frontAxleTo5thWheelCouplingMax: ").append(toIndentedString(frontAxleTo5thWheelCouplingMax)).append("\n");
+    sb.append("    frontVehicleTo5thWheelCouplingMin: ").append(toIndentedString(frontVehicleTo5thWheelCouplingMin)).append("\n");
+    sb.append("    frontVehicleTo5thWheelCouplingMax: ").append(toIndentedString(frontVehicleTo5thWheelCouplingMax)).append("\n");
     sb.append("    frontAxleToRearAxle: ").append(toIndentedString(frontAxleToRearAxle)).append("\n");
     sb.append("    rearAxleToRearTrl: ").append(toIndentedString(rearAxleToRearTrl)).append("\n");
     sb.append("    couplingCenterToRearAxleMin: ").append(toIndentedString(couplingCenterToRearAxleMin)).append("\n");
