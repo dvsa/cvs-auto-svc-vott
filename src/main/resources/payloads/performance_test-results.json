@@ -15,7 +15,7 @@
       "testTypeName": "Low Emissions Certificate (LEC) with annual test",
       "name": "Technical test",
       "testTypeId": "39",
-      "certificateNumber": "LP12334",
+      "certificateNumber": "12334",
       "testTypeStartTimestamp": "2019-01-14T10:36:33.987Z",
       "testTypeEndTimestamp": "2019-01-14T10:36:33.987Z",
       "testExpiryDate": "2019-09-19",
