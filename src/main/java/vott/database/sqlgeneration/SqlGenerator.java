@@ -1,8 +1,12 @@
 package vott.database.sqlgeneration;
 
+import org.mockito.internal.verification.Times;
 import vott.database.*;
+import vott.models.dao.VtEVLAdditions;
+import vott.models.dao.VtEvlCvsRemoved;
 import vott.models.dto.enquiry.TechnicalRecord;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -53,6 +57,11 @@ public class SqlGenerator {
             )
         );
     }
+    public String generateFullUpsertSqlWithoutID(TableDetails tableDetails) {
+        return generateUpsertSqlWithoutID(
+                tableDetails
+        );
+    }
 
     private String generateUpsertSql(TableDetails tableDetails, String[] updatePlaceholders) {
         String[] valuePlaceholders = new String[tableDetails.getColumnNames().length];
@@ -66,6 +75,21 @@ public class SqlGenerator {
                 .collect(Collectors.joining(", ")),
             String.join(", ", valuePlaceholders),
             String.join(", ", updatePlaceholders)
+        );
+    }
+
+    private String generateUpsertSqlWithoutID(TableDetails tableDetails) {
+        String[] valuePlaceholders = new String[tableDetails.getColumnNames().length];
+        Arrays.fill(valuePlaceholders, "?");
+
+        return String.format(
+                "INSERT INTO `%s` (%s) VALUES (%s)",
+                tableDetails.getTableName(),
+                Arrays.stream(tableDetails.getColumnNames())
+                        .map(c -> '`' + c + '`')
+                        .collect(Collectors.joining(", ")),
+                String.join(", ", valuePlaceholders)
+
         );
     }
 
@@ -138,6 +162,18 @@ public class SqlGenerator {
         return preparersResult;
     }
 
+    public static List<vott.models.dao.Preparer> getPreparerDetailsWithVehicleID1(String testResultVehicleID, PreparerRepository preparerRepository) {
+        List<vott.models.dao.Preparer> preparersResult = preparerRepository.select(String.format(
+                "SELECT `preparer`.*\n"
+                        + "FROM `preparer`\n"
+                        + "JOIN `test_result`\n"
+                        + "ON `test_result`.`preparer_id` = `preparer`.`id`\n"
+                        + "WHERE `test_result`.`vehicle_id` = '%s'" , testResultVehicleID
+        ));
+        //preparerRepository.
+        return preparersResult;
+    }
+
     public static List<vott.models.dao.Tester> getTesterDetailsWithVehicleID(String testResultVehicleID, TesterRepository testerRepository) {
         List<vott.models.dao.Tester> testerResults = testerRepository.select(String.format(
                 "SELECT `tester`.*\n"
@@ -159,11 +195,49 @@ public class SqlGenerator {
         return evl;
     }
 
+    public static List<vott.models.dao.EVLView> getEVLViewWithVrm(String vrm, EVLViewRepository evlViewRepository){
+        List<vott.models.dao.EVLView> evl = evlViewRepository.select(String.format(
+                "SELECT * \n"
+                        + "FROM `evl_view`\n"
+                        + "WHERE \n"
+                        + "`evl_view`.`vrm_trm` = '%s' GROUP BY  `vrm_trm`, `certificateNumber` ORDER BY `vrm_trm`, `testExpiryDate` DESC " ,  vrm
+        ));
+        return evl;
+    }
+    public static void upsertVTEVLADDITIONS(VtEVLAdditionsRepository vtEVLAddRepo, VtEVLAdditions vtEvlAdd) throws SQLException,RuntimeException {
+        vtEVLAddRepo.fullUpsertWithoutID(vtEvlAdd);
+    }
+
+    public static void upsertVtEvlCvsRemoved(VtEvlCvsRemovedRepository vtEVLRepo, VtEvlCvsRemoved vtEvl) throws SQLException,RuntimeException {
+        vtEVLRepo.fullUpsertWithoutID(vtEvl);
+    }
+
+    public static List<vott.models.dao.VtEvlCvsRemoved> getVTEVLRecordsWithVin(String vin, VtEvlCvsRemovedRepository repo){
+
+        List<vott.models.dao.VtEvlCvsRemoved> vtCvsRemoved = repo.select(String.format(
+                "SELECT `vt`.`vrm`,`vt`.`vrm_test_record`,`vt`.`system_number`,`vt`.`vin` ,  \n"
+                        + "`vt`.`certificateNumber`,`vt`.`testStartDate`,`vt`.`testExpiryDate` \n"
+                        + " FROM `vt_evl_02_cvs_removed` AS `vt` \n"
+                        + "LEFT JOIN (SELECT `v`.`system_number`,DATE(MAX(`tr`.`testTypeStartTimestamp`)) AS `testTypeStartTimestamp` FROM`test_result` `tr` \n"
+                        + "JOIN `test_type` `tt` ON `tr`.`test_type_id`=`tt`.`id` \n"
+                        + "JOIN `vehicle` `v` ON `tr`.`vehicle_id`=`v`.`id` \n"
+                        + "WHERE \n"
+                        + "LOWER(`tr`.`testResult`) ='fail' AND LOWER(`tt`.`testTypeClassification`) ='annual with certificate' \n"
+                        + "AND `tr`.`testTypeStartTimestamp`>= DATE(NOW() - INTERVAL 1 YEAR) \n"
+                        + "GROUP BY `v`.`system_number` \n"
+                        + ") AS `fails` ON `vt`.`system_number`=`fails`.`system_number` \n"
+                        + "WHERE \n"
+                        + "(`fails`.`system_number`IS NULL OR `fails`.`testTypeStartTimestamp` < `vt`.`testStartDate`) \n"
+                        + "AND `vt`.`vin`='%s'" , vin
+        ));
+        return vtCvsRemoved;
+    }
+
     public static List<vott.models.dao.TFLView> getTFLViewWithVin(String vin, TFLViewRepository tflViewRepository){
         List<vott.models.dao.TFLView> tfl = tflViewRepository.select(String.format(
                 "SELECT * \n"
-                        + "FROM `CVSNOPCVSB5043`.`tfl_view`\n"
-                        + "WHERE `CVSNOPCVSB5043`.`tfl_view`.`vin` = '%s'" , vin
+                        + "FROM `CVSNOP`.`tfl_view`\n"
+                        + "WHERE `CVSNOP`.`tfl_view`.`VIN` = '%s'" , vin
         ));
         return tfl;
     }

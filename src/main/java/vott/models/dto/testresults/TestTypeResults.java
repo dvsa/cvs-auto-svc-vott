@@ -158,11 +158,16 @@ public class TestTypeResults {
   public enum EmissionStandardEnum {
     _0_10_G_KWH_EURO_3_PM("0.10 g/kWh Euro 3 PM"),
     _0_03_G_KWH_EURO_IV_PM("0.03 g/kWh Euro IV PM"),
-    EURO_3("Euro 3"),
     EURO_4("Euro 4"),
     EURO_6("Euro 6"),
     EURO_VI("Euro VI"),
-    FULL_ELECTRIC("Full Electric");
+    FULL_ELECTRIC("Full Electric"),
+    EURO_1("Euro 1"),
+    Euro_I("Euro I"),
+    Euro_2("Euro 2"),
+    Euro_II("Euro II"),
+    Euro_3("Euro 3"),
+    Euro_III("Euro III");
 
     private String value;
 

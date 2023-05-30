@@ -14,17 +14,18 @@ public class TFLViewRepository extends AbstractRepository<TFLView> {
     @Override
     protected TableDetails getTableDetails() {
         TableDetails tableDetails = new TableDetails();
-        tableDetails.setTableName("CVSNOPCVSB5043.tfl_view");
+        tableDetails.setTableName("CVSNOP.tfl_view");
         tableDetails.setColumnNames(new String[] {
-                "vrm_trm",
-                "vin",
-                "certificateNumber",
-                "modTypeCode",
-                "Name_exp_5",
-                "issueDate",
-                "testExpiryDate",
-                "pNumber",
-                "testTypeStartTimestamp",
+                "VRM",
+                "VIN",
+                "SerialNumberOfCertificate",
+                "CertificationModificationType",
+                "TestStatus",
+                "PMEuropeanEmissionClassificationCode",
+                "ValidFromDate",
+                "ExpiryDate",
+                "IssuedBy",
+                "IssueDate",
         });
         return tableDetails;
     }
@@ -35,12 +36,13 @@ public class TFLViewRepository extends AbstractRepository<TFLView> {
         preparedStatement.setString(1, entity.getVrmTrm());
         preparedStatement.setString(2, entity.getVin());
         preparedStatement.setString(3, entity.getCertificateNumber());
-        preparedStatement.setString(4, entity.getModTypeCode());
-        preparedStatement.setString(5, entity.getName_exp_5());
-        preparedStatement.setString(6, entity.getIssueDate());
-        preparedStatement.setString(7, entity.getTestExpiryDate());
-        preparedStatement.setString(8, entity.getPNumber());
-        preparedStatement.setString(9, entity.getTestTypeStartTimestamp());
+        preparedStatement.setString(4,entity.getEmissionClassificationCode());
+        preparedStatement.setString(5, entity.getModTypeCode());
+        preparedStatement.setString(6, entity.getTestStatus());
+        preparedStatement.setString(7, entity.getIssueDate());
+        preparedStatement.setString(8, entity.getTestExpiryDate());
+        preparedStatement.setString(9, entity.getPNumber());
+        preparedStatement.setString(10, entity.getTestTypeStartTimestamp());
     }
 
     @Override
@@ -49,26 +51,28 @@ public class TFLViewRepository extends AbstractRepository<TFLView> {
         preparedStatement.setString(1, entity.getVrmTrm());
         preparedStatement.setString(2, entity.getVin());
         preparedStatement.setString(3, entity.getCertificateNumber());
-        preparedStatement.setString(4, entity.getModTypeCode());
-        preparedStatement.setString(5, entity.getName_exp_5());
-        preparedStatement.setString(6, entity.getIssueDate());
-        preparedStatement.setString(7, entity.getTestExpiryDate());
-        preparedStatement.setString(8, entity.getPNumber());
-        preparedStatement.setString(9, entity.getTestTypeStartTimestamp());
+        preparedStatement.setString(4,entity.getEmissionClassificationCode());
+        preparedStatement.setString(5, entity.getModTypeCode());
+        preparedStatement.setString(6, entity.getTestStatus());
+        preparedStatement.setString(7, entity.getIssueDate());
+        preparedStatement.setString(8, entity.getTestExpiryDate());
+        preparedStatement.setString(9, entity.getPNumber());
+        preparedStatement.setString(10, entity.getTestTypeStartTimestamp());
     }
 
     @Override
     protected TFLView mapToEntity(ResultSet rs) throws SQLException {
         TFLView tfl = new TFLView();
-        tfl.setVrmTrm(rs.getString("vrm_trm"));
-        tfl.setVin(rs.getString("vin"));
-        tfl.setCertificateNumber(rs.getString("certificateNumber"));
-        tfl.setModTypeCode(rs.getString("IFNULL(fe.modTypeCode,\"\")"));
-        tfl.setName_exp_5(rs.getString("Name_exp_5"));
-        tfl.setIssueDate(rs.getString("DATE_FORMAT(tr.testTypeStartTimestamp, '%Y-%m-%d')"));
-        tfl.setTestExpiryDate(rs.getString("DATE_FORMAT(tr.testExpiryDate, '%Y-%m-%d')"));
-        tfl.setPNumber(rs.getString("pNumber"));
-        tfl.setTestTypeStartTimestamp(rs.getString("My_exp_DATE_FORMAT(tr.testTypeStartTimestamp, '%Y-%m-%d')"));
+        tfl.setVrmTrm(rs.getString("VRM"));
+        tfl.setVin(rs.getString("VIN"));
+        tfl.setCertificateNumber(rs.getString("SerialNumberOfCertificate"));
+        tfl.setEmissionClassificationCode(rs.getString("PMEuropeanEmissionClassificationCode"));
+        tfl.setModTypeCode(rs.getString("CertificationModificationType"));
+        tfl.setTestStatus(rs.getString("TestStatus"));
+        tfl.setIssueDate(rs.getString("ValidFromDate"));
+        tfl.setTestExpiryDate(rs.getString("ExpiryDate"));
+        tfl.setPNumber(rs.getString("IssuedBy"));
+        tfl.setTestTypeStartTimestamp(rs.getString("IssueDate"));
         return tfl;
     }
 

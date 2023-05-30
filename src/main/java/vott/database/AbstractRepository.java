@@ -1,5 +1,6 @@
 package vott.database;
 
+import com.github.rjeschke.txtmark.Run;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.database.sqlgeneration.TableDetails;
@@ -36,6 +37,7 @@ public abstract class AbstractRepository<T> {
         }
     }
 
+
     public int fullUpsert(T entity) {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -49,10 +51,33 @@ public abstract class AbstractRepository<T> {
                     preparedStatement,
                     entity
             );
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void fullUpsertWithoutID(T entity) throws RuntimeException,SQLException {
+        try (Connection connection = connectionFactory.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    sqlGenerator.generateFullUpsertSqlWithoutID(getTableDetails()),
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            setParametersFull(preparedStatement, entity);
+
+            upsert(
+                    preparedStatement,
+                    entity
+            );
+        } catch (RuntimeException e) {
+            boolean b = (e.getMessage().startsWith("Expected exactly 1 generated key,"));
+            if (!b) {
+                throw new SQLException(e.getCause());
+            }
+        }
+    }
+
 
     public T select(int primaryKey) {
         try (Connection connection = connectionFactory.getConnection()) {
@@ -139,7 +164,6 @@ public abstract class AbstractRepository<T> {
         if (generatedKeys.size() != 1 && generatedKeys.size() != 2) { //.size == 2 allowed due to bug linked in comments related to generated keys above
             throw new RuntimeException("Expected exactly 1 generated key, got " + generatedKeys.size());
         }
-
         return generatedKeys.get(0);
     }
 }
