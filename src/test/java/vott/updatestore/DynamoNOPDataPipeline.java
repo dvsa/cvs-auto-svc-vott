@@ -6,6 +6,7 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.api.TestResultAPI;
@@ -65,6 +66,7 @@ public class DynamoNOPDataPipeline {
 
     @Before
     public void setUp() throws Exception {
+        int counter = 0;
         configuration = VottConfiguration.local();
 
         gson = GsonInstance.get();
@@ -98,6 +100,9 @@ public class DynamoNOPDataPipeline {
         payloadPath="src/main/resources/payloads/" ;
 
     }
+
+    @Rule
+    public RetryRule retryRule = new RetryRule(3);
 
     @Title("CB2-7258 - TC1 - testCode value truncation")
     @Test
@@ -250,16 +255,13 @@ public class DynamoNOPDataPipeline {
         testResult.setSystemNumber(techRecord.getSystemNumber());
 
         System.out.println(testResult.getVin());
-        //VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
 
-        //with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.EVLView> evlViews = getEVLViewWithCertificateNumberAndVrm(testResultNOP.get(0).getCertificateNumber(),techRecord.getPrimaryVrm(),evlViewRepository);
-        //assertThat(evlViews.get(0)).isNotNull();
 
         EvlContainer container = new EvlContainer();
         container.evlView= evlViews.get(0);
@@ -947,4 +949,5 @@ public class DynamoNOPDataPipeline {
         return testResult;
     }
 }
+
 
