@@ -4,14 +4,15 @@ import lombok.Data;
 
 @Data
 public class TFLView {
-    private String vrmTrm;
+    private String vrm;
     private String vin;
-    private String certificateNumber;
-    private String modTypeCode;
+    private String serialNumberOfCertificate;
+    private String certificationModificationType;
     private String testStatus;
     private String emissionClassificationCode;
-    private String testTypeStartTimestamp;
+    private String testValidFromDate;
     private String testExpiryDate;
-    private String pNumber;
+    private String issuedBy;
     private String issueDate;
+    private String issueDateTime;
 }

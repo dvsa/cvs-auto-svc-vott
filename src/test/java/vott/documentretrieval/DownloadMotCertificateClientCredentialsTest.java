@@ -89,6 +89,7 @@ public class DownloadMotCertificateClientCredentialsTest {
 
         //Retrieve and save test certificate (pdf) as byteArray
         do {
+            //Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
             Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(validVIN, validTestNumber, token);
             statusCode = response.statusCode();
             pdf = response.asByteArray();

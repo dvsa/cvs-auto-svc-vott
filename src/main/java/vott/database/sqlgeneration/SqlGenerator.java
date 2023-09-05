@@ -236,8 +236,8 @@ public class SqlGenerator {
     public static List<vott.models.dao.TFLView> getTFLViewWithVin(String vin, TFLViewRepository tflViewRepository){
         List<vott.models.dao.TFLView> tfl = tflViewRepository.select(String.format(
                 "SELECT * \n"
-                        + "FROM `CVSNOP`.`tfl_view`\n"
-                        + "WHERE `CVSNOP`.`tfl_view`.`VIN` = '%s'" , vin
+                        + "FROM `tfl_view`\n"
+                        + "WHERE `tfl_view`.`VIN` = '%s'" , vin
         ));
         return tfl;
     }
