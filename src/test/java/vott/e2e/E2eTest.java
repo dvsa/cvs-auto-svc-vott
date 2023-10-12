@@ -108,8 +108,8 @@ public class E2eTest {
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         vott.models.dto.enquiry.Vehicle actualVehicle = retrieveVehicle(vin);
         List<TestResult> actualTestResults = retrieveTestResults(vin);

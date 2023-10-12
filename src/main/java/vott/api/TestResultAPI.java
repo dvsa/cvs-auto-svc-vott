@@ -30,6 +30,7 @@ public class TestResultAPI {
                     .body(testResultJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
+            //System.out.print(response.getBody());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
     }
