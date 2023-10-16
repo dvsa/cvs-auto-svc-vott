@@ -1,0 +1,82 @@
+{
+  "testResultId": "1b8047ed-a29a-4d37-8376-832bc7111f36",
+  "systemNumber": "18000002",
+  "vin": "HGV2AXLE",
+  "testStationName": "Rowe,WunschandWisoky",
+  "testStationPNumber": "87-1369561",
+  "testStationType": "atf",
+  "testerName": "Gica",
+  "testerEmailAddress": "someone@email.com",
+  "testerStaffId": "133",
+  "testStartTimestamp": "2020-11-02T14:42:05.280Z",
+  "testEndTimestamp": "2020-11-02T14:45:06.915Z",
+  "testStatus": "submitted",
+  "vehicleType": "hgv",
+  "vehicleConfiguration": "semi-car transporter",
+  "noOfAxles": 2,
+  "preparerId": "BL5545",
+  "preparerName": "DurrellVehiclesLimited",
+  "euVehicleCategory": "n2",
+  "countryOfRegistration": "gb",
+  "vrm": "HGV2AVRM",
+  "odometerReading": 56000,
+  "odometerReadingUnits": "miles",
+  "shouldEmailCertificate": "0",
+  "vehicleClass": {
+    "code": "v",
+    "description": "heavy goods vehicle"
+  },
+  "numberOfWheelsDriven": "0",
+  "reasonForCancellation": "no reason",
+  "testTypes": [
+    {
+      "name": "Annualtest",
+      "testTypeName": "Annualtest",
+      "testTypeId": "94",
+      "testTypeStartTimestamp": "2020-11-02T14:44:49.957Z",
+      "testTypeEndTimestamp": "2020-11-02T14:45:06.918Z",
+      "certificateNumber": "12345678",
+      "prohibitionIssued": false,
+      "reasonForAbandoning": "no reason",
+      "testResult": "pass",
+      "additionalNotesRecorded": "additionalnotes",
+      "additionalCommentsForAbandon": "no comments",
+      "secondaryCertificateNumber": "secondarycertnumber",
+      "customDefects": [
+        {
+          "referenceNumber": "1",
+          "defectName": "customdefect1",
+          "defectNotes": "customdefects1notes"
+        }
+      ],
+      "defects": [
+        {
+          "imNumber": 1000,
+          "imDescription": "imdescription1",
+          "itemNumber": 1500,
+          "itemDescription": "itemdescription1",
+          "deficiencyRef": "deficiencyreference(1)*",
+          "deficiencyId": "b",
+          "deficiencySubId": "d",
+          "deficiencyCategory": "advisory",
+          "deficiencyText": "deficinecytextstring",
+          "stdForProhibition": true,
+          "prs": true,
+          "prohibitionIssued": true,
+          "additionalInformation": {
+            "location": {
+              "vertical": "upper",
+              "horizontal": "outer",
+              "lateral": "centre",
+              "longitudinal": "front",
+              "rowNumber": null,
+              "seatNumber": null,
+              "axleNumber": null
+            },
+            "notes": null
+          }
+        }
+      ]
+    }
+  ]
+}

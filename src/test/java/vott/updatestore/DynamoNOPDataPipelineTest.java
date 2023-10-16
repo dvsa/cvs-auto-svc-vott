@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import net.thucydides.core.annotations.WithTag;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import vott.api.TestResultAPI;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
@@ -105,6 +108,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-7258 - TC1 - testCode value truncation")
     @Test
     public void testCodeTruncation() {
@@ -123,6 +127,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
     }
 
+    @WithTag("Vott")
     @Title("CB2-7548 - Remove technical-record stream from edh-marshaller - Verify Tech and test results are updated correctly")
     @Test
     public void testTechUpdate() {
@@ -151,6 +156,7 @@ public class DynamoNOPDataPipelineTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("CB2-7553 - Handle test results with no test types in update-store function. Has two test types")
     @Test
     public void twoTestType() {
@@ -174,6 +180,8 @@ public class DynamoNOPDataPipelineTest {
         assertThat(testResultNOP.get(0).getCertificateNumber()).isNotEqualTo(testResultNOP.get(1).getCertificateNumber());
     }
 
+
+    @WithTag("Vott")
     @Title("CB2-7553 - numberOfWheelsDriven accepted as string as well as string")
     @Test
     public void wheelsDrivenString() {
@@ -192,6 +200,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(techRecordNOP.get(0).getNumberOfWheelsDriven()).isEqualTo("4");
     }
 
+    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void testResultsTruncation() {
@@ -232,6 +241,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     public EvlContainer evlFeeds(String testResultFileName) throws RuntimeException {
 
@@ -267,6 +277,7 @@ public class DynamoNOPDataPipelineTest {
         return container;
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_same_as_evl_view() throws SQLException, RuntimeException {
@@ -288,6 +299,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.size()).isEqualTo(1);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_certificate_differs() throws SQLException, RuntimeException {
@@ -314,6 +326,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_vrm_differs() throws SQLException, RuntimeException {
@@ -340,6 +353,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_differs() throws SQLException, RuntimeException {
@@ -364,6 +378,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getTestExpiryDate().substring(0, 10)).isEqualTo(replace_date.substring(0, 10));
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_differs_variation1() throws SQLException, RuntimeException {
@@ -389,6 +404,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getTestExpiryDate().substring(0, 10)).isEqualTo(evlViews.getTestExpiryDate().substring(0, 10));
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_cert_differs() throws SQLException, RuntimeException {
@@ -416,6 +432,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.size()).isEqualTo(1);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_recent_date() throws SQLException, RuntimeException {
@@ -475,6 +492,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber() + "11");
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_recent_date_same_cert() throws SQLException, RuntimeException {
@@ -527,6 +545,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber());
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_old_date() throws SQLException, RuntimeException {
@@ -572,6 +591,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_same_date() throws SQLException, RuntimeException {
@@ -622,6 +642,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber());
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_only_vt() throws SQLException, RuntimeException {
@@ -668,6 +689,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void evlFeedsRekey() {
@@ -713,6 +735,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evlViews.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-7792 - Add Authorisation Into Service data to NOP")
     @Test
     public void trailerOCO() {
@@ -725,6 +748,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(ais.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-7793 - Add Type Approval data to NOP")
     @Test
     public void trailerApprovalType() {
@@ -747,6 +771,7 @@ public class DynamoNOPDataPipelineTest {
         }
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLbp() {
@@ -766,6 +791,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLcp() {
@@ -779,6 +805,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLdv() {
@@ -792,6 +819,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLev() {
@@ -805,6 +833,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnp() {
@@ -818,6 +847,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnv() {
@@ -831,6 +861,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnz() {
@@ -844,6 +875,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8967 - Update TfL view logic to handle NULL Mod Type Codes. ")
     @Test
     public void tflFeedsDeskBasedNoModTypeCode() {
@@ -857,6 +889,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8967 - Update TfL view logic to handle NULL Mod Type Codes. ")
     @Test
     public void tflFeedsCertDoesNotStartLP() {
@@ -930,6 +963,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(tflViews.size()).isEqualTo(0);
     }
 
+    @WithTag("Vott")
     @Title("CB2-5043 - TFL View reporting Emission standards")
     @Test
     public void tflFeedsEmissionStandards() {
@@ -977,6 +1011,58 @@ public class DynamoNOPDataPipelineTest {
             assertThat(tflViews.get(0).getEmissionClassificationCode()).isEqualTo(entry.getValue());
         }
     }
+
+    @WithTag("Vott")
+    @Title("CB2-9237 - test inserts data in NOP")
+    @Test
+    public void insertNopTest()
+    {
+
+        //consider tests with multiple test types
+
+        //create tech record from JSON
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_hgv_annual_2_axles.json");
+        //create test result from JSON
+        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_hgv_annual_2_axles.json");
+        //set timestamps to today's date
+        TestTypes testTypes = expectedTestResult.getTestTypes();
+        LocalDate ld = LocalDate.now();
+        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+
+        expectedTestResult.setTestTypes(testTypes);
+
+        testTypes.get(0).setTestExpiryDate(ld);
+        testTypes.get(0).setTestTypeStartTimestamp(datetime);
+        testTypes.get(0).setTestTypeEndTimestamp(datetime);
+
+        expectedTestResult.setTestStartTimestamp(datetime);
+        expectedTestResult.setTestEndTimestamp(datetime);
+
+        //post technical record
+        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        //post test result
+        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
+        String vin = expectedTestResult.getVin();
+        //wait for data to be streamed to NOP
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+
+        //get test result from NOP
+        List<vott.models.dao.TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
+
+        //compare JSON input to NOP data
+
+        vott.models.dao.TestResult actualTestResult = actualTestResults.get(0);
+
+        String expectedTestResultId = expectedTestResult.getTestResultId();
+        String actualTestResultId = actualTestResult.getTestResultId();
+        Assert.assertEquals("test result ids do not match", expectedTestResultId,actualTestResultId);
+
+
+
+        }
+
+
 
     private TechRecordPOST loadTechRecord(String fileName) {
         return randomizeKeys(readTechRecord(fileName));

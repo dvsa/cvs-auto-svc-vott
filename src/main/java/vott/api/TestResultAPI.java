@@ -3,6 +3,7 @@ package vott.api;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import vott.config.VottConfiguration;
 import vott.json.GsonInstance;
@@ -30,6 +31,9 @@ public class TestResultAPI {
                     .body(testResultJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
+            //for debug
+            ResponseBody responseBody = response.getBody();
+            System.out.println(responseBody.prettyPrint());
             //System.out.print(response.getBody());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
