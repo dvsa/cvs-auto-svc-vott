@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import vott.api.TestResultAPI;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
@@ -23,10 +22,7 @@ import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
-import vott.models.dao.EVLView;
-import vott.models.dao.TestResult;
-import vott.models.dao.VtEVLAdditions;
-import vott.models.dao.VtEvlCvsRemoved;
+import vott.models.dao.*;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
 import vott.models.dto.testresults.CompleteTestResults;
@@ -70,6 +66,9 @@ public class DynamoNOPDataPipelineTest {
     private VtEVLAdditionsRepository vtEVLAdditionsRepository;
     private VtEvlCvsRemovedRepository vtEvlCvsRemovedRepository;
     private String payloadPath;
+    private TestStationRepository testStationRepository;
+
+    private TestTypeRepository testTypeRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -103,6 +102,10 @@ public class DynamoNOPDataPipelineTest {
         vtEVLAdditionsRepository = new VtEVLAdditionsRepository(connectionFactory);
 
         vtEvlCvsRemovedRepository = new VtEvlCvsRemovedRepository(connectionFactory);
+
+        testStationRepository = new TestStationRepository(connectionFactory);
+
+        testTypeRepository = new TestTypeRepository(connectionFactory);
 
         payloadPath = "src/main/resources/payloads/";
 
@@ -1050,16 +1053,164 @@ public class DynamoNOPDataPipelineTest {
         //get test result from NOP
         List<vott.models.dao.TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
 
+        Assert.assertEquals("expected only one test result to be returned from database",actualTestResults.size(), 1);
         //compare JSON input to NOP data
+        compareTestResultJsonToNOP(expectedTestResult, actualTestResults.get(0));
 
-        vott.models.dao.TestResult actualTestResult = actualTestResults.get(0);
+        }
 
-        String expectedTestResultId = expectedTestResult.getTestResultId();
-        String actualTestResultId = actualTestResult.getTestResultId();
-        Assert.assertEquals("test result ids do not match", expectedTestResultId,actualTestResultId);
+        //re-factor to compare
+        //test result
+        //test type
+        //tester
+        private void compareTestResultJsonToNOP(CompleteTestResults expectedTestResult, TestResult actualTestResult)
+        {
+            //get from test result table
+            //test result attributes
+            //testResultId
+            String expectedTestResultId = expectedTestResult.getTestResultId();
+            String actualTestResultId = actualTestResult.getTestResultId();
+            Assert.assertEquals(expectedTestResultId,actualTestResultId);
+            //testStatus
+            String expectedTestStatus = String.valueOf(expectedTestResult.getTestStatus());
+            String actualTestStatus = actualTestResult.getTestStatus();
+            Assert.assertEquals(expectedTestStatus,actualTestStatus);
+            //noOfAxles
+            String expectedNoOfAxles = String.valueOf(expectedTestResult.getNoOfAxles());
+            String actualNoOfAxles = actualTestResult.getNoOfAxles();
+            Assert.assertEquals(expectedNoOfAxles,actualNoOfAxles);
+            //countryOfRegistration
+            String expectedCountryOfRegistration = expectedTestResult.getCountryOfRegistration();
+            String actualCountryOfRegistration = actualTestResult.getCountryOfRegistration();
+            Assert.assertEquals(expectedCountryOfRegistration,actualCountryOfRegistration);
+            //odometerReading
+            String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
+            String actualOdometerReading = actualTestResult.getOdometerReading();
+            Assert.assertEquals(expectedOdometerReading,actualOdometerReading);
+            //odometerReadingUnits
+            String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
+            String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
+            Assert.assertEquals(expectedOdometerReadingUnits,actualOdometerReadingUnits);
+            //reasonForCancellation
+            String expectedReasonForCancellation = expectedTestResult.getReasonForCancellation();
+            String actualReasonForCancellation = actualTestResult.getReasonForCancellation();
+            Assert.assertEquals(expectedReasonForCancellation,actualReasonForCancellation);
+
+            //test type attributes
+            //assert there is 1 test type
+            TestTypeResults expectedTestType = expectedTestResult.getTestTypes().get(0);
+            //testTypeStartTimestamp
+            OffsetDateTime expectedTestTypeStartTimestamp = expectedTestType.getTestTypeStartTimestamp();
+            //format to match NOP timestamp
+            String formattedStartTimeStamp = expectedTestTypeStartTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
+            String actualTestTypeStartTimestamp = actualTestResult.getTestTypeStartTimestamp();
+            Assert.assertEquals(formattedStartTimeStamp,actualTestTypeStartTimestamp);
+            //testTypeEndTimestamp
+            OffsetDateTime expectedTestTypeEndTimestamp = expectedTestType.getTestTypeEndTimestamp();
+            //format to match NOP timestamp
+            String formattedEndTimeStamp = expectedTestTypeEndTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
+            String actualTestTypeEndTimestamp = actualTestResult.getTestTypeEndTimestamp();
+            Assert.assertEquals(formattedEndTimeStamp,actualTestTypeEndTimestamp);
+            //reasonForAbandoning
+            String expectedReasonForAbandoning = expectedTestType.getReasonForAbandoning();
+            String actualReasonForAbandoning = actualTestResult.getReasonForAbandoning();
+            Assert.assertEquals(expectedReasonForAbandoning,actualReasonForAbandoning);
+            //testResult (outcome)
+            String expectedTestResultOutcome = String.valueOf(expectedTestType.getTestResult());
+            String actualTestResultOutcome = actualTestResult.getTestResult();
+            Assert.assertEquals(expectedTestResultOutcome,actualTestResultOutcome);
+            //additionalNotesRecorded
+            String expectedAdditionalNotesRecorded = expectedTestType.getAdditionalNotesRecorded();
+            String actualAdditionalNotesRecorded = actualTestResult.getAdditionalNotesRecorded();
+            Assert.assertEquals(expectedAdditionalNotesRecorded,actualAdditionalNotesRecorded);
+
+            //get from tester table
+            String testResultVehicleID = actualTestResult.getVehicleID();
+            List<vott.models.dao.Tester> actualTesters = SqlGenerator.getTesterDetailsWithVehicleID(testResultVehicleID, testerRepository);
+            Assert.assertEquals(actualTesters.size(),1);
+            Tester actualTester = actualTesters.get(0);
+            //testerName
+            String expectedTesterName = expectedTestResult.getTesterName();
+            String actualTesterName = actualTester.getName();
+            Assert.assertEquals(expectedTesterName,actualTesterName);
+            //testerEmailAddress
+            String expectedTesterEmailAddress = expectedTestResult.getTesterEmailAddress();
+            String actualTesterEmailAddress = actualTester.getEmailAddress();
+            Assert.assertEquals(expectedTesterEmailAddress,actualTesterEmailAddress);
+            //testerStaffId
+            String expectedTesterStaffId = expectedTestResult.getTesterStaffId();
+            String actualTesterStaffId = actualTester.getStaffID();
+            Assert.assertEquals(expectedTesterStaffId,actualTesterStaffId);
+
+            //get from test station table
+            String testResultId = actualTestResult.getTestResultId();
+            List<vott.models.dao.TestStation> testStations = SqlGenerator.getTestStationWithTestResultId(testResultId,testStationRepository);
+            Assert.assertEquals(testStations.size(), 1);
+            TestStation testStation = testStations.get(0);
+            //testStationName
+            String expectedTestStation = expectedTestResult.getTestStationName();
+            String actualTestStation = testStation.getName();
+            Assert.assertEquals(expectedTestStation,actualTestStation);
+            //testStationPNumber
+            String expectedTestStationPNumber = expectedTestResult.getTestStationPNumber();
+            String actualTestStationPNumber = testStation.getPNumber();
+            Assert.assertEquals(expectedTestStationPNumber,actualTestStationPNumber);
+            //testStationType
+            String expectedTestStationType = String.valueOf(expectedTestResult.getTestStationType());
+            String actualTestStationType = testStation.getType();
+            Assert.assertEquals(expectedTestStationType,actualTestStationType);
+
+            //get from prepare table
+            List<vott.models.dao.Preparer> preparers = SqlGenerator.getPreparerDetailsWithVehicleID(testResultVehicleID,preparerRepository);
+            Assert.assertEquals(preparers.size(), 1);
+            Preparer preparer = preparers.get(0);
+            //preparerName
+            String expectedPreparerName = expectedTestResult.getPreparerName();
+            String actualPreparerName = preparer.getName();
+            Assert.assertEquals(expectedPreparerName,actualPreparerName);
+            //preparerId
+            String expectedPreparerId = expectedTestResult.getPreparerId();
+            String actualPreparerId = preparer.getPreparerID();
+            Assert.assertEquals(expectedPreparerId,actualPreparerId);
+
+            //get from test type table
+            String testTypeId = actualTestResult.getTestTypeID();
+            List<vott.models.dao.TestType> testTypes = SqlGenerator.getTestTypeWithTestTypeId(testTypeId,testTypeRepository);
+            Assert.assertEquals(testTypes.size(), 1);
+            TestType testType = testTypes.get(0);
+            //name
+            String expectedTestTypeName = expectedTestType.getTestTypeName();
+            String actualTestTypeName = testType.getTestTypeName();
+            Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
 
 
+            //get from vehicle_class, joining on vehicle and tech record tables?
+            //vehicleType
+            //vehicleConfiguration
+            //euVehicleCategory
+            //vehicleClass > code
+            //vehicleClass > description
 
+
+            //check if these are actually migrated to NOP
+            //testStartTimestamp (test result)
+            //testEndTimestamp (test result)
+            //shouldEmailCertificate
+            //testTypeName
+            //testTypeId
+            //prohibitionIssued (test type not defect)
+            //the following are on vehicle table not test result and present in technical record as well as test result
+            //system number
+            //vin
+            //vrm
+            //numberOfWheelsDriven
+
+            //generated in back end CVS, would need to compare directly with dynamo db value
+            //certificateNumber
+
+            //not mapped from VT for HGVs
+            //additionalCommentsForAbandon
+            //secondaryCertificateNumber
         }
 
 

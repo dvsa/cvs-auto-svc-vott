@@ -16,47 +16,48 @@ public class SqlGenerator {
 
     public String generateSelectSql(TableDetails tableDetails, int primaryKey) {
         List<String> columnNames = Arrays.stream(tableDetails.getColumnNames())
-            .map(c -> '`' + c + '`')
-            .collect(Collectors.toList());
+                .map(c -> '`' + c + '`')
+                .collect(Collectors.toList());
 
         columnNames.add(0, "`" + tableDetails.getPrimaryKeyColumnName() + "`");
 
         return String.format(
-            "SELECT %s FROM `%s` WHERE `%s` = %d",
-            String.join(", ", columnNames),
-            tableDetails.getTableName(),
-            tableDetails.getPrimaryKeyColumnName(),
-            primaryKey
+                "SELECT %s FROM `%s` WHERE `%s` = %d",
+                String.join(", ", columnNames),
+                tableDetails.getTableName(),
+                tableDetails.getPrimaryKeyColumnName(),
+                primaryKey
         );
     }
 
     public String generateDeleteSql(TableDetails tableDetails, int primaryKey) {
         return String.format(
-            "DELETE FROM `%s` WHERE `%s` = %d",
-            tableDetails.getTableName(),
-            tableDetails.getPrimaryKeyColumnName(),
-            primaryKey
+                "DELETE FROM `%s` WHERE `%s` = %d",
+                tableDetails.getTableName(),
+                tableDetails.getPrimaryKeyColumnName(),
+                primaryKey
         );
     }
 
     public String generatePartialUpsertSql(TableDetails tableDetails) {
         return generateUpsertSql(
-            tableDetails,
-            generateUpdatePlaceholders(
-                tableDetails.getPrimaryKeyColumnName()
-            )
+                tableDetails,
+                generateUpdatePlaceholders(
+                        tableDetails.getPrimaryKeyColumnName()
+                )
         );
     }
 
     public String generateFullUpsertSql(TableDetails tableDetails) {
         return generateUpsertSql(
-            tableDetails,
-            generateUpdatePlaceholders(
-                tableDetails.getPrimaryKeyColumnName(),
-                tableDetails.getColumnNames()
-            )
+                tableDetails,
+                generateUpdatePlaceholders(
+                        tableDetails.getPrimaryKeyColumnName(),
+                        tableDetails.getColumnNames()
+                )
         );
     }
+
     public String generateFullUpsertSqlWithoutID(TableDetails tableDetails) {
         return generateUpsertSqlWithoutID(
                 tableDetails
@@ -68,13 +69,13 @@ public class SqlGenerator {
         Arrays.fill(valuePlaceholders, "?");
 
         return String.format(
-            "INSERT INTO `%s` (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
-            tableDetails.getTableName(),
-            Arrays.stream(tableDetails.getColumnNames())
-                .map(c -> '`' + c + '`')
-                .collect(Collectors.joining(", ")),
-            String.join(", ", valuePlaceholders),
-            String.join(", ", updatePlaceholders)
+                "INSERT INTO `%s` (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
+                tableDetails.getTableName(),
+                Arrays.stream(tableDetails.getColumnNames())
+                        .map(c -> '`' + c + '`')
+                        .collect(Collectors.joining(", ")),
+                String.join(", ", valuePlaceholders),
+                String.join(", ", updatePlaceholders)
         );
     }
 
@@ -98,22 +99,22 @@ public class SqlGenerator {
     }
 
     private String[] generateUpdatePlaceholders(String primaryKey, String[] columnNames) {
-        String nonNullPrimaryKey = primaryKey == null ? "id": primaryKey;
+        String nonNullPrimaryKey = primaryKey == null ? "id" : primaryKey;
 
         String primaryKeyPlaceholder = String.format(
-            "`%s` = LAST_INSERT_ID(`%s`)",
-            nonNullPrimaryKey,
-            nonNullPrimaryKey
+                "`%s` = LAST_INSERT_ID(`%s`)",
+                nonNullPrimaryKey,
+                nonNullPrimaryKey
         );
 
         if (columnNames.length == 0) {
-            return new String[] { primaryKeyPlaceholder };
+            return new String[]{primaryKeyPlaceholder};
         }
 
         List<String> updatePlaceholders = Arrays.stream(columnNames)
-            .filter(c -> !c.equals(nonNullPrimaryKey))
-            .map(c -> String.format("`%s` = ?", c))
-            .collect(Collectors.toList());
+                .filter(c -> !c.equals(nonNullPrimaryKey))
+                .map(c -> String.format("`%s` = ?", c))
+                .collect(Collectors.toList());
 
         updatePlaceholders.add(0, primaryKeyPlaceholder);
 
@@ -157,22 +158,23 @@ public class SqlGenerator {
                         + "FROM `preparer`\n"
                         + "JOIN `test_result`\n"
                         + "ON `test_result`.`preparer_id` = `preparer`.`id`\n"
-                        + "WHERE `test_result`.`vehicle_id` = '%s'" , testResultVehicleID
+                        + "WHERE `test_result`.`vehicle_id` = '%s'", testResultVehicleID
         ));
         return preparersResult;
     }
 
-    public static List<vott.models.dao.Preparer> getPreparerDetailsWithVehicleID1(String testResultVehicleID, PreparerRepository preparerRepository) {
-        List<vott.models.dao.Preparer> preparersResult = preparerRepository.select(String.format(
-                "SELECT `preparer`.*\n"
-                        + "FROM `preparer`\n"
-                        + "JOIN `test_result`\n"
-                        + "ON `test_result`.`preparer_id` = `preparer`.`id`\n"
-                        + "WHERE `test_result`.`vehicle_id` = '%s'" , testResultVehicleID
-        ));
-        //preparerRepository.
-        return preparersResult;
-    }
+//duplicate of above?
+//    public static List<vott.models.dao.Preparer> getPreparerDetailsWithVehicleID1(String testResultVehicleID, PreparerRepository preparerRepository) {
+//        List<vott.models.dao.Preparer> preparersResult = preparerRepository.select(String.format(
+//                "SELECT `preparer`.*\n"
+//                        + "FROM `preparer`\n"
+//                        + "JOIN `test_result`\n"
+//                        + "ON `test_result`.`preparer_id` = `preparer`.`id`\n"
+//                        + "WHERE `test_result`.`vehicle_id` = '%s'", testResultVehicleID
+//        ));
+//        //preparerRepository.
+//        return preparersResult;
+//    }
 
     public static List<vott.models.dao.Tester> getTesterDetailsWithVehicleID(String testResultVehicleID, TesterRepository testerRepository) {
         List<vott.models.dao.Tester> testerResults = testerRepository.select(String.format(
@@ -180,39 +182,40 @@ public class SqlGenerator {
                         + "FROM `tester`\n"
                         + "JOIN `test_result`\n"
                         + "ON `test_result`.`tester_id` = `tester`.`id`\n"
-                        + "WHERE `test_result`.`vehicle_id` = '%s'" , testResultVehicleID
+                        + "WHERE `test_result`.`vehicle_id` = '%s'", testResultVehicleID
         ));
         return testerResults;
     }
 
-    public static List<vott.models.dao.EVLView> getEVLViewWithCertificateNumberAndVrm(String certificateNumber, String vrm, EVLViewRepository evlViewRepository){
+    public static List<vott.models.dao.EVLView> getEVLViewWithCertificateNumberAndVrm(String certificateNumber, String vrm, EVLViewRepository evlViewRepository) {
         List<vott.models.dao.EVLView> evl = evlViewRepository.select(String.format(
                 "SELECT * \n"
                         + "FROM `evl_view`\n"
                         + "WHERE `evl_view`.`certificateNumber` = '%s'\n"
-                        + "AND `evl_view`.`vrm_trm` = '%s' " , certificateNumber, vrm
+                        + "AND `evl_view`.`vrm_trm` = '%s' ", certificateNumber, vrm
         ));
         return evl;
     }
 
-    public static List<vott.models.dao.EVLView> getEVLViewWithVrm(String vrm, EVLViewRepository evlViewRepository){
+    public static List<vott.models.dao.EVLView> getEVLViewWithVrm(String vrm, EVLViewRepository evlViewRepository) {
         List<vott.models.dao.EVLView> evl = evlViewRepository.select(String.format(
                 "SELECT * \n"
                         + "FROM `evl_view`\n"
                         + "WHERE \n"
-                        + "`evl_view`.`vrm_trm` = '%s' GROUP BY  `vrm_trm`, `certificateNumber` ORDER BY `vrm_trm`, `testExpiryDate` DESC " ,  vrm
+                        + "`evl_view`.`vrm_trm` = '%s' GROUP BY  `vrm_trm`, `certificateNumber` ORDER BY `vrm_trm`, `testExpiryDate` DESC ", vrm
         ));
         return evl;
     }
-    public static void upsertVTEVLADDITIONS(VtEVLAdditionsRepository vtEVLAddRepo, VtEVLAdditions vtEvlAdd) throws SQLException,RuntimeException {
+
+    public static void upsertVTEVLADDITIONS(VtEVLAdditionsRepository vtEVLAddRepo, VtEVLAdditions vtEvlAdd) throws SQLException, RuntimeException {
         vtEVLAddRepo.fullUpsertWithoutID(vtEvlAdd);
     }
 
-    public static void upsertVtEvlCvsRemoved(VtEvlCvsRemovedRepository vtEVLRepo, VtEvlCvsRemoved vtEvl) throws SQLException,RuntimeException {
+    public static void upsertVtEvlCvsRemoved(VtEvlCvsRemovedRepository vtEVLRepo, VtEvlCvsRemoved vtEvl) throws SQLException, RuntimeException {
         vtEVLRepo.fullUpsertWithoutID(vtEvl);
     }
 
-    public static List<vott.models.dao.VtEvlCvsRemoved> getVTEVLRecordsWithVin(String vin, VtEvlCvsRemovedRepository repo){
+    public static List<vott.models.dao.VtEvlCvsRemoved> getVTEVLRecordsWithVin(String vin, VtEvlCvsRemovedRepository repo) {
 
         List<vott.models.dao.VtEvlCvsRemoved> vtCvsRemoved = repo.select(String.format(
                 "SELECT `vt`.`vrm`,`vt`.`vrm_test_record`,`vt`.`system_number`,`vt`.`vin` ,  \n"
@@ -228,21 +231,21 @@ public class SqlGenerator {
                         + ") AS `fails` ON `vt`.`system_number`=`fails`.`system_number` \n"
                         + "WHERE \n"
                         + "(`fails`.`system_number`IS NULL OR `fails`.`testTypeStartTimestamp` < `vt`.`testStartDate`) \n"
-                        + "AND `vt`.`vin`='%s'" , vin
+                        + "AND `vt`.`vin`='%s'", vin
         ));
         return vtCvsRemoved;
     }
 
-    public static List<vott.models.dao.TFLView> getTFLViewWithVin(String vin, TFLViewRepository tflViewRepository){
+    public static List<vott.models.dao.TFLView> getTFLViewWithVin(String vin, TFLViewRepository tflViewRepository) {
         List<vott.models.dao.TFLView> tfl = tflViewRepository.select(String.format(
                 "SELECT * \n"
                         + "FROM `tfl_view`\n"
-                        + "WHERE `tfl_view`.`VIN` = '%s'" , vin
+                        + "WHERE `tfl_view`.`VIN` = '%s'", vin
         ));
         return tfl;
     }
 
-    public static List<vott.models.dao.AuthIntoServices> getAuthIntoServices(String vin, AuthIntoServicesRepository authIntoServicesRepository){
+    public static List<vott.models.dao.AuthIntoServices> getAuthIntoServices(String vin, AuthIntoServicesRepository authIntoServicesRepository) {
         List<vott.models.dao.AuthIntoServices> ais = authIntoServicesRepository.select(String.format(
                 "SELECT `auth_into_service`.*  from auth_into_service \n"
                         + "JOIN `technical_record` ON `technical_record`.`id` = `auth_into_service`.`technical_record_id` \n"
@@ -252,6 +255,7 @@ public class SqlGenerator {
 
         return ais;
     }
+
     public static List<vott.models.dao.TestResult> getTestResultWithVIN(String vin, TestResultRepository testResultRepository) {
         List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
                 "SELECT `test_result`.*\n"
@@ -274,5 +278,26 @@ public class SqlGenerator {
         ));
 
         return techRecord;
+    }
+
+    public static List<vott.models.dao.TestStation> getTestStationWithTestResultId(String testResultId, TestStationRepository testStationRepository) {
+        List<vott.models.dao.TestStation> testStations = testStationRepository.select(String.format(
+                "SELECT test_station.* \n" +
+                        "FROM test_station\n" +
+                        "JOIN test_result ON test_result.test_station_id = test_station.id\n" +
+                        "WHERE test_result.testResultId = '%s'", testResultId
+        ));
+
+        return testStations;
+    }
+
+    public static List<vott.models.dao.TestType> getTestTypeWithTestTypeId(String testTypeId, TestTypeRepository testTypeRepository) {
+        List<vott.models.dao.TestType> testTypes = testTypeRepository.select(String.format(
+                "SELECT test_type.*\n" +
+                        "FROM test_type\n" +
+                        "WHERE  test_type.id = '%s'", testTypeId
+        ));
+
+        return testTypes;
     }
 }
