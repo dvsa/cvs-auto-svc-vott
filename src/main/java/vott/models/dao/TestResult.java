@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class TestResult {
 
+    private String id;
     private String vehicleID;
     private String fuelEmissionID;
     private String testStationID;

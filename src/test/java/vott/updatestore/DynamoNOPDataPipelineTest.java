@@ -25,11 +25,10 @@ import vott.json.GsonInstance;
 import vott.models.dao.*;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
-import vott.models.dto.testresults.CompleteTestResults;
-import vott.models.dto.testresults.TestTypeResults;
-import vott.models.dto.testresults.TestTypes;
+import vott.models.dto.testresults.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -42,6 +41,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
+import vott.models.dto.testresults.Defect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -57,6 +57,7 @@ public class DynamoNOPDataPipelineTest {
     private TokenService v1ImplicitTokens;
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
+    private DefectRepository defectRepository;
     private TechnicalRecordRepository technicalRecordRepository;
     private TesterRepository testerRepository;
     private PreparerRepository preparerRepository;
@@ -86,6 +87,8 @@ public class DynamoNOPDataPipelineTest {
         vehicleRepository = new VehicleRepository(connectionFactory);
 
         testResultRepository = new TestResultRepository(connectionFactory);
+
+        defectRepository = new DefectRepository(connectionFactory);
 
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
 
@@ -1213,8 +1216,196 @@ public class DynamoNOPDataPipelineTest {
             //secondaryCertificateNumber
         }
 
+    @WithTag("Vott")
+    @Title("CB2-9237 - test inserts data in NOP")
+    @Test
+    public void insertDefectTest()
+    {
+        //consider tests with multiple test types
+        //create tech record from JSON
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_defect.json");
+        //create test result from JSON
+        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_defect.json");
 
+        Defect expectedDefect = expectedTestResult.getTestTypes().get(0).getDefects().get(0);
 
+        //set timestamps to today's date
+        TestTypes testTypes = expectedTestResult.getTestTypes();
+        LocalDate ld = LocalDate.now();
+        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        expectedTestResult.setTestTypes(testTypes);
+        testTypes.get(0).setTestExpiryDate(ld);
+        testTypes.get(0).setTestTypeStartTimestamp(datetime);
+        testTypes.get(0).setTestTypeEndTimestamp(datetime);
+        expectedTestResult.setTestStartTimestamp(datetime);
+        expectedTestResult.setTestEndTimestamp(datetime);
+        //post technical record
+        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        //post test result
+        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
+        String vin = expectedTestResult.getVin();
+        //wait for data to be streamed to NOP
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        //get test result from NOP
+        List<vott.models.dao.TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
+        String nopTestResultId = actualTestResults.get(0).getId();
+        List<vott.models.dao.Defect> actualDefectList = SqlGenerator.getDefectWithNopTestResultId(nopTestResultId, defectRepository);
+        //compare JSON input to NOP data
+        vott.models.dao.TestResult actualTestResult = actualTestResults.get(0);
+
+        String expectedTestResultId = expectedTestResult.getTestResultId();
+        String actualTestResultId = actualTestResult.getTestResultId();
+        Assert.assertEquals("Test result ids do not match", expectedTestResultId,actualTestResultId);
+
+        vott.models.dao.Defect actualDefect = actualDefectList.get(0);
+
+        String expectedImNumber = String.valueOf(expectedDefect.getImNumber());
+        String actualImNumber = actualDefect.getImNumber();
+        Assert.assertEquals("imNumbers do not match", expectedImNumber, actualImNumber);
+
+        String expectedImDescription = expectedDefect.getImDescription();
+        String actualImDescription = actualDefect.getImDescription();
+        Assert.assertEquals("imDescriptions do not match", expectedImDescription, actualImDescription);
+
+        String expectedItemNumber = String.valueOf(expectedDefect.getItemNumber());
+        String actualItemNumber = actualDefect.getItemNumber();
+        Assert.assertEquals("Item Numbers do not match", expectedItemNumber, actualItemNumber);
+
+        String expectedItemDescription = expectedDefect.getItemDescription();
+        String actualItemDescription = actualDefect.getItemDescription();
+        Assert.assertEquals("Item Descriptions do not match", expectedItemDescription, actualItemDescription);
+
+        String expectedDeficiencyRef = expectedDefect.getDeficiencyRef();
+        String actualDeficiencyRef = actualDefect.getDeficiencyRef();
+        Assert.assertEquals("Deficiency Refs do not match", expectedDeficiencyRef, actualDeficiencyRef);
+
+        String expectedDeficiencyID = expectedDefect.getDeficiencyId();
+        String actualDeficiencyID = actualDefect.getDeficiencyID();
+        Assert.assertEquals("Deficiency IDs do not match", expectedDeficiencyID, actualDeficiencyID);
+
+        String expectedDeficiencySubID = expectedDefect.getDeficiencySubId();
+        String actualDeficiencySubID = actualDefect.getDeficiencySubID();
+        Assert.assertEquals("Deficiency Sub IDs do not match", expectedDeficiencySubID, actualDeficiencySubID);
+
+        String expectedDeficiencyCategory = String.valueOf(expectedDefect.getDeficiencyCategory());
+        String actualDeficiencyCategory = actualDefect.getDeficiencyCategory();
+        Assert.assertEquals("Deficiency Categories do not match", expectedDeficiencyCategory, actualDeficiencyCategory);
+
+        String expectedDeficiencyText = expectedDefect.getDeficiencyText();
+        String actualDeficiencyText = actualDefect.getDeficiencyText();
+        Assert.assertEquals("Deficiency Texts do not match", expectedDeficiencyText, actualDeficiencyText);
+
+        Boolean expectedStdForProhibition = expectedDefect.isStdForProhibition();
+        String expectedStringStdForProhibition = convertBooleanToStringNumericBoolean(expectedStdForProhibition);
+        String actualStdForProhibition = actualDefect.getStdForProhibition();
+        Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
+    }
+
+    @WithTag("Vott")
+    @Title("CB2-9237 - test inserts data in NOP")
+    @Test
+    public void insertMultipleDefectTests()
+    {
+        //consider tests with multiple test types
+        //create tech record from JSON
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_defect.json");
+        //create test result from JSON
+        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_defect_multiple.json");
+
+        //set timestamps to today's date
+        TestTypes testTypes = expectedTestResult.getTestTypes();
+        LocalDate ld = LocalDate.now();
+        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        expectedTestResult.setTestTypes(testTypes);
+        testTypes.get(0).setTestExpiryDate(ld);
+        testTypes.get(0).setTestTypeStartTimestamp(datetime);
+        testTypes.get(0).setTestTypeEndTimestamp(datetime);
+        expectedTestResult.setTestStartTimestamp(datetime);
+        expectedTestResult.setTestEndTimestamp(datetime);
+        //post technical record
+        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        //post test result
+        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
+        String vin = expectedTestResult.getVin();
+        //wait for data to be streamed to NOP
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        //get test result from NOP
+        List<vott.models.dao.TestResult> actualTestResultList = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
+        String nopTestResultId = actualTestResultList.get(0).getId();
+        List<vott.models.dao.Defect> actualDefectList = SqlGenerator.getDefectWithNopTestResultId(nopTestResultId, defectRepository);
+        //compare JSON input to NOP data
+        vott.models.dao.TestResult actualTestResult = actualTestResultList.get(0);
+
+        String expectedTestResultId = expectedTestResult.getTestResultId();
+        String actualTestResultId = actualTestResult.getTestResultId();
+        Assert.assertEquals("Test result ids do not match", expectedTestResultId,actualTestResultId);
+
+        for (int i = 0; i < actualDefectList.size(); i++){
+            //Obtain expected and actual defects from list
+            Defect expectedDefect = expectedTestResult.getTestTypes().get(0).getDefects().get(i);
+            vott.models.dao.Defect actualDefect = actualDefectList.get(i);
+
+            String expectedImNumber = String.valueOf(expectedDefect.getImNumber());
+            String actualImNumber = actualDefect.getImNumber();
+            Assert.assertEquals("imNumbers do not match", expectedImNumber, actualImNumber);
+
+            String expectedImDescription = expectedDefect.getImDescription();
+            String actualImDescription = actualDefect.getImDescription();
+            Assert.assertEquals("imDescriptions do not match", expectedImDescription, actualImDescription);
+
+            String expectedItemNumber = String.valueOf(expectedDefect.getItemNumber());
+            String actualItemNumber = actualDefect.getItemNumber();
+            Assert.assertEquals("Item Numbers do not match", expectedItemNumber, actualItemNumber);
+
+            String expectedItemDescription = expectedDefect.getItemDescription();
+            String actualItemDescription = actualDefect.getItemDescription();
+            Assert.assertEquals("Item Descriptions do not match", expectedItemDescription, actualItemDescription);
+
+            String expectedDeficiencyRef = expectedDefect.getDeficiencyRef();
+            String actualDeficiencyRef = actualDefect.getDeficiencyRef();
+            Assert.assertEquals("Deficiency Refs do not match", expectedDeficiencyRef, actualDeficiencyRef);
+
+            String expectedDeficiencyID = expectedDefect.getDeficiencyId();
+            String actualDeficiencyID = actualDefect.getDeficiencyID();
+            Assert.assertEquals("Deficiency IDs do not match", expectedDeficiencyID, actualDeficiencyID);
+
+            String expectedDeficiencySubID = expectedDefect.getDeficiencySubId();
+            String actualDeficiencySubID = actualDefect.getDeficiencySubID();
+            Assert.assertEquals("Deficiency Sub IDs do not match", expectedDeficiencySubID, actualDeficiencySubID);
+
+            String expectedDeficiencyCategory = String.valueOf(expectedDefect.getDeficiencyCategory());
+            String actualDeficiencyCategory = actualDefect.getDeficiencyCategory();
+            Assert.assertEquals("Deficiency Categories do not match", expectedDeficiencyCategory, actualDeficiencyCategory);
+
+            String expectedDeficiencyText = expectedDefect.getDeficiencyText();
+            String actualDeficiencyText = actualDefect.getDeficiencyText();
+            Assert.assertEquals("Deficiency Texts do not match", expectedDeficiencyText, actualDeficiencyText);
+
+            Boolean expectedStdForProhibition = expectedDefect.isStdForProhibition();
+            String expectedStringStdForProhibition = convertBooleanToStringNumericBoolean(expectedStdForProhibition);
+            String actualStdForProhibition = actualDefect.getStdForProhibition();
+            Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
+        }
+    }
+
+    private static String convertBooleanToStringNumericBoolean(Boolean bool){
+        String stringBoolean = bool.toString();
+        String numericStringBoolean = "";
+        switch (stringBoolean) {
+            case "true":
+                numericStringBoolean = "1";
+                break;
+            case "false":
+                numericStringBoolean = "0";
+                break;
+            case "null":
+                numericStringBoolean = "null";
+                break;
+        }
+        return numericStringBoolean;
+    }
     private TechRecordPOST loadTechRecord(String fileName) {
         return randomizeKeys(readTechRecord(fileName));
     }
