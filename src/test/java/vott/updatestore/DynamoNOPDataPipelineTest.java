@@ -1400,7 +1400,7 @@ public class DynamoNOPDataPipelineTest {
             case "false":
                 numericStringBoolean = "0";
                 break;
-            case "null":
+            default:
                 numericStringBoolean = "null";
                 break;
         }
