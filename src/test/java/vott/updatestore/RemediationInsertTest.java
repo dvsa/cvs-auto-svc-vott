@@ -53,7 +53,6 @@ public class RemediationInsertTest {
     private TestTypeRepository testTypeRepository;
     private CompleteTestResults expectedTestResult;
     private TestResult actualTestResult;
-
     @Before
     public void setUp() throws Exception {
 
@@ -94,9 +93,11 @@ public class RemediationInsertTest {
         testTypeRepository = new TestTypeRepository(connectionFactory);
 
         payloadPath = "src/main/resources/payloads/";
+
     }
 
     private void testSetUp(String filename) {
+
         //Obtain expectedTestResult from JSON file
         CompleteTestResults expectedTestResult = SharedUtilities.readTestResult(payloadPath + filename);
         //Extract vin for use in following tests
@@ -132,6 +133,7 @@ public class RemediationInsertTest {
         testSetUp(filename);
         testResultTests(expectedTestResult, actualTestResult);
     }
+
     @Title("CB2-9237 - Testing testTypes remediation inserts for single defect within NOP")
     @Test
     public void testTypesRemediationInsert() {
