@@ -1,13 +1,14 @@
 package vott.updatestore;
 
 import com.google.gson.Gson;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -23,10 +24,13 @@ import vott.models.dto.testresults.TestTypeResults;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-@RunWith(SerenityRunner.class)
+@RunWith(Parameterized.class)
+//@Category(UnitTest.class)
 public class RemediationInsertTest {
     @Rule
     public RetryRule retryRule = new RetryRule(3);
@@ -110,44 +114,57 @@ public class RemediationInsertTest {
         this.actualTestResult = actualTestResultList.get(0);
     }
 
+    @Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                {"test-results_remediation_insertion_single_defect.json"},
+                {"test-results_remediation_insertion_multiple_defects.json"}
+        });
+    }
+    private String filename;
+    public RemediationInsertTest(String filename) {
+        this.filename = filename;
+    }
+
     @Title("CB2-9237 - Testing testResults remediation inserts for single defect within NOP")
     @Test
-    public void singleDefectTestResultsRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_single_defect.json");
+    public void testResultsRemediationInsert() {
+        testSetUp(filename);
         testResultTests(expectedTestResult, actualTestResult);
     }
     @Title("CB2-9237 - Testing testTypes remediation inserts for single defect within NOP")
     @Test
-    public void singleDefectTestTypesRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_single_defect.json");
+    public void testTypesRemediationInsert() {
+        testSetUp(filename);
         testTypeTests(expectedTestResult, actualTestResult);
     }
 
     @Title("CB2-9237 - Testing defects remediation inserts for single defect within NOP")
     @Test
-    public void singleDefectDefectsRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_single_defect.json");
+    public void defectsRemediationInsert() {
+        testSetUp(filename);
         defectTestsLoop(expectedTestResult, actualTestResult);
-    }
-    @Title("CB2-9237 - Testing testResults remediation inserts for multiple defects within NOP")
-    @Test
-    public void multipleDefectTestResultsRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-        testResultTests(expectedTestResult, actualTestResult);
-    }
-    @Title("CB2-9237 - Testing testTypes remediation inserts for multiple defects within NOP")
-    @Test
-    public void multipleDefectTestTypesRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-        testTypeTests(expectedTestResult, actualTestResult);
     }
 
-    @Title("CB2-9237 - Testing defects remediation inserts for multiple defects within NOP")
-    @Test
-    public void multipleDefectRemediationInsert() {
-        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-        defectTestsLoop(expectedTestResult, actualTestResult);
-    }
+//    @Title("CB2-9237 - Testing testResults remediation inserts for multiple defects within NOP")
+//    @Test
+//    public void multipleDefectTestResultsRemediationInsert() {
+//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
+//        testResultTests(expectedTestResult, actualTestResult);
+//    }
+//    @Title("CB2-9237 - Testing testTypes remediation inserts for multiple defects within NOP")
+//    @Test
+//    public void multipleDefectTestTypesRemediationInsert() {
+//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
+//        testTypeTests(expectedTestResult, actualTestResult);
+//    }
+//
+//    @Title("CB2-9237 - Testing defects remediation inserts for multiple defects within NOP")
+//    @Test
+//    public void multipleDefectRemediationInsert() {
+//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
+//        defectTestsLoop(expectedTestResult, actualTestResult);
+//    }
     //--------------------------------------------------------------------
     private void testResultTests (CompleteTestResults expectedTestResult, TestResult actualTestResult) {
         //testResultId
