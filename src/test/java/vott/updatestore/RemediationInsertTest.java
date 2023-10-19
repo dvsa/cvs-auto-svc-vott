@@ -148,25 +148,6 @@ public class RemediationInsertTest {
         defectTestsLoop(expectedTestResult, actualTestResult);
     }
 
-//    @Title("CB2-9237 - Testing testResults remediation inserts for multiple defects within NOP")
-//    @Test
-//    public void multipleDefectTestResultsRemediationInsert() {
-//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-//        testResultTests(expectedTestResult, actualTestResult);
-//    }
-//    @Title("CB2-9237 - Testing testTypes remediation inserts for multiple defects within NOP")
-//    @Test
-//    public void multipleDefectTestTypesRemediationInsert() {
-//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-//        testTypeTests(expectedTestResult, actualTestResult);
-//    }
-//
-//    @Title("CB2-9237 - Testing defects remediation inserts for multiple defects within NOP")
-//    @Test
-//    public void multipleDefectRemediationInsert() {
-//        testSetUp("test-results_remediation_insertion_multiple_defects.json");
-//        defectTestsLoop(expectedTestResult, actualTestResult);
-//    }
     //--------------------------------------------------------------------
     private void testResultTests (CompleteTestResults expectedTestResult, TestResult actualTestResult) {
         //testResultId
