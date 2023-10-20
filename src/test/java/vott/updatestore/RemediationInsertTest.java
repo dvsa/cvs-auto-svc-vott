@@ -119,7 +119,11 @@ public class RemediationInsertTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 {"test-results_remediation_insertion_single_defect.json"},
-                {"test-results_remediation_insertion_multiple_defects.json"}
+                {"test-results_remediation_insertion_multiple_defects.json"},
+                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
+                {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
+                {"TestResultsRemediationInserts/HGV_4_Axel_Paid_Annual_Test_Retest.json"},
+                {"TestResultsRemediationInserts/HGV_5_Axel_Part_Paid_Annual_Test_Retest.json"}
         });
     }
     private String filename;
