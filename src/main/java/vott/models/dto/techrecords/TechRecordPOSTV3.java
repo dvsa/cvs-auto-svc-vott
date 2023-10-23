@@ -1,0 +1,77 @@
+package vott.models.dto.techrecords;
+
+import java.util.List;
+
+public class TechRecordPOSTV3 {
+
+    String createdTimestamp;
+    String partialVin;
+    String primaryVrm;
+    String systemNumber;
+    boolean techRecord_alterationMarker;
+    String techRecord_applicantDetails_address1;
+    String techRecord_applicantDetails_address2;
+    String techRecord_applicantDetails_address3;
+    String techRecord_applicantDetails_emailAddress;
+    String techRecord_applicantDetails_name;
+    String techRecord_applicantDetails_postCode;
+    String techRecord_applicantDetails_postTown;
+    String techRecord_applicantDetails_telephoneNumber;
+    String techRecord_applicationId;
+    String techRecord_approvalType;
+    String techRecord_approvalTypeNumber;
+    String techRecord_bodyType_code;
+    String techRecord_bodyType_description;
+    String techRecord_brakes_dtpNumber;
+    String techRecord_conversionRefNo;
+    String techRecord_createdAt;
+    String techRecord_createdById;
+    String techRecord_createdByName;
+    boolean techRecord_departmentalVehicleMarker;
+    int techRecord_dimensions_length;
+    int techRecord_dimensions_width;
+    boolean techRecord_drawbarCouplingFitted;
+    int techRecord_emissionsLimit;
+    String techRecord_euVehicleCategory;
+    String techRecord_euroStandard;
+    int techRecord_frontAxleTo5thWheelMax;
+    int techRecord_frontAxleTo5thWheelMin;
+    int techRecord_frontAxleToRearAxle;
+    int techRecord_frontVehicleTo5thWheelCouplingMax;
+    int techRecord_frontVehicleTo5thWheelCouplingMin;
+    String techRecord_fuelPropulsionSystem;
+    String techRecord_functionCode;
+    int techRecord_grossDesignWeight;
+    int techRecord_grossEecWeight;
+    int techRecord_grossGbWeight;
+    String techRecord_make;
+    int techRecord_manufactureYear;
+    int techRecord_maxTrainDesignWeight;
+    int techRecord_maxTrainEecWeight;
+    int techRecord_maxTrainGbWeight;
+    String techRecord_model;
+    int techRecord_noOfAxles;
+    String techRecord_notes;
+    int techRecord_numberOfWheelsDriven;
+    boolean techRecord_offRoad;
+    String techRecord_reasonForCreation;
+    String techRecord_recordCompleteness;
+    String techRecord_regnDate;
+    boolean techRecord_roadFriendly;
+    boolean techRecord_speedLimiterMrk;
+    String techRecord_statusCode;
+    boolean techRecord_tachoExemptMrk;
+    int techRecord_trainDesignWeight;
+    int techRecord_trainEecWeight;
+    int techRecord_trainGbWeight;
+    String techRecord_tyreUseCode;
+    String techRecord_variantNumber;
+    String techRecord_variantVersionNumber;
+    String techRecord_vehicleClass_code;
+    String techRecord_vehicleClass_description;
+    String techRecord_vehicleConfiguration;
+    String techRecord_vehicleType;
+    String vin;
+    List<AxlesV3> techRecord_axles;
+
+}
