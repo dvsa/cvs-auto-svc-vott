@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import vott.api.TechnicalRecordsV3;
-import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -18,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RunWith(SerenityRunner.class)
-public class InsertTechRecord {
+public class InsertV3TechRecordTest {
 
     private TokenService v1ImplicitTokens;
     private String payloadPath;
