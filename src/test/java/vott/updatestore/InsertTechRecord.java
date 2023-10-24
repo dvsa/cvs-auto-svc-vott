@@ -1,17 +1,16 @@
 package vott.updatestore;
 
 import com.google.gson.Gson;
-import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import vott.api.TechnicalRecordsV3;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.json.GsonInstance;
-import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecordPOSTV3;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class InsertTechRecord {
 
     public void postTechRecord(TechRecordPOSTV3 techRecord)
     {
-        VehiclesAPI.postVehicleTechnicalRecordV3(techRecord, v1ImplicitTokens.getBearerToken());
+        TechnicalRecordsV3.postTechnicalRecordV3(techRecord, v1ImplicitTokens.getBearerToken());
 
     }
 
