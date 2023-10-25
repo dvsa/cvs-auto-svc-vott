@@ -1,12 +1,10 @@
 package vott.updatestore;
 
 import com.google.gson.Gson;
-import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import net.thucydides.core.annotations.WithTag;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,11 +24,8 @@ import vott.models.dao.*;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
 import vott.models.dto.testresults.*;
+import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -40,8 +35,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
-import vott.models.dto.testresults.Defect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -68,8 +61,8 @@ public class DynamoNOPDataPipelineTest {
     private VtEvlCvsRemovedRepository vtEvlCvsRemovedRepository;
     private String payloadPath;
     private TestStationRepository testStationRepository;
-
     private TestTypeRepository testTypeRepository;
+    private SharedUtilities sharedUtilities;
 
     @Before
     public void setUp() throws Exception {
@@ -110,6 +103,8 @@ public class DynamoNOPDataPipelineTest {
 
         testTypeRepository = new TestTypeRepository(connectionFactory);
 
+        sharedUtilities = new SharedUtilities();
+
         payloadPath = "src/main/resources/payloads/";
 
     }
@@ -118,8 +113,8 @@ public class DynamoNOPDataPipelineTest {
     @Title("CB2-7258 - TC1 - testCode value truncation")
     @Test
     public void testCodeTruncation() {
-        TechRecordPOST truncationTechRecord = loadTechRecord(payloadPath + "truncation_technical-records.json");
-        CompleteTestResults truncationTestResult = loadTestResults(truncationTechRecord, payloadPath + "truncation_test-results.json");
+        TechRecordPOST truncationTechRecord =  sharedUtilities.loadTechRecord(payloadPath + "truncation_technical-records.json");
+        CompleteTestResults truncationTestResult = sharedUtilities.loadTestResults(truncationTechRecord, payloadPath + "truncation_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(truncationTechRecord, v1ImplicitTokens.getBearerToken());
         TestResultAPI.postTestResult(truncationTestResult, v1ImplicitTokens.getBearerToken());
@@ -146,8 +141,8 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST truncationTechRecord;
         CompleteTestResults truncationTestResult;
         for (int i = 0; i < 20; i++) {
-            truncationTechRecord = loadTechRecord(payloadPath + "performance_technical-records.json");
-            truncationTestResult = loadTestResults(truncationTechRecord, payloadPath + "performance_test-results.json");
+            truncationTechRecord = sharedUtilities.loadTechRecord(payloadPath + "performance_technical-records.json");
+            truncationTestResult = sharedUtilities.loadTestResults(truncationTechRecord, payloadPath + "performance_test-results.json");
             VehiclesAPI.postVehicleTechnicalRecord(truncationTechRecord, v1ImplicitTokens.getBearerToken());
             TestResultAPI.postTestResult(truncationTestResult, v1ImplicitTokens.getBearerToken());
             String vin = truncationTestResult.getVin();
@@ -169,8 +164,8 @@ public class DynamoNOPDataPipelineTest {
         /*
          Vehicle test results have two test types of same test type id
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "twotesttype_technical-records.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "twotesttype_test-results.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "twotesttype_technical-records.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "twotesttype_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
@@ -194,7 +189,7 @@ public class DynamoNOPDataPipelineTest {
         /*
          Tech records and Test Records numberOfWheelsDriven can be considered as string as well as numbers
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "wheelNumber_technical-records.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "wheelNumber_technical-records.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
 
@@ -213,8 +208,8 @@ public class DynamoNOPDataPipelineTest {
         /*
          Tech records and Test Records numberOfWheelsDriven can be considered as string as well as numbers
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         //String token = v1ImplicitTokens.getBearerToken();
 
@@ -251,8 +246,8 @@ public class DynamoNOPDataPipelineTest {
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     public EvlContainer evlFeeds(String testResultFileName) throws RuntimeException {
 
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + testResultFileName);
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + testResultFileName);
 
         TestTypes ts = testResult.getTestTypes();
         LocalDate ld = LocalDate.now();
@@ -703,8 +698,8 @@ public class DynamoNOPDataPipelineTest {
          values are updated to rekey to dynamoDB table and expect the EVL_VIEW to show results once
          */
 
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         TestTypes ts = testResult.getTestTypes();
         LocalDate ld = LocalDate.now();
@@ -746,7 +741,7 @@ public class DynamoNOPDataPipelineTest {
     @Test
     public void trailerOCO() {
 
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_trl_oco.json");
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         String vin = techRecord.getVin();
         with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
@@ -763,7 +758,7 @@ public class DynamoNOPDataPipelineTest {
         SoftAssertions softly = new SoftAssertions();
         List<ApprovalTypeEnum> approvalList = new ArrayList<>(EnumSet.allOf(ApprovalTypeEnum.class));
         for (ApprovalTypeEnum appList : approvalList) {
-            techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
+            techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_trl_oco.json");
             trs = techRecord.getTechRecord();
             trs.get(0).setApprovalType(appList);
             techRecord.setTechRecord(trs);
@@ -792,8 +787,8 @@ public class DynamoNOPDataPipelineTest {
          And expiry date is not blank
 
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lbp.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lbp.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lbp.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lbp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -806,8 +801,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lcp.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lcp.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lcp.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lcp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -820,8 +815,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_ldv.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_ldv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -834,8 +829,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lev.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lev.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_lev.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lev.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -848,8 +843,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lnp.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lnp.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lnp.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lnp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -862,8 +857,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lnv.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lnv.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_lnv.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lnv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -876,8 +871,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_lgv_lnz.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_lgv_lnz.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_lgv_lnz.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_lgv_lnz.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -890,8 +885,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test has a CertificationModificationType defaulted to p
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_desk_based.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_desk_based.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_desk_based.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_desk_based.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -904,8 +899,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test will not be on view
          */
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_hgv_ldv_cert_not_LP.json");
+        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
+        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_hgv_ldv_cert_not_LP.json");
         checkTestResultNotOnTFL(techRecord, testResult);
     }
 
@@ -994,8 +989,8 @@ public class DynamoNOPDataPipelineTest {
 
         for (Map.Entry<TestTypeResults.EmissionStandardEnum, String> entry : es.entrySet()) {
 
-            techRecord = loadTechRecord(payloadPath + "technical-records_psv.json");
-            testResult = loadTestResults(techRecord, payloadPath + "test-results_psv.json");
+            techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_psv.json");
+            testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "test-results_psv.json");
 
             //System.out.println(entry.getKey());
             TestTypes ts = testResult.getTestTypes();
@@ -1016,437 +1011,6 @@ public class DynamoNOPDataPipelineTest {
             assertThat(tflViews.get(0)).isNotNull();
             assertThat(tflViews.get(0).getEmissionClassificationCode()).isEqualTo(entry.getValue());
         }
-    }
-
-    @WithTag("Vott")
-    @Title("CB2-9237 - test inserts data in NOP")
-    @Test
-    public void insertNopTest()
-    {
-
-        //consider tests with multiple test types
-
-        //create tech record from JSON
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_hgv_annual_2_axles.json");
-        //create test result from JSON
-        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_hgv_annual_2_axles.json");
-        //set timestamps to today's date
-        TestTypes testTypes = expectedTestResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
-        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
-
-        expectedTestResult.setTestTypes(testTypes);
-
-        testTypes.get(0).setTestExpiryDate(ld);
-        testTypes.get(0).setTestTypeStartTimestamp(datetime);
-        testTypes.get(0).setTestTypeEndTimestamp(datetime);
-
-        expectedTestResult.setTestStartTimestamp(datetime);
-        expectedTestResult.setTestEndTimestamp(datetime);
-
-        //post technical record
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-        //post test result
-        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
-        String vin = expectedTestResult.getVin();
-        //wait for data to be streamed to NOP
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-
-        //get test result from NOP
-        List<vott.models.dao.TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
-
-        Assert.assertEquals("expected only one test result to be returned from database",actualTestResults.size(), 1);
-        //compare JSON input to NOP data
-        compareTestResultJsonToNOP(expectedTestResult, actualTestResults.get(0));
-
-        }
-
-        //re-factor to compare
-        //test result
-        //test type
-        //tester
-        private void compareTestResultJsonToNOP(CompleteTestResults expectedTestResult, TestResult actualTestResult)
-        {
-            //get from test result table
-            //test result attributes
-            //testResultId
-            String expectedTestResultId = expectedTestResult.getTestResultId();
-            String actualTestResultId = actualTestResult.getTestResultId();
-            Assert.assertEquals(expectedTestResultId,actualTestResultId);
-            //testStatus
-            String expectedTestStatus = String.valueOf(expectedTestResult.getTestStatus());
-            String actualTestStatus = actualTestResult.getTestStatus();
-            Assert.assertEquals(expectedTestStatus,actualTestStatus);
-            //noOfAxles
-            String expectedNoOfAxles = String.valueOf(expectedTestResult.getNoOfAxles());
-            String actualNoOfAxles = actualTestResult.getNoOfAxles();
-            Assert.assertEquals(expectedNoOfAxles,actualNoOfAxles);
-            //countryOfRegistration
-            String expectedCountryOfRegistration = expectedTestResult.getCountryOfRegistration();
-            String actualCountryOfRegistration = actualTestResult.getCountryOfRegistration();
-            Assert.assertEquals(expectedCountryOfRegistration,actualCountryOfRegistration);
-            //odometerReading
-            String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
-            String actualOdometerReading = actualTestResult.getOdometerReading();
-            Assert.assertEquals(expectedOdometerReading,actualOdometerReading);
-            //odometerReadingUnits
-            String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
-            String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
-            Assert.assertEquals(expectedOdometerReadingUnits,actualOdometerReadingUnits);
-            //reasonForCancellation
-            String expectedReasonForCancellation = expectedTestResult.getReasonForCancellation();
-            String actualReasonForCancellation = actualTestResult.getReasonForCancellation();
-            Assert.assertEquals(expectedReasonForCancellation,actualReasonForCancellation);
-
-            //test type attributes
-            //assert there is 1 test type
-            TestTypeResults expectedTestType = expectedTestResult.getTestTypes().get(0);
-            //testTypeStartTimestamp
-            OffsetDateTime expectedTestTypeStartTimestamp = expectedTestType.getTestTypeStartTimestamp();
-            //format to match NOP timestamp
-            String formattedStartTimeStamp = expectedTestTypeStartTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
-            String actualTestTypeStartTimestamp = actualTestResult.getTestTypeStartTimestamp();
-            Assert.assertEquals(formattedStartTimeStamp,actualTestTypeStartTimestamp);
-            //testTypeEndTimestamp
-            OffsetDateTime expectedTestTypeEndTimestamp = expectedTestType.getTestTypeEndTimestamp();
-            //format to match NOP timestamp
-            String formattedEndTimeStamp = expectedTestTypeEndTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
-            String actualTestTypeEndTimestamp = actualTestResult.getTestTypeEndTimestamp();
-            Assert.assertEquals(formattedEndTimeStamp,actualTestTypeEndTimestamp);
-            //reasonForAbandoning
-            String expectedReasonForAbandoning = expectedTestType.getReasonForAbandoning();
-            String actualReasonForAbandoning = actualTestResult.getReasonForAbandoning();
-            Assert.assertEquals(expectedReasonForAbandoning,actualReasonForAbandoning);
-            //testResult (outcome)
-            String expectedTestResultOutcome = String.valueOf(expectedTestType.getTestResult());
-            String actualTestResultOutcome = actualTestResult.getTestResult();
-            Assert.assertEquals(expectedTestResultOutcome,actualTestResultOutcome);
-            //additionalNotesRecorded
-            String expectedAdditionalNotesRecorded = expectedTestType.getAdditionalNotesRecorded();
-            String actualAdditionalNotesRecorded = actualTestResult.getAdditionalNotesRecorded();
-            Assert.assertEquals(expectedAdditionalNotesRecorded,actualAdditionalNotesRecorded);
-
-            //get from tester table
-            String testResultVehicleID = actualTestResult.getVehicleID();
-            List<vott.models.dao.Tester> actualTesters = SqlGenerator.getTesterDetailsWithVehicleID(testResultVehicleID, testerRepository);
-            Assert.assertEquals(actualTesters.size(),1);
-            Tester actualTester = actualTesters.get(0);
-            //testerName
-            String expectedTesterName = expectedTestResult.getTesterName();
-            String actualTesterName = actualTester.getName();
-            Assert.assertEquals(expectedTesterName,actualTesterName);
-            //testerEmailAddress
-            String expectedTesterEmailAddress = expectedTestResult.getTesterEmailAddress();
-            String actualTesterEmailAddress = actualTester.getEmailAddress();
-            Assert.assertEquals(expectedTesterEmailAddress,actualTesterEmailAddress);
-            //testerStaffId
-            String expectedTesterStaffId = expectedTestResult.getTesterStaffId();
-            String actualTesterStaffId = actualTester.getStaffID();
-            Assert.assertEquals(expectedTesterStaffId,actualTesterStaffId);
-
-            //get from test station table
-            String testResultId = actualTestResult.getTestResultId();
-            List<vott.models.dao.TestStation> testStations = SqlGenerator.getTestStationWithTestResultId(testResultId,testStationRepository);
-            Assert.assertEquals(testStations.size(), 1);
-            TestStation testStation = testStations.get(0);
-            //testStationName
-            String expectedTestStation = expectedTestResult.getTestStationName();
-            String actualTestStation = testStation.getName();
-            Assert.assertEquals(expectedTestStation,actualTestStation);
-            //testStationPNumber
-            String expectedTestStationPNumber = expectedTestResult.getTestStationPNumber();
-            String actualTestStationPNumber = testStation.getPNumber();
-            Assert.assertEquals(expectedTestStationPNumber,actualTestStationPNumber);
-            //testStationType
-            String expectedTestStationType = String.valueOf(expectedTestResult.getTestStationType());
-            String actualTestStationType = testStation.getType();
-            Assert.assertEquals(expectedTestStationType,actualTestStationType);
-
-            //get from prepare table
-            List<vott.models.dao.Preparer> preparers = SqlGenerator.getPreparerDetailsWithVehicleID(testResultVehicleID,preparerRepository);
-            Assert.assertEquals(preparers.size(), 1);
-            Preparer preparer = preparers.get(0);
-            //preparerName
-            String expectedPreparerName = expectedTestResult.getPreparerName();
-            String actualPreparerName = preparer.getName();
-            Assert.assertEquals(expectedPreparerName,actualPreparerName);
-            //preparerId
-            String expectedPreparerId = expectedTestResult.getPreparerId();
-            String actualPreparerId = preparer.getPreparerID();
-            Assert.assertEquals(expectedPreparerId,actualPreparerId);
-
-            //get from test type table
-            String testTypeId = actualTestResult.getTestTypeID();
-            List<vott.models.dao.TestType> testTypes = SqlGenerator.getTestTypeWithTestTypeId(testTypeId,testTypeRepository);
-            Assert.assertEquals(testTypes.size(), 1);
-            TestType testType = testTypes.get(0);
-            //name
-            String expectedTestTypeName = expectedTestType.getTestTypeName();
-            String actualTestTypeName = testType.getTestTypeName();
-            Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
-
-
-            //get from vehicle_class, joining on vehicle and tech record tables?
-            //vehicleType
-            //vehicleConfiguration
-            //euVehicleCategory
-            //vehicleClass > code
-            //vehicleClass > description
-
-
-            //check if these are actually migrated to NOP
-            //testStartTimestamp (test result)
-            //testEndTimestamp (test result)
-            //shouldEmailCertificate
-            //testTypeName
-            //testTypeId
-            //prohibitionIssued (test type not defect)
-            //the following are on vehicle table not test result and present in technical record as well as test result
-            //system number
-            //vin
-            //vrm
-            //numberOfWheelsDriven
-
-            //generated in back end CVS, would need to compare directly with dynamo db value
-            //certificateNumber
-
-            //not mapped from VT for HGVs
-            //additionalCommentsForAbandon
-            //secondaryCertificateNumber
-        }
-
-    @WithTag("Vott")
-    @Title("CB2-9237 - test inserts data in NOP")
-    @Test
-    public void insertDefectTest()
-    {
-        //consider tests with multiple test types
-        //create tech record from JSON
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_defect.json");
-        //create test result from JSON
-        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_defect.json");
-
-        Defect expectedDefect = expectedTestResult.getTestTypes().get(0).getDefects().get(0);
-
-        //set timestamps to today's date
-        TestTypes testTypes = expectedTestResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
-        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
-        expectedTestResult.setTestTypes(testTypes);
-        testTypes.get(0).setTestExpiryDate(ld);
-        testTypes.get(0).setTestTypeStartTimestamp(datetime);
-        testTypes.get(0).setTestTypeEndTimestamp(datetime);
-        expectedTestResult.setTestStartTimestamp(datetime);
-        expectedTestResult.setTestEndTimestamp(datetime);
-        //post technical record
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-        //post test result
-        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
-        String vin = expectedTestResult.getVin();
-        //wait for data to be streamed to NOP
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-        //get test result from NOP
-        List<vott.models.dao.TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
-        String nopTestResultId = actualTestResults.get(0).getId();
-        List<vott.models.dao.Defect> actualDefectList = SqlGenerator.getDefectWithNopTestResultId(nopTestResultId, defectRepository);
-        //compare JSON input to NOP data
-        vott.models.dao.TestResult actualTestResult = actualTestResults.get(0);
-
-        String expectedTestResultId = expectedTestResult.getTestResultId();
-        String actualTestResultId = actualTestResult.getTestResultId();
-        Assert.assertEquals("Test result ids do not match", expectedTestResultId,actualTestResultId);
-
-        vott.models.dao.Defect actualDefect = actualDefectList.get(0);
-
-        String expectedImNumber = String.valueOf(expectedDefect.getImNumber());
-        String actualImNumber = actualDefect.getImNumber();
-        Assert.assertEquals("imNumbers do not match", expectedImNumber, actualImNumber);
-
-        String expectedImDescription = expectedDefect.getImDescription();
-        String actualImDescription = actualDefect.getImDescription();
-        Assert.assertEquals("imDescriptions do not match", expectedImDescription, actualImDescription);
-
-        String expectedItemNumber = String.valueOf(expectedDefect.getItemNumber());
-        String actualItemNumber = actualDefect.getItemNumber();
-        Assert.assertEquals("Item Numbers do not match", expectedItemNumber, actualItemNumber);
-
-        String expectedItemDescription = expectedDefect.getItemDescription();
-        String actualItemDescription = actualDefect.getItemDescription();
-        Assert.assertEquals("Item Descriptions do not match", expectedItemDescription, actualItemDescription);
-
-        String expectedDeficiencyRef = expectedDefect.getDeficiencyRef();
-        String actualDeficiencyRef = actualDefect.getDeficiencyRef();
-        Assert.assertEquals("Deficiency Refs do not match", expectedDeficiencyRef, actualDeficiencyRef);
-
-        String expectedDeficiencyID = expectedDefect.getDeficiencyId();
-        String actualDeficiencyID = actualDefect.getDeficiencyID();
-        Assert.assertEquals("Deficiency IDs do not match", expectedDeficiencyID, actualDeficiencyID);
-
-        String expectedDeficiencySubID = expectedDefect.getDeficiencySubId();
-        String actualDeficiencySubID = actualDefect.getDeficiencySubID();
-        Assert.assertEquals("Deficiency Sub IDs do not match", expectedDeficiencySubID, actualDeficiencySubID);
-
-        String expectedDeficiencyCategory = String.valueOf(expectedDefect.getDeficiencyCategory());
-        String actualDeficiencyCategory = actualDefect.getDeficiencyCategory();
-        Assert.assertEquals("Deficiency Categories do not match", expectedDeficiencyCategory, actualDeficiencyCategory);
-
-        String expectedDeficiencyText = expectedDefect.getDeficiencyText();
-        String actualDeficiencyText = actualDefect.getDeficiencyText();
-        Assert.assertEquals("Deficiency Texts do not match", expectedDeficiencyText, actualDeficiencyText);
-
-        Boolean expectedStdForProhibition = expectedDefect.isStdForProhibition();
-        String expectedStringStdForProhibition = convertBooleanToStringNumericBoolean(expectedStdForProhibition);
-        String actualStdForProhibition = actualDefect.getStdForProhibition();
-        Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
-    }
-
-    @WithTag("Vott")
-    @Title("CB2-9237 - test inserts data in NOP")
-    @Test
-    public void insertMultipleDefectTests()
-    {
-        //consider tests with multiple test types
-        //create tech record from JSON
-        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_defect.json");
-        //create test result from JSON
-        CompleteTestResults expectedTestResult = loadTestResults(techRecord, payloadPath + "test-results_defect_multiple.json");
-
-        //set timestamps to today's date
-        TestTypes testTypes = expectedTestResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
-        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
-        expectedTestResult.setTestTypes(testTypes);
-        testTypes.get(0).setTestExpiryDate(ld);
-        testTypes.get(0).setTestTypeStartTimestamp(datetime);
-        testTypes.get(0).setTestTypeEndTimestamp(datetime);
-        expectedTestResult.setTestStartTimestamp(datetime);
-        expectedTestResult.setTestEndTimestamp(datetime);
-        //post technical record
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-        //post test result
-        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
-        String vin = expectedTestResult.getVin();
-        //wait for data to be streamed to NOP
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-        //get test result from NOP
-        List<vott.models.dao.TestResult> actualTestResultList = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
-        String nopTestResultId = actualTestResultList.get(0).getId();
-        List<vott.models.dao.Defect> actualDefectList = SqlGenerator.getDefectWithNopTestResultId(nopTestResultId, defectRepository);
-        //compare JSON input to NOP data
-        vott.models.dao.TestResult actualTestResult = actualTestResultList.get(0);
-
-        String expectedTestResultId = expectedTestResult.getTestResultId();
-        String actualTestResultId = actualTestResult.getTestResultId();
-        Assert.assertEquals("Test result ids do not match", expectedTestResultId,actualTestResultId);
-
-        for (int i = 0; i < actualDefectList.size(); i++){
-            //Obtain expected and actual defects from list
-            Defect expectedDefect = expectedTestResult.getTestTypes().get(0).getDefects().get(i);
-            vott.models.dao.Defect actualDefect = actualDefectList.get(i);
-
-            String expectedImNumber = String.valueOf(expectedDefect.getImNumber());
-            String actualImNumber = actualDefect.getImNumber();
-            Assert.assertEquals("imNumbers do not match", expectedImNumber, actualImNumber);
-
-            String expectedImDescription = expectedDefect.getImDescription();
-            String actualImDescription = actualDefect.getImDescription();
-            Assert.assertEquals("imDescriptions do not match", expectedImDescription, actualImDescription);
-
-            String expectedItemNumber = String.valueOf(expectedDefect.getItemNumber());
-            String actualItemNumber = actualDefect.getItemNumber();
-            Assert.assertEquals("Item Numbers do not match", expectedItemNumber, actualItemNumber);
-
-            String expectedItemDescription = expectedDefect.getItemDescription();
-            String actualItemDescription = actualDefect.getItemDescription();
-            Assert.assertEquals("Item Descriptions do not match", expectedItemDescription, actualItemDescription);
-
-            String expectedDeficiencyRef = expectedDefect.getDeficiencyRef();
-            String actualDeficiencyRef = actualDefect.getDeficiencyRef();
-            Assert.assertEquals("Deficiency Refs do not match", expectedDeficiencyRef, actualDeficiencyRef);
-
-            String expectedDeficiencyID = expectedDefect.getDeficiencyId();
-            String actualDeficiencyID = actualDefect.getDeficiencyID();
-            Assert.assertEquals("Deficiency IDs do not match", expectedDeficiencyID, actualDeficiencyID);
-
-            String expectedDeficiencySubID = expectedDefect.getDeficiencySubId();
-            String actualDeficiencySubID = actualDefect.getDeficiencySubID();
-            Assert.assertEquals("Deficiency Sub IDs do not match", expectedDeficiencySubID, actualDeficiencySubID);
-
-            String expectedDeficiencyCategory = String.valueOf(expectedDefect.getDeficiencyCategory());
-            String actualDeficiencyCategory = actualDefect.getDeficiencyCategory();
-            Assert.assertEquals("Deficiency Categories do not match", expectedDeficiencyCategory, actualDeficiencyCategory);
-
-            String expectedDeficiencyText = expectedDefect.getDeficiencyText();
-            String actualDeficiencyText = actualDefect.getDeficiencyText();
-            Assert.assertEquals("Deficiency Texts do not match", expectedDeficiencyText, actualDeficiencyText);
-
-            Boolean expectedStdForProhibition = expectedDefect.isStdForProhibition();
-            String expectedStringStdForProhibition = convertBooleanToStringNumericBoolean(expectedStdForProhibition);
-            String actualStdForProhibition = actualDefect.getStdForProhibition();
-            Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
-        }
-    }
-
-    private static String convertBooleanToStringNumericBoolean(Boolean bool){
-        String stringBoolean = bool.toString();
-        String numericStringBoolean = "";
-        switch (stringBoolean) {
-            case "true":
-                numericStringBoolean = "1";
-                break;
-            case "false":
-                numericStringBoolean = "0";
-                break;
-            default:
-                numericStringBoolean = "null";
-                break;
-        }
-        return numericStringBoolean;
-    }
-    private TechRecordPOST loadTechRecord(String fileName) {
-        return randomizeKeys(readTechRecord(fileName));
-    }
-
-    private CompleteTestResults loadTestResults(TechRecordPOST techRecord, String fileName) {
-        return matchKeys(techRecord, readTestResult(fileName));
-    }
-
-    @SneakyThrows(IOException.class)
-    private TechRecordPOST readTechRecord(String path) {
-        return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
-                TechRecordPOST.class
-        );
-    }
-
-    @SneakyThrows(IOException.class)
-    private CompleteTestResults readTestResult(String path) {
-        return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
-                CompleteTestResults.class
-        );
-    }
-
-    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
-        String vin = fieldGenerator.randomVin();
-        while (SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository).toString().equals("true")) {
-            vin = fieldGenerator.randomVin();
-        }
-        techRecord.setVin(vin);
-        techRecord.setPrimaryVrm(fieldGenerator.randomVrm());
-        return techRecord;
-    }
-
-    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
-        testResult.setTestResultId(UUID.randomUUID().toString());
-        // test result ID is not kept on enquiry-service retrievals: need a way to uniquely identify within test suite
-        testResult.setTesterName(UUID.randomUUID().toString());
-        testResult.setVin(techRecord.getVin());
-        testResult.setVrm(techRecord.getPrimaryVrm());
-        return testResult;
     }
 
     static class EvlContainer {

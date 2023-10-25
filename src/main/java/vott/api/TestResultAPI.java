@@ -32,8 +32,6 @@ public class TestResultAPI {
                     .post().thenReturn();
             statusCode = response.statusCode();
             //for debug
-            ResponseBody responseBody = response.getBody();
-            System.out.println(responseBody.prettyPrint());
             //System.out.print(response.getBody());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
