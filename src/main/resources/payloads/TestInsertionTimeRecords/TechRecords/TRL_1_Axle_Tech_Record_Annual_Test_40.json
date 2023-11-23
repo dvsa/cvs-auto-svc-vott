@@ -45,12 +45,12 @@
   "techRecord_manufactureYear": 2018,
   "techRecord_maxLoadOnCoupling": 7000,
   "techRecord_model": "F06",
-  "techRecord_noOfAxles": 5,
+  "techRecord_noOfAxles": 1,
   "techRecord_notes": "some note",
   "techRecord_ntaNumber": "123456",
   "techRecord_numberOfWheelsDriven": null,
   "techRecord_rearAxleToRearTrl": 400,
-  "techRecord_reasonForCreation": "test missing trl inserts on 5 axles",
+  "techRecord_reasonForCreation": "test missing trl inserts on 1 axle annual test",
   "techRecord_recordCompleteness": "complete",
   "techRecord_regnDate": "2007-07-01",
   "techRecord_roadFriendly": true,
@@ -62,6 +62,6 @@
   "techRecord_vehicleClass_description": "trailer",
   "techRecord_vehicleConfiguration": "centre axle drawbar",
   "techRecord_vehicleType": "trl",
-  "trailerId": "C585005",
-  "vin": "MissingTR5"
+  "trailerId": "C585001",
+  "vin": "MissingTR1"
 }

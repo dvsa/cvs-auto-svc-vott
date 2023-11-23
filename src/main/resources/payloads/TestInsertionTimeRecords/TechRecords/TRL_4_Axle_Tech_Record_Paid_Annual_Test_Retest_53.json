@@ -50,7 +50,7 @@
   "techRecord_ntaNumber": "123456",
   "techRecord_numberOfWheelsDriven": null,
   "techRecord_rearAxleToRearTrl": 400,
-  "techRecord_reasonForCreation": "test missing trl inserts on 4 axles",
+  "techRecord_reasonForCreation": "test missing trl inserts on 4 axles paid annual test retest",
   "techRecord_recordCompleteness": "complete",
   "techRecord_regnDate": "2007-07-01",
   "techRecord_roadFriendly": true,
@@ -62,6 +62,6 @@
   "techRecord_vehicleClass_description": "trailer",
   "techRecord_vehicleConfiguration": "centre axle drawbar",
   "techRecord_vehicleType": "trl",
-  "trailerId": "C585004",
-  "vin": "MissingTR4"
+  "trailerId": "C585006",
+  "vin": "MissingTR6"
 }

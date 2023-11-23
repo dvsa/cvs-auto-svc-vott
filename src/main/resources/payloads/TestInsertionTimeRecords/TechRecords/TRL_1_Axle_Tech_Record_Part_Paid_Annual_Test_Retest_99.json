@@ -1,6 +1,6 @@
 {
   "createdTimestamp": "2022-06-16T14:17:05.788Z",
-  "partialVin": "MT01",
+  "partialVin": "MT03",
   "systemNumber": "10000098",
   "techRecord_antilockBrakingSystem": true,
   "techRecord_bodyType_code": "p",
@@ -50,7 +50,7 @@
   "techRecord_ntaNumber": "123456",
   "techRecord_numberOfWheelsDriven": null,
   "techRecord_rearAxleToRearTrl": 400,
-  "techRecord_reasonForCreation": "test missing trl inserts on 1 axle",
+  "techRecord_reasonForCreation": "test missing trl inserts on 1 axle part paid annual test retest",
   "techRecord_recordCompleteness": "complete",
   "techRecord_regnDate": "2007-07-01",
   "techRecord_roadFriendly": true,
@@ -62,6 +62,6 @@
   "techRecord_vehicleClass_description": "trailer",
   "techRecord_vehicleConfiguration": "centre axle drawbar",
   "techRecord_vehicleType": "trl",
-  "trailerId": "C585001",
-  "vin": "MissingTR1"
+  "trailerId": "C585003",
+  "vin": "MissingTR3"
 }
