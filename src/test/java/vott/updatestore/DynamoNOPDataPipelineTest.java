@@ -253,7 +253,7 @@ public class DynamoNOPDataPipelineTest {
         LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);
@@ -705,7 +705,7 @@ public class DynamoNOPDataPipelineTest {
         LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);
@@ -910,7 +910,7 @@ public class DynamoNOPDataPipelineTest {
         LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);

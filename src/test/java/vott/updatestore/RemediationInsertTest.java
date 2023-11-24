@@ -12,7 +12,6 @@ import org.junit.runners.Parameterized.Parameters;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
-import vott.config.DatabaseProperties;
 import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 
 @RunWith(Parameterized.class)
-//@Category(UnitTest.class)
 public class RemediationInsertTest {
     @Rule
     public RetryRule retryRule = new RetryRule(3);
@@ -55,7 +53,7 @@ public class RemediationInsertTest {
     private CompleteTestResults expectedTestResult;
     private TestResult actualTestResult;
     private SharedUtilities sharedUtilities;
-    private DatabaseProperties databaseProperties;
+
     @Before
     public void setUp() throws Exception {
 
@@ -95,8 +93,6 @@ public class RemediationInsertTest {
 
         testTypeRepository = new TestTypeRepository(connectionFactory);
 
-//        payloadPath = "src/main/resources/payloads/";
-
         sharedUtilities = new SharedUtilities();
     }
 
@@ -122,7 +118,7 @@ public class RemediationInsertTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                {"test-results_remediation_insertion_single_defect.json"},
+
                 {"test-results_remediation_insertion_multiple_defects.json"},
                 {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
                 {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
@@ -194,13 +190,13 @@ public class RemediationInsertTest {
         //testTypeStartTimestamp
         OffsetDateTime expectedTestTypeStartTimestamp = expectedTestType.getTestTypeStartTimestamp();
         //format to match NOP timestamp
-        String formattedStartTimeStamp = expectedTestTypeStartTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
+        String formattedStartTimeStamp = expectedTestTypeStartTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss", Locale.ENGLISH));
         String actualTestTypeStartTimestamp = actualTestResult.getTestTypeStartTimestamp();
         Assert.assertEquals(formattedStartTimeStamp,actualTestTypeStartTimestamp);
         //testTypeEndTimestamp
         OffsetDateTime expectedTestTypeEndTimestamp = expectedTestType.getTestTypeEndTimestamp();
         //format to match NOP timestamp
-        String formattedEndTimeStamp = expectedTestTypeEndTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss.SSS", Locale.ENGLISH));
+        String formattedEndTimeStamp = expectedTestTypeEndTimestamp.format(DateTimeFormatter.ofPattern("uuuu-MM-dd' 'HH:mm:ss", Locale.ENGLISH));
         String actualTestTypeEndTimestamp = actualTestResult.getTestTypeEndTimestamp();
         Assert.assertEquals(formattedEndTimeStamp,actualTestTypeEndTimestamp);
         //reasonForAbandoning

@@ -326,7 +326,7 @@ public class NOPInsertionTest {
         LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         expectedTestResult.setTestTypes(testTypes);
-        testTypes.get(0).setTestExpiryDate(ld);
+        testTypes.get(0).setTestExpiryDate(datetime);
         testTypes.get(0).setTestTypeStartTimestamp(datetime);
         testTypes.get(0).setTestTypeEndTimestamp(datetime);
         expectedTestResult.setTestStartTimestamp(datetime);

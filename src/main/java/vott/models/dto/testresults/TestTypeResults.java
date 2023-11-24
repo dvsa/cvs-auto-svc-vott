@@ -66,7 +66,7 @@ public class TestTypeResults {
     private String certificateLink = null;
 
     @SerializedName("testExpiryDate")
-    private LocalDate testExpiryDate = null;
+    private OffsetDateTime testExpiryDate = null;
 
     @SerializedName("testAnniversaryDate")
     private LocalDate testAnniversaryDate = null;
@@ -493,7 +493,7 @@ public class TestTypeResults {
         this.certificateLink = certificateLink;
     }
 
-    public TestTypeResults testExpiryDate(LocalDate testExpiryDate) {
+    public TestTypeResults testExpiryDate(OffsetDateTime testExpiryDate) {
         this.testExpiryDate = testExpiryDate;
         return this;
     }
@@ -504,11 +504,11 @@ public class TestTypeResults {
      * @return testExpiryDate
      **/
 
-    public LocalDate getTestExpiryDate() {
+    public OffsetDateTime getTestExpiryDate() {
         return testExpiryDate;
     }
 
-    public void setTestExpiryDate(LocalDate testExpiryDate) {
+    public void setTestExpiryDate(OffsetDateTime testExpiryDate) {
         this.testExpiryDate = testExpiryDate;
     }
 
