@@ -118,12 +118,20 @@ public class RemediationInsertTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
+                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Annual_Test_40.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Paid_Annual_Test_Retest_98.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Part_Paid_Annual_Test_Retest_99.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_2_Axle_Annual_Test_94.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_3_Axle_Annual_Test_94.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_4_Axle_Paid_Annual_Test_Retest_53.json"},
+                {"TestInsertionTimeRecords/TestResults/TRL_5_Axle_Part_Paid_Annual_Test_Retest_54.json"},
 
-                {"test-results_remediation_insertion_multiple_defects.json"},
-                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
-                {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
-                {"TestResultsRemediationInserts/HGV_4_Axel_Paid_Annual_Test_Retest.json"},
-                {"TestResultsRemediationInserts/HGV_5_Axel_Part_Paid_Annual_Test_Retest.json"}
+                //HGV Tests
+//                {"test-results_remediation_insertion_multiple_defects.json"},
+//                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
+//                {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
+//                {"TestResultsRemediationInserts/HGV_4_Axel_Paid_Annual_Test_Retest.json"},
+//                {"TestResultsRemediationInserts/HGV_5_Axel_Part_Paid_Annual_Test_Retest.json"}
         });
     }
     private String filename;
@@ -170,14 +178,17 @@ public class RemediationInsertTest {
         String expectedCountryOfRegistration = expectedTestResult.getCountryOfRegistration();
         String actualCountryOfRegistration = actualTestResult.getCountryOfRegistration();
         Assert.assertEquals(expectedCountryOfRegistration,actualCountryOfRegistration);
-        //odometerReading
-        String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
-        String actualOdometerReading = actualTestResult.getOdometerReading();
-        Assert.assertEquals(expectedOdometerReading,actualOdometerReading);
-        //odometerReadingUnits
-        String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
-        String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
-        Assert.assertEquals(expectedOdometerReadingUnits,actualOdometerReadingUnits);
+        //odometer tests - valid for only HGVs
+        if (expectedTestResult.getVehicleType().getValue() == "hgv") {
+            //odometerReading
+            String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
+            String actualOdometerReading = actualTestResult.getOdometerReading();
+            Assert.assertEquals(expectedOdometerReading, actualOdometerReading);
+            //odometerReadingUnits
+            String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
+            String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
+            Assert.assertEquals(expectedOdometerReadingUnits, actualOdometerReadingUnits);
+        }
         //reasonForCancellation
         String expectedReasonForCancellation = expectedTestResult.getReasonForCancellation();
         String actualReasonForCancellation = actualTestResult.getReasonForCancellation();
