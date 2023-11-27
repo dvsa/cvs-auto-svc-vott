@@ -190,12 +190,10 @@ public class RemediationInsertTest {
         }
         //TRL Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "trl") {
-            firstUseDate(expectedTestResult, actualTestResult);
         }
         //PSV Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "psv") {
             odometerTests(expectedTestResult, actualTestResult);
-//            vehicleSizeTests(expectedTestResult, actualTestResult);
         }
     }
 
@@ -286,8 +284,10 @@ public class RemediationInsertTest {
         String expectedTestTypeName = expectedTestType.getTestTypeName();
         String actualTestTypeName = testType.getTestTypeName();
         Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
+
+        String expectedVehicleType = expectedTestResult.getVehicleType().getValue();
         //TRL specific tests
-        if (expectedTestResult.getVehicleType().getValue() == "trl"){
+        if (expectedVehicleType == "trl"){
             expiryDateTests(expectedTestType, actualTestResult);
         }
         //PSV Specific Tests
@@ -365,13 +365,14 @@ public class RemediationInsertTest {
     }
     private void expiryDateTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
         //expiryDate
-        String expectedExpiryDate = String.valueOf(expectedTestType.getTestExpiryDate());
+        OffsetDateTime expectedExpiryDate = expectedTestType.getTestExpiryDate();
+        String expectedFormattedExpiryDate = expectedExpiryDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH));
         String actualExpiryDate = actualTestResult.getTestExpiryDate();
-        Assert.assertEquals(expectedExpiryDate, actualExpiryDate);
+        Assert.assertEquals(expectedFormattedExpiryDate, actualExpiryDate);
     }
     private void firstUseDate(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
         String expectedFirstUseDate = String.valueOf(expectedTestResult.getFirstUseDate());
-        String actualFirstUseDate = actualTestResult.getFirstUseDate();
+        String actualFirstUseDate = String.valueOf(actualTestResult.getFirstUseDate());
         Assert.assertEquals(expectedFirstUseDate, actualFirstUseDate);
     }
     private void regnDateTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
