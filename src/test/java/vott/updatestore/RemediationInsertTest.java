@@ -173,27 +173,32 @@ public class RemediationInsertTest {
         //noOfAxles
         String expectedNoOfAxles = String.valueOf(expectedTestResult.getNoOfAxles());
         String actualNoOfAxles = actualTestResult.getNoOfAxles();
+        
         Assert.assertEquals(expectedNoOfAxles,actualNoOfAxles);
         //countryOfRegistration
         String expectedCountryOfRegistration = expectedTestResult.getCountryOfRegistration();
         String actualCountryOfRegistration = actualTestResult.getCountryOfRegistration();
         Assert.assertEquals(expectedCountryOfRegistration,actualCountryOfRegistration);
-        //odometer tests - valid for only HGVs
-        if (expectedTestResult.getVehicleType().getValue() == "hgv") {
-            //odometerReading
-            String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
-            String actualOdometerReading = actualTestResult.getOdometerReading();
-            Assert.assertEquals(expectedOdometerReading, actualOdometerReading);
-            //odometerReadingUnits
-            String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
-            String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
-            Assert.assertEquals(expectedOdometerReadingUnits, actualOdometerReadingUnits);
-        }
         //reasonForCancellation
         String expectedReasonForCancellation = expectedTestResult.getReasonForCancellation();
         String actualReasonForCancellation = actualTestResult.getReasonForCancellation();
         Assert.assertEquals(expectedReasonForCancellation,actualReasonForCancellation);
+        //HGV Specific Tests
+        if (expectedTestResult.getVehicleType().getValue() == "hgv") {
+            odometerTests(expectedTestResult, actualTestResult);
+            regnDateTests(expectedTestResult, actualTestResult);
+        }
+        //TRL Specific Tests
+        if (expectedTestResult.getVehicleType().getValue() == "trl") {
+            firstUseDate(expectedTestResult, actualTestResult);
+        }
+        //PSV Specific Tests
+        if (expectedTestResult.getVehicleType().getValue() == "psv") {
+            odometerTests(expectedTestResult, actualTestResult);
+//            vehicleSizeTests(expectedTestResult, actualTestResult);
+        }
     }
+
     private void testTypeTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
         //test type attributes
         //assert there is 1 test type
@@ -244,8 +249,7 @@ public class RemediationInsertTest {
         //get from test station table
         String testResultId = actualTestResult.getTestResultId();
         List<vott.models.dao.TestStation> testStations = SqlGenerator.getTestStationWithTestResultId(testResultId,testStationRepository);
-        //TODO Uncomment below assertion when NOP data is fixed
-//        Assert.assertEquals(testStations.size(), 1);
+        Assert.assertEquals(testStations.size(), 1);
         TestStation testStation = testStations.get(0);
         //testStationName
         String expectedTestStation = expectedTestResult.getTestStationName();
@@ -262,8 +266,7 @@ public class RemediationInsertTest {
 
         //get from prepare table
         List<vott.models.dao.Preparer> preparers = SqlGenerator.getPreparerDetailsWithVehicleID(testResultVehicleID,preparerRepository);
-        //TODO Uncomment below assertion when NOP data is fixed
-//        Assert.assertEquals(preparers.size(), 1);
+        Assert.assertEquals(preparers.size(), 1);
         Preparer preparer = preparers.get(0);
         //preparerName
         String expectedPreparerName = expectedTestResult.getPreparerName();
@@ -277,13 +280,24 @@ public class RemediationInsertTest {
         //get from test type table
         String testTypeId = actualTestResult.getTestTypeID();
         List<vott.models.dao.TestType> testTypes = SqlGenerator.getTestTypeWithTestTypeId(testTypeId,testTypeRepository);
-        //TODO Uncomment below assertion when NOP data is fixed
-//        Assert.assertEquals(testTypes.size(), 1);
+        Assert.assertEquals(testTypes.size(), 1);
         TestType testType = testTypes.get(0);
         //name
         String expectedTestTypeName = expectedTestType.getTestTypeName();
         String actualTestTypeName = testType.getTestTypeName();
         Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
+        //TRL specific tests
+        if (expectedTestResult.getVehicleType().getValue() == "trl"){
+            expiryDateTests(expectedTestType, actualTestResult);
+        }
+        //PSV Specific Tests
+        //TODO Test with PSV records/results
+        if (expectedTestResult.getVehicleType().getValue() == "psv") {
+            seatbeltInstallationTests(expectedTestType, actualTestResult);
+            particulateTrapTests(expectedTestType, actualTestResult);
+            smokeTestKLimitAppliedTests(expectedTestType, actualTestResult);
+            modificationTypeUsedTests(expectedTestType, actualTestResult);
+        }
     }
     private void defectTestsLoop(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
         //Obtain testResultId from NOP, use it to obtain Defect List
@@ -337,5 +351,62 @@ public class RemediationInsertTest {
         String expectedStringStdForProhibition = sharedUtilities.convertBooleanToStringNumericBoolean(expectedStdForProhibition);
         String actualStdForProhibition = actualDefect.getStdForProhibition();
         Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
+    }
+    //---------------------------Vehicle type specific tests---------------------------
+    private void odometerTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+        //odometerReading
+        String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
+        String actualOdometerReading = actualTestResult.getOdometerReading();
+        Assert.assertEquals(expectedOdometerReading, actualOdometerReading);
+        //odometerReadingUnits
+        String expectedOdometerReadingUnits = String.valueOf(expectedTestResult.getOdometerReadingUnits());
+        String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
+        Assert.assertEquals(expectedOdometerReadingUnits, actualOdometerReadingUnits);
+    }
+    private void expiryDateTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+        //expiryDate
+        String expectedExpiryDate = String.valueOf(expectedTestType.getTestExpiryDate());
+        String actualExpiryDate = actualTestResult.getTestExpiryDate();
+        Assert.assertEquals(expectedExpiryDate, actualExpiryDate);
+    }
+    private void firstUseDate(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+        String expectedFirstUseDate = String.valueOf(expectedTestResult.getFirstUseDate());
+        String actualFirstUseDate = actualTestResult.getFirstUseDate();
+        Assert.assertEquals(expectedFirstUseDate, actualFirstUseDate);
+    }
+    private void regnDateTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+        String expectedRegnDate = String.valueOf(expectedTestResult.getRegnDate());
+        String actualRegnDate = actualTestResult.getRegnDate();
+        Assert.assertEquals(expectedRegnDate, actualRegnDate);
+    }
+    private void seatbeltInstallationTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+        //NumberOfSeatbeltsFitted
+        String expectedNumberOfSeatbeltsFitted = String.valueOf(expectedTestType.getNumberOfSeatbeltsFitted());
+        String actualNumberOfSeatbeltsFitted = actualTestResult.getNumberOfSeatbeltsFitted();
+        Assert.assertEquals(expectedNumberOfSeatbeltsFitted, actualNumberOfSeatbeltsFitted);
+        //LastSeatbeltInstallationCheckDate
+        String expectedLastSeatbeltInstallationCheckDate = String.valueOf(expectedTestType.getLastSeatbeltInstallationCheckDate());
+        String actualLastSeatbeltInstallationCheckDate = actualTestResult.getLastSeatbeltInstallationCheckDate();
+        Assert.assertEquals(expectedLastSeatbeltInstallationCheckDate, actualLastSeatbeltInstallationCheckDate);
+    }
+    private void particulateTrapTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+        //particulateTrapFitted
+        String expectedParticulateTrapFitted = expectedTestType.getParticulateTrapFitted();
+        String actualParticulateTrapFitted = actualTestResult.getParticulateTrapFitted();
+        Assert.assertEquals(expectedParticulateTrapFitted, actualParticulateTrapFitted);
+        //particulateTrapSerialNumber
+        String expectedParticulateTrapSerialNumber = expectedTestType.getParticulateTrapSerialNumber();
+        String actualParticulateTrapSerialNumber = actualTestResult.getParticulateTrapSerialNumber();
+        Assert.assertEquals(expectedParticulateTrapSerialNumber, actualParticulateTrapSerialNumber);
+    }
+    private void smokeTestKLimitAppliedTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+        String expectedSmokeTestKLimitApplied = expectedTestType.getSmokeTestKLimitApplied();
+        String actualSmokeTestKLimitApplied = actualTestResult.getSmokeTestKLimitApplied();
+        Assert.assertEquals(expectedSmokeTestKLimitApplied, actualSmokeTestKLimitApplied);
+    }
+    private void modificationTypeUsedTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+        String expectedModificationTypeUsed = expectedTestType.getModificationTypeUsed();
+        String actualModificationTypeUsed = actualTestResult.getModificationTypeUsed();
+        Assert.assertEquals(expectedModificationTypeUsed, actualModificationTypeUsed);
     }
 }
