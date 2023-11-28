@@ -1,85 +1,59 @@
 {
-  "testResultId": "d0e4560f-7689-4571-b0d1-c9cf74787ecc",
-  "systemNumber": "10000007",
-  "vin": "HGV22MISSINGTEST",
-  "testStationName": "Rowe,WunschandWisoky",
-  "testStationPNumber": "87-1369561",
-  "testStationType": "atf",
-  "testerName": "Gica",
-  "testerEmailAddress": "someone@email.com",
-  "testerStaffId": "133",
-  "testStartTimestamp": "2023-04-02T09:42:05.280Z",
-  "testEndTimestamp": "2023-04-02T16:45:06.915Z",
-  "testStatus": "submitted",
-  "vehicleType": "hgv",
-  "vehicleConfiguration": "semi-car transporter",
-  "noOfAxles": 2,
-  "preparerId": "BL5545",
-  "preparerName": "DurrellVehiclesLimited",
-  "euVehicleCategory": "n2",
   "countryOfRegistration": "gb",
-  "vrm": "HGV22VRM",
-  "odometerReading": 54000,
+  "euVehicleCategory": "n3",
+  "noOfAxles": 2,
+  "numberOfWheelsDriven": 2,
+  "odometerReading": 209277,
   "odometerReadingUnits": "kilometres",
-  "shouldEmailCertificate": "0",
+  "preparerId": "1",
+  "preparerName": "preparer one",
+  "reasonForCancellation": "no reason",
+  "regnDate": "2012-01-24",
+  "shouldEmailCertificate": "false",
+  "systemNumber": "10000101",
+  "testEndTimestamp": "2022-11-28T14:16:45.000000Z",
+  "testResultId": "f8b9609b-6ada-4071-af81-433567941f2d",
+  "testStartTimestamp": "2022-11-28T14:14:19.000000Z",
+  "testStationName": "atf station",
+  "testStationPNumber": "P12345",
+  "testStationType": "atf",
+  "testStatus": "submitted",
+  "testTypes": [
+    {
+      "additionalCommentsForAbandon": "abandon comments",
+      "additionalNotesRecorded": "additional notes",
+      "certificateNumber": "A12345678",
+      "customDefects": [],
+      "defects": [
+      ],
+      "emissionStandard": "Euro V",
+      "fuelType": "fuel cell",
+      "lastUpdatedAt": "2023-11-06T12:54:11.792000Z",
+      "modType": {
+        "code": "p",
+        "description": "particulate trap"
+      },
+      "name": "Annual test",
+      "prohibitionIssued": true,
+      "reasonForAbandoning": "abandon reason",
+      "secondaryCertificateNumber": "secondcert1235",
+      "testExpiryDate": "2023-11-30T00:00:00.000000Z",
+      "testResult": "pass",
+      "testTypeEndTimestamp": "2022-11-28T14:16:45.000000Z",
+      "testTypeId": "94",
+      "testTypeName": "Annual test",
+      "testTypeStartTimestamp": "2022-11-28T14:14:19.000000Z"
+    }
+  ],
+  "testerEmailAddress": "cvs_migrated_tester@dvsa.gov.uk",
+  "testerName": "testername",
+  "testerStaffId": "staffid",
   "vehicleClass": {
     "code": "v",
     "description": "heavy goods vehicle"
   },
-  "numberOfWheelsDriven": 2,
-  "reasonForCancellation": "no reason",
-  "contingencyTestNumber": "123456",
-  "testTypes": [
-    {
-      "name": "Annualtest",
-      "testTypeName": "Annualtest",
-      "testTypeId": "94",
-      "testTypeStartTimestamp": "2023-04-02T10:12:05.280Z",
-      "testTypeEndTimestamp": "2023-04-02T11:01:06.918Z",
-      "certificateNumber": "12345678",
-      "prohibitionIssued": false,
-      "reasonForAbandoning": "no reason",
-      "testResult": "pass",
-      "additionalNotesRecorded": "additionalnotes",
-      "additionalCommentsForAbandon": "no comments",
-      "secondaryCertificateNumber": "secondarycertnumber",
-      "customDefects": [
-        {
-          "referenceNumber": "1",
-          "defectName": "customdefect1",
-          "defectNotes": "customdefects1notes"
-        }
-      ],
-      "defects": [
-        {
-          "imNumber": 1000,
-          "imDescription": "imdescription1",
-          "itemNumber": 1500,
-          "itemDescription": "itemdescription1",
-          "deficiencyRef": "deficiencyreference(1)*",
-          "deficiencyId": "b",
-          "deficiencySubId": "d",
-          "deficiencyCategory": "advisory",
-          "deficiencyText": "deficinecytextstring",
-          "stdForProhibition": true,
-          "prs": true,
-          "prohibitionIssued": true,
-          "additionalInformation": {
-            "location": {
-              "vertical": "upper",
-              "horizontal": "outer",
-              "lateral": "centre",
-              "longitudinal": "front",
-              "rowNumber": "1",
-              "seatNumber": "2",
-              "axleNumber": "3"
-            },
-            "notes": "defect notes"
-          }
-        }
-
-      ],
-      "emissionStandard": "Euro 3"
-    }
-  ]
+  "vehicleConfiguration": "rigid",
+  "vehicleType": "hgv",
+  "vin": "testvinnumber",
+  "vrm": "AB12CDE"
 }
