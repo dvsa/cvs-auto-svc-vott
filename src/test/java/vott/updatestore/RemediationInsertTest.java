@@ -128,7 +128,7 @@ public class RemediationInsertTest {
 
                 //HGV Tests
 //                {"test-results_remediation_insertion_multiple_defects.json"},
-//                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
+                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
 //                {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
 //                {"TestResultsRemediationInserts/HGV_4_Axel_Paid_Annual_Test_Retest.json"},
 //                {"TestResultsRemediationInserts/HGV_5_Axel_Part_Paid_Annual_Test_Retest.json"}
@@ -183,17 +183,21 @@ public class RemediationInsertTest {
         String expectedReasonForCancellation = expectedTestResult.getReasonForCancellation();
         String actualReasonForCancellation = actualTestResult.getReasonForCancellation();
         Assert.assertEquals(expectedReasonForCancellation,actualReasonForCancellation);
+        //regn
+        regnDateTests(expectedTestResult, actualTestResult);
+        firstUseDate(expectedTestResult, actualTestResult);
         //HGV Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "hgv") {
             odometerTests(expectedTestResult, actualTestResult);
-            regnDateTests(expectedTestResult, actualTestResult);
         }
         //TRL Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "trl") {
+            //TODO Add in trailerID when it comes back from payload
         }
         //PSV Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "psv") {
             odometerTests(expectedTestResult, actualTestResult);
+            //TODO Add in vehicleSize
         }
     }
 
@@ -286,9 +290,9 @@ public class RemediationInsertTest {
         Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
 
         String expectedVehicleType = expectedTestResult.getVehicleType().getValue();
+        expiryDateTests(expectedTestType, actualTestResult);
         //TRL specific tests
         if (expectedVehicleType == "trl"){
-            expiryDateTests(expectedTestType, actualTestResult);
         }
         //PSV Specific Tests
         //TODO Test with PSV records/results
