@@ -84,7 +84,7 @@ public class TestTypeResults {
     private BigDecimal numberOfSeatbeltsFitted = null;
 
     @SerializedName("lastSeatbeltInstallationCheckDate")
-    private LocalDate lastSeatbeltInstallationCheckDate = null;
+    private OffsetDateTime lastSeatbeltInstallationCheckDate = null;
 
     @SerializedName("seatbeltInstallationCheckDate")
     private Boolean seatbeltInstallationCheckDate = null;
@@ -607,7 +607,7 @@ public class TestTypeResults {
         this.numberOfSeatbeltsFitted = numberOfSeatbeltsFitted;
     }
 
-    public TestTypeResults lastSeatbeltInstallationCheckDate(LocalDate lastSeatbeltInstallationCheckDate) {
+    public TestTypeResults lastSeatbeltInstallationCheckDate(OffsetDateTime lastSeatbeltInstallationCheckDate) {
         this.lastSeatbeltInstallationCheckDate = lastSeatbeltInstallationCheckDate;
         return this;
     }
@@ -618,11 +618,11 @@ public class TestTypeResults {
      * @return lastSeatbeltInstallationCheckDate
      **/
 
-    public LocalDate getLastSeatbeltInstallationCheckDate() {
+    public OffsetDateTime getLastSeatbeltInstallationCheckDate() {
         return lastSeatbeltInstallationCheckDate;
     }
 
-    public void setLastSeatbeltInstallationCheckDate(LocalDate lastSeatbeltInstallationCheckDate) {
+    public void setLastSeatbeltInstallationCheckDate(OffsetDateTime lastSeatbeltInstallationCheckDate) {
         this.lastSeatbeltInstallationCheckDate = lastSeatbeltInstallationCheckDate;
     }
 

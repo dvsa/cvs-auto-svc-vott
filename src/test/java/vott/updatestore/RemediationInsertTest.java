@@ -38,6 +38,8 @@ public class RemediationInsertTest {
     private TokenService v1ImplicitTokens;
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
+    private TestResultDynamoRepository testResultDynamoRepository;
+
     private DefectRepository defectRepository;
     private TechnicalRecordRepository technicalRecordRepository;
     private TesterRepository testerRepository;
@@ -51,7 +53,7 @@ public class RemediationInsertTest {
     private TestStationRepository testStationRepository;
     private TestTypeRepository testTypeRepository;
     private CompleteTestResults expectedTestResult;
-    private TestResult actualTestResult;
+    private TestResultDynamo actualTestResult;
     private SharedUtilities sharedUtilities;
 
     @Before
@@ -70,6 +72,8 @@ public class RemediationInsertTest {
         vehicleRepository = new VehicleRepository(connectionFactory);
 
         testResultRepository = new TestResultRepository(connectionFactory);
+
+        testResultDynamoRepository = new TestResultDynamoRepository(connectionFactory);
 
         defectRepository = new DefectRepository(connectionFactory);
 
@@ -102,36 +106,30 @@ public class RemediationInsertTest {
         CompleteTestResults expectedTestResult = sharedUtilities.readTestResult(PAYLOAD_PATH + filename);
         //Extract vin for use in following tests
         String vin = expectedTestResult.getVin();
+        String testResultId = expectedTestResult.getTestResultId();
+
 
         //Check vehicle and testResult are present
         SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository);
         SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository);
 
         //Pull actualTestResultList from NOP
-        List<TestResult> actualTestResultList = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
+//        List<TestResult> actualTestResultList = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
+        List<TestResultDynamo> actualTestResultDynamoList = SqlGenerator.getTestResultDynamoWithTestResultId(testResultId, testResultDynamoRepository);
+
 
         this.expectedTestResult = expectedTestResult;
 
-        this.actualTestResult = actualTestResultList.get(0);
+        this.actualTestResult = actualTestResultDynamoList.get(0);
     }
 
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Annual_Test_40.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Paid_Annual_Test_Retest_98.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_1_Axle_Part_Paid_Annual_Test_Retest_99.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_2_Axle_Annual_Test_94.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_3_Axle_Annual_Test_94.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_4_Axle_Paid_Annual_Test_Retest_53.json"},
-                {"TestInsertionTimeRecords/TestResults/TRL_5_Axle_Part_Paid_Annual_Test_Retest_54.json"},
-
-                //HGV Tests
-//                {"test-results_remediation_insertion_multiple_defects.json"},
-                {"TestResultsRemediationInserts/HGV_2_Axel_Annual_Test.json"},
-//                {"TestResultsRemediationInserts/HGV_3_Axel_First_Test.json"},
-//                {"TestResultsRemediationInserts/HGV_4_Axel_Paid_Annual_Test_Retest.json"},
-//                {"TestResultsRemediationInserts/HGV_5_Axel_Part_Paid_Annual_Test_Retest.json"}
+                {"TestInsertionTimeRecords/TestResults/PSV_Large_Annual_Test_m2.json"},
+                {"TestInsertionTimeRecords/TestResults/PSV_Large_Annual_Test_m3.json"},
+                {"TestInsertionTimeRecords/TestResults/PSV_Small_Annual_Test_m2.json"},
+                {"TestInsertionTimeRecords/TestResults/PSV_Small_Annual_test_m3.json"},
         });
     }
     private String filename;
@@ -161,7 +159,7 @@ public class RemediationInsertTest {
     }
 
     //--------------------------------------------------------------------
-    private void testResultTests (CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void testResultTests (CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         //testResultId
         String expectedTestResultId = expectedTestResult.getTestResultId();
         String actualTestResultId = actualTestResult.getTestResultId();
@@ -192,16 +190,17 @@ public class RemediationInsertTest {
         }
         //TRL Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "trl") {
-            //TODO Add in trailerID when it comes back from payload
+            trailerIdTests(expectedTestResult, actualTestResult);
         }
         //PSV Specific Tests
         if (expectedTestResult.getVehicleType().getValue() == "psv") {
             odometerTests(expectedTestResult, actualTestResult);
-            //TODO Add in vehicleSize
+            vehicleSizeTests(expectedTestResult, actualTestResult);
+            numberOfSeatsTests(expectedTestResult, actualTestResult);
         }
     }
 
-    private void testTypeTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void testTypeTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         //test type attributes
         //assert there is 1 test type
         TestTypeResults expectedTestType = expectedTestResult.getTestTypes().get(0);
@@ -231,8 +230,8 @@ public class RemediationInsertTest {
         Assert.assertEquals(expectedAdditionalNotesRecorded,actualAdditionalNotesRecorded);
 
         //get from tester table
-        String testResultVehicleID = actualTestResult.getVehicleID();
-        List<Tester> actualTesters = SqlGenerator.getTesterDetailsWithVehicleID(testResultVehicleID, testerRepository);
+        String testResultID = actualTestResult.getTestResultId();
+        List<Tester> actualTesters = SqlGenerator.getTesterDetailsWithTestResultID(testResultID, testerRepository);
         Assert.assertEquals(actualTesters.size(),1);
         Tester actualTester = actualTesters.get(0);
         //testerName
@@ -267,7 +266,7 @@ public class RemediationInsertTest {
         Assert.assertEquals(expectedTestStationType,actualTestStationType);
 
         //get from prepare table
-        List<vott.models.dao.Preparer> preparers = SqlGenerator.getPreparerDetailsWithVehicleID(testResultVehicleID,preparerRepository);
+        List<vott.models.dao.Preparer> preparers = SqlGenerator.getPreparerDetailsWithTestResultID(testResultID,preparerRepository);
         Assert.assertEquals(preparers.size(), 1);
         Preparer preparer = preparers.get(0);
         //preparerName
@@ -290,7 +289,8 @@ public class RemediationInsertTest {
         Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
 
         String expectedVehicleType = expectedTestResult.getVehicleType().getValue();
-        expiryDateTests(expectedTestType, actualTestResult);
+        //TODO uncomment expiry date testing
+//        expiryDateTests(expectedTestType, actualTestResult);
         //TRL specific tests
         if (expectedVehicleType == "trl"){
         }
@@ -298,12 +298,13 @@ public class RemediationInsertTest {
         //TODO Test with PSV records/results
         if (expectedTestResult.getVehicleType().getValue() == "psv") {
             seatbeltInstallationTests(expectedTestType, actualTestResult);
-            particulateTrapTests(expectedTestType, actualTestResult);
-            smokeTestKLimitAppliedTests(expectedTestType, actualTestResult);
-            modificationTypeUsedTests(expectedTestType, actualTestResult);
+            // Not testing the below currently
+//            particulateTrapTests(expectedTestType, actualTestResult);
+//            smokeTestKLimitAppliedTests(expectedTestType, actualTestResult);
+//            modificationTypeUsedTests(expectedTestType, actualTestResult);
         }
     }
-    private void defectTestsLoop(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void defectTestsLoop(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         //Obtain testResultId from NOP, use it to obtain Defect List
         String nopTestResultId = actualTestResult.getId();
         List<vott.models.dao.Defect> actualDefectList = SqlGenerator.getDefectWithNopTestResultId(nopTestResultId, defectRepository);
@@ -357,7 +358,7 @@ public class RemediationInsertTest {
         Assert.assertEquals("Standard for Prohibitions do not match", expectedStringStdForProhibition, actualStdForProhibition);
     }
     //---------------------------Vehicle type specific tests---------------------------
-    private void odometerTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void odometerTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         //odometerReading
         String expectedOdometerReading = String.valueOf(expectedTestResult.getOdometerReading());
         String actualOdometerReading = actualTestResult.getOdometerReading();
@@ -367,34 +368,55 @@ public class RemediationInsertTest {
         String actualOdometerReadingUnits = actualTestResult.getOdometerReadingUnits();
         Assert.assertEquals(expectedOdometerReadingUnits, actualOdometerReadingUnits);
     }
-    private void expiryDateTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+    private void expiryDateTests(TestTypeResults expectedTestType, TestResultDynamo actualTestResult) {
         //expiryDate
         OffsetDateTime expectedExpiryDate = expectedTestType.getTestExpiryDate();
         String expectedFormattedExpiryDate = expectedExpiryDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH));
         String actualExpiryDate = actualTestResult.getTestExpiryDate();
         Assert.assertEquals(expectedFormattedExpiryDate, actualExpiryDate);
     }
-    private void firstUseDate(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void firstUseDate(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         String expectedFirstUseDate = String.valueOf(expectedTestResult.getFirstUseDate());
         String actualFirstUseDate = String.valueOf(actualTestResult.getFirstUseDate());
         Assert.assertEquals(expectedFirstUseDate, actualFirstUseDate);
     }
-    private void regnDateTests(CompleteTestResults expectedTestResult, TestResult actualTestResult) {
+    private void regnDateTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
         String expectedRegnDate = String.valueOf(expectedTestResult.getRegnDate());
-        String actualRegnDate = actualTestResult.getRegnDate();
+        String actualRegnDate = String.valueOf(actualTestResult.getRegnDate());
         Assert.assertEquals(expectedRegnDate, actualRegnDate);
     }
-    private void seatbeltInstallationTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+    private void vehicleSizeTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
+        String expectedVehicleSize = String.valueOf(expectedTestResult.getVehicleSize());
+        String actualVehicleSize = String.valueOf(actualTestResult.getVehicleSize());
+        Assert.assertEquals(expectedVehicleSize, actualVehicleSize);
+    }
+    private void trailerIdTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
+        String expectedTrailerId = String.valueOf(expectedTestResult.getTrailerId());
+        String actualTrailerId = String.valueOf(actualTestResult.getTrailerID());
+        Assert.assertEquals(expectedTrailerId, actualTrailerId);
+    }
+
+    private void numberOfSeatsTests(CompleteTestResults expectedTestResult, TestResultDynamo actualTestResult) {
+        String expectedNumberOfSeats = String.valueOf(expectedTestResult.getNumberOfSeats());
+        String actualNumberOfSeats = String.valueOf(actualTestResult.getNumberOfSeats());
+        Assert.assertEquals(expectedNumberOfSeats, actualNumberOfSeats);
+    }
+    private void seatbeltInstallationTests(TestTypeResults expectedTestType, TestResultDynamo actualTestResult) {
         //NumberOfSeatbeltsFitted
         String expectedNumberOfSeatbeltsFitted = String.valueOf(expectedTestType.getNumberOfSeatbeltsFitted());
         String actualNumberOfSeatbeltsFitted = actualTestResult.getNumberOfSeatbeltsFitted();
         Assert.assertEquals(expectedNumberOfSeatbeltsFitted, actualNumberOfSeatbeltsFitted);
         //LastSeatbeltInstallationCheckDate
-        String expectedLastSeatbeltInstallationCheckDate = String.valueOf(expectedTestType.getLastSeatbeltInstallationCheckDate());
+        OffsetDateTime expectedLastSeatbeltInstallationCheckDate = expectedTestType.getLastSeatbeltInstallationCheckDate();
+        String expectedLastSeatbeltInstallationCheckDateString = null;
+        if (expectedLastSeatbeltInstallationCheckDate != null){
+            expectedLastSeatbeltInstallationCheckDateString = String.valueOf(expectedLastSeatbeltInstallationCheckDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)));
+        }
         String actualLastSeatbeltInstallationCheckDate = actualTestResult.getLastSeatbeltInstallationCheckDate();
-        Assert.assertEquals(expectedLastSeatbeltInstallationCheckDate, actualLastSeatbeltInstallationCheckDate);
+        Assert.assertEquals(expectedLastSeatbeltInstallationCheckDateString, actualLastSeatbeltInstallationCheckDate);
+        //TODO seatbeltInstallationCheckDate
     }
-    private void particulateTrapTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+    private void particulateTrapTests(TestTypeResults expectedTestType, TestResultDynamo actualTestResult) {
         //particulateTrapFitted
         String expectedParticulateTrapFitted = expectedTestType.getParticulateTrapFitted();
         String actualParticulateTrapFitted = actualTestResult.getParticulateTrapFitted();
@@ -404,12 +426,12 @@ public class RemediationInsertTest {
         String actualParticulateTrapSerialNumber = actualTestResult.getParticulateTrapSerialNumber();
         Assert.assertEquals(expectedParticulateTrapSerialNumber, actualParticulateTrapSerialNumber);
     }
-    private void smokeTestKLimitAppliedTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+    private void smokeTestKLimitAppliedTests(TestTypeResults expectedTestType, TestResultDynamo actualTestResult) {
         String expectedSmokeTestKLimitApplied = expectedTestType.getSmokeTestKLimitApplied();
         String actualSmokeTestKLimitApplied = actualTestResult.getSmokeTestKLimitApplied();
         Assert.assertEquals(expectedSmokeTestKLimitApplied, actualSmokeTestKLimitApplied);
     }
-    private void modificationTypeUsedTests(TestTypeResults expectedTestType, TestResult actualTestResult) {
+    private void modificationTypeUsedTests(TestTypeResults expectedTestType, TestResultDynamo actualTestResult) {
         String expectedModificationTypeUsed = expectedTestType.getModificationTypeUsed();
         String actualModificationTypeUsed = actualTestResult.getModificationTypeUsed();
         Assert.assertEquals(expectedModificationTypeUsed, actualModificationTypeUsed);

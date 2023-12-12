@@ -162,6 +162,17 @@ public class SqlGenerator {
         return preparersResult;
     }
 
+    public static List<vott.models.dao.Preparer> getPreparerDetailsWithTestResultID(String testResultID, PreparerRepository preparerRepository) {
+        List<vott.models.dao.Preparer> preparersResult = preparerRepository.select(String.format(
+                "SELECT `preparer`.*\n"
+                        + "FROM `preparer`\n"
+                        + "JOIN `test_result`\n"
+                        + "ON `test_result`.`preparer_id` = `preparer`.`id`\n"
+                        + "WHERE `test_result`.`testResultId` = '%s'" , testResultID
+        ));
+        return preparersResult;
+    }
+
     public static List<vott.models.dao.Preparer> getPreparerDetailsWithVehicleID1(String testResultVehicleID, PreparerRepository preparerRepository) {
         List<vott.models.dao.Preparer> preparersResult = preparerRepository.select(String.format(
                 "SELECT `preparer`.*\n"
@@ -181,6 +192,17 @@ public class SqlGenerator {
                         + "JOIN `test_result`\n"
                         + "ON `test_result`.`tester_id` = `tester`.`id`\n"
                         + "WHERE `test_result`.`vehicle_id` = '%s'" , testResultVehicleID
+        ));
+        return testerResults;
+    }
+
+    public static List<vott.models.dao.Tester> getTesterDetailsWithTestResultID(String testResultID, TesterRepository testerRepository) {
+        List<vott.models.dao.Tester> testerResults = testerRepository.select(String.format(
+                "SELECT `tester`.*\n"
+                        + "FROM `tester`\n"
+                        + "JOIN `test_result`\n"
+                        + "ON `test_result`.`tester_id` = `tester`.`id`\n"
+                        + "WHERE `test_result`.`testResultId` = '%s'" , testResultID
         ));
         return testerResults;
     }
@@ -251,6 +273,84 @@ public class SqlGenerator {
         ));
 
         return ais;
+    }
+
+    public static List<vott.models.dao.TestResultDynamo> getTestResultDynamoWithTestResultId(String testResultId, TestResultDynamoRepository testResultDynamoRepository) {
+        List<vott.models.dao.TestResultDynamo> testResults = testResultDynamoRepository.select(String.format(
+                "SELECT\n" +
+                        "test.testResultId,\n" +
+                        "vehicle.vin,\n" +
+                        "vehicle.vrm_trm,\n" +
+                        "vehicle.trailer_id,\n" +
+                        "vehicle.system_number,\n" +
+                        "test.countryOfRegistration,\n" +
+                        "vehicle_class.euVehicleCategory,\n" +
+                        "test.noOfAxles,\n" +
+                        "test.odometerReading,\n" +
+                        "test.odometerReadingUnits,\n" +
+                        "test.preparer_id,\n" +
+                        "preparer.name,\n" +
+                        "test.reasonForCancellation,\n" +
+                        "test.regnDate,\n" +
+                        "test.test_station_id,\n" +
+                        "station.name,\n" +
+                        "station.pNumber,\n" +
+                        "station.type,\n" +
+                        "test.testStatus,\n" +
+                        "test.additionalCommentsForAbandon,\n" +
+                        "test.additionalNotesRecorded,\n" +
+                        "test.certificateNumber,\n" +
+                        "test.fuel_emission_id,\n" +
+                        "emission.emissionStandard,\n" +
+                        "emission.fuelType,\n" +
+                        "emission.modTypeCode,\n" +
+                        "emission.description,\n" +
+                        "test.lastUpdatedAt,\n" +
+                        "test.test_type_id,\n" +
+                        "test_type.testTypeName,\n" +
+                        "test_type.testTypeClassification,\n" +
+                        "test.reasonForAbandoning,\n" +
+                        "test.secondaryCertificateNumber,\n" +
+                        "test.testExpiryDate,\n" +
+                        "test.testResult,\n" +
+                        "test.testNumber,\n" +
+                        "test.testTypeStartTimestamp,\n" +
+                        "test.testTypeEndTimestamp,\n" +
+                        "test.firstUseDate,\n" +
+                        "test.regnDate,\n" +
+                        "test.tester_id,\n" +
+                        "test.testCode, \n" +
+                        "tester.staffid,\n" +
+                        "tester.name,\n" +
+                        "tester.email_address,\n" +
+                        "vehicle_class.code,\n" +
+                        "vehicle_class.description,\n" +
+                        "vehicle_class.vehicleConfiguration,\n" +
+                        "vehicle_class.vehicleType,\n" +
+                        "vehicle_class.vehicleSize,\n" +
+                        "defect.test_result_id AS defect_tr_id,\n" +
+                        "custom_defect.test_result_id AS c_defect_tr_id,\n" +
+                        "-- psv only\n" +
+                        "test.numberOfSeats,\n" +
+                        "test.lastSeatbeltInstallationCheckDate,\n" +
+                        "test.numberOfSeatbeltsFitted,\n" +
+                        "test.seatbeltInstallationCheckDate\n" +
+                        ", test.nopInsertedAt\n" +
+                        "FROM test_result test\n" +
+                        "LEFT JOIN vehicle ON vehicle.id = test.vehicle_id\n" +
+                        "LEFT JOIN vehicle_class ON vehicle_class.id = test.vehicle_class_id\n" +
+                        "LEFT JOIN preparer ON preparer.id = test.preparer_id\n" +
+                        "LEFT JOIN test_station station ON station.id = test.test_station_id\n" +
+                        "LEFT JOIN fuel_emission emission ON emission.id = test.fuel_emission_id\n" +
+                        "LEFT JOIN test_type ON test_type.id = test.test_type_id\n" +
+                        "LEFT JOIN tester ON tester.id = test.tester_id\n" +
+                        "LEFT JOIN test_defect defect ON defect.test_result_id = test.id\n" +
+                        "LEFT JOIN custom_defect ON custom_defect.test_result_id = test.id\n" +
+                        "WHERE\n" +
+                        "testresultId = '%s'", testResultId
+        ));
+
+        return testResults;
     }
 
     public static List<vott.models.dao.TestResult> getTestResultWithVIN(String vin, TestResultRepository testResultRepository) {
