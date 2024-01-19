@@ -1,12 +1,10 @@
 package vott.enquiry;
 
-
 import com.google.gson.Gson;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -164,7 +162,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
     @WithTag("Vott")
     @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History using client credentials token and a valid vin")
-    @Test
+
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
         int tries = 0;

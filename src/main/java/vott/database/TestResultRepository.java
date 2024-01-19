@@ -19,7 +19,6 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
 
         tableDetails.setTableName("test_result");
         tableDetails.setColumnNames(new String[] {
-                "id",
                 "vehicle_id",
                 "fuel_emission_id",
                 "test_station_id",
@@ -160,7 +159,6 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
     protected TestResult mapToEntity(ResultSet rs) throws SQLException {
         TestResult tr = new TestResult();
 
-        tr.setId(rs.getString("id"));
         tr.setVehicleID(rs.getString("vehicle_id"));
         tr.setFuelEmissionID(rs.getString("fuel_emission_id"));
         tr.setTestStationID(rs.getString("test_station_id"));
@@ -201,7 +199,6 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
         tr.setSmokeTestKLimitApplied(rs.getString("smokeTestKLimitApplied"));
         tr.setCreatedByID(rs.getString("createdBy_Id"));
         tr.setLastUpdatedByID(rs.getString("lastUpdatedBy_Id"));
-
         return tr;
     }
 }

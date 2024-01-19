@@ -18,7 +18,7 @@
       "certificateNumber": "12334",
       "testTypeStartTimestamp": "2019-01-14T10:36:33.987Z",
       "testTypeEndTimestamp": "2019-01-14T10:36:33.987Z",
-      "testExpiryDate": "2019-09-19",
+      "testExpiryDate": "2019-09-19T00:00:00.000000Z",
       "modType": {
         "code": "p",
         "description": "particulate trap"
@@ -30,7 +30,7 @@
       "emissionStandard": "0.10 g/kWh Euro 3 PM",
       "fuelType": "diesel",
       "numberOfSeatbeltsFitted": 2,
-      "lastSeatbeltInstallationCheckDate": "2019-01-14",
+      "lastSeatbeltInstallationCheckDate": "2019-01-14T00:00:00.000000Z",
       "seatbeltInstallationCheckDate": true,
       "prohibitionIssued": false,
       "reasonForAbandoning": "none",

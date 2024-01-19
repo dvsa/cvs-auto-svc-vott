@@ -1,9 +1,8 @@
 package vott.updatestore;
 
-import com.google.gson.Gson;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,8 +17,6 @@ import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
-import vott.e2e.FieldGenerator;
-import vott.json.GsonInstance;
 import vott.models.dao.*;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
@@ -45,12 +42,9 @@ import static vott.models.dto.testresults.TestTypeResults.EmissionStandardEnum.*
 public class DynamoNOPDataPipelineTest {
     @Rule
     public RetryRule retryRule = new RetryRule(3);
-    private Gson gson;
-    private FieldGenerator fieldGenerator;
     private TokenService v1ImplicitTokens;
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
-    private DefectRepository defectRepository;
     private TechnicalRecordRepository technicalRecordRepository;
     private TesterRepository testerRepository;
     private PreparerRepository preparerRepository;
@@ -60,18 +54,12 @@ public class DynamoNOPDataPipelineTest {
     private VtEVLAdditionsRepository vtEVLAdditionsRepository;
     private VtEvlCvsRemovedRepository vtEvlCvsRemovedRepository;
     private String payloadPath;
-    private TestStationRepository testStationRepository;
-    private TestTypeRepository testTypeRepository;
     private SharedUtilities sharedUtilities;
 
     @Before
     public void setUp() throws Exception {
 
         VottConfiguration configuration = VottConfiguration.local();
-
-        gson = GsonInstance.get();
-
-        fieldGenerator = new FieldGenerator();
 
         v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
@@ -80,8 +68,6 @@ public class DynamoNOPDataPipelineTest {
         vehicleRepository = new VehicleRepository(connectionFactory);
 
         testResultRepository = new TestResultRepository(connectionFactory);
-
-        defectRepository = new DefectRepository(connectionFactory);
 
         technicalRecordRepository = new TechnicalRecordRepository(connectionFactory);
 
@@ -98,10 +84,6 @@ public class DynamoNOPDataPipelineTest {
         vtEVLAdditionsRepository = new VtEVLAdditionsRepository(connectionFactory);
 
         vtEvlCvsRemovedRepository = new VtEvlCvsRemovedRepository(connectionFactory);
-
-        testStationRepository = new TestStationRepository(connectionFactory);
-
-        testTypeRepository = new TestTypeRepository(connectionFactory);
 
         sharedUtilities = new SharedUtilities();
 
@@ -250,7 +232,7 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + testResultFileName);
 
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
+        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);
@@ -702,7 +684,7 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
+        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);
@@ -907,7 +889,7 @@ public class DynamoNOPDataPipelineTest {
 
     private List<vott.models.dao.TFLView> insertDataViaApiAndGetTFLViewByVIN(TechRecordPOST techRecord, CompleteTestResults testResult) {
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
+       //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);

@@ -1,8 +1,8 @@
 package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -113,7 +113,7 @@ public class TestResultRepositoryTest {
         assertEquals(primaryKey1, primaryKey2);
     }
 
-    @WithTag("Vott")
+    @WithTag("Remediation")
     @Title("VOTT-8 - AC1 - TC50 - Testing test result unique index compound key")
     @Test
     public void upsertingNewVehicleIDReturnsDifferentPk() {

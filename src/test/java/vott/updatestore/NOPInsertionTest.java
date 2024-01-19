@@ -1,17 +1,16 @@
 package vott.updatestore;
 
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.junit.runners.SerenityParameterizedRunner;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
+import net.thucydides.junit.annotations.TestData;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import vott.api.TestResultAPI;
 import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
-import vott.config.DatabaseProperties;
 import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
@@ -31,7 +30,7 @@ import java.util.Locale;
 
 import static org.awaitility.Awaitility.with;
 
-@RunWith(Parameterized.class)
+@RunWith(SerenityParameterizedRunner.class)
 public class NOPInsertionTest {
     @Rule
     public RetryRule retryRule = new RetryRule(3);
@@ -45,21 +44,15 @@ public class NOPInsertionTest {
     private TestStationRepository testStationRepository;
     private TestTypeRepository testTypeRepository;
     private SharedUtilities sharedUtilities;
-    private TechRecordPOST techRecord;
     private CompleteTestResults expectedTestResult;
     private List<TestResult> actualTestResultList;
     private TestResult actualTestResult;
-    private String vin;
-    private Boolean testSetupFinished = false;
+
 
     @Before
     public void setUp() throws Exception {
 
         VottConfiguration configuration = VottConfiguration.local();
-
-        DatabaseProperties databaseProperties = configuration.getDatabaseProperties();
-        databaseProperties.setDatabaseName("CVSNOP");
-        configuration.setDatabaseProperties(databaseProperties);
 
         v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
@@ -87,22 +80,23 @@ public class NOPInsertionTest {
 
     }
 
-    @Parameters
+    @TestData
+    @WithTag("Vott")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 {"technical-records_hgv_annual_2_axles.json", "test-results_hgv_annual_2_axles.json"}
         });
     }
-    private String techRecordFileName;
-    private String testResultFileName;
+    private final String techRecordFileName;
+    private final String testResultFileName;
     public NOPInsertionTest(String techRecordFileName, String testResultFileName) {
         this.techRecordFileName = techRecordFileName;
         this.testResultFileName = testResultFileName;
     }
 
+    @Test
     @WithTag("Vott")
     @Title("CB2-9237 - test inserts data in NOP")
-    @Test
     public void insertNopTest()
     {
         Assert.assertEquals("expected only one test result to be returned from database", actualTestResultList.size(), 1);
@@ -235,35 +229,6 @@ public class NOPInsertionTest {
         String expectedTestTypeName = expectedTestType.getTestTypeName();
         String actualTestTypeName = testType.getTestTypeName();
         Assert.assertEquals(expectedTestTypeName,actualTestTypeName);
-
-
-        //get from vehicle_class, joining on vehicle and tech record tables?
-        //vehicleType
-        //vehicleConfiguration
-        //euVehicleCategory
-        //vehicleClass > code
-        //vehicleClass > description
-
-
-        //check if these are actually migrated to NOP
-        //testStartTimestamp (test result)
-        //testEndTimestamp (test result)
-        //shouldEmailCertificate
-        //testTypeName
-        //testTypeId
-        //prohibitionIssued (test type not defect)
-        //the following are on vehicle table not test result and present in technical record as well as test result
-        //system number
-        //vin
-        //vrm
-        //numberOfWheelsDriven
-
-        //generated in back end CVS, would need to compare directly with dynamo db value
-        //certificateNumber
-
-        //not mapped from VT for HGVs
-        //additionalCommentsForAbandon
-        //secondaryCertificateNumber
     }
 
     private void compareDefectsFromJsonToNOP()
@@ -323,7 +288,7 @@ public class NOPInsertionTest {
     }
     private void testResultDateSynchronisation(CompleteTestResults expectedTestResult) {
         TestTypes testTypes = expectedTestResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
+        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         expectedTestResult.setTestTypes(testTypes);
         testTypes.get(0).setTestExpiryDate(datetime);
@@ -333,7 +298,7 @@ public class NOPInsertionTest {
         expectedTestResult.setTestEndTimestamp(datetime);
     }
 
-    private void testSetup() throws Exception {
+    private void testSetup() {
         //TODO consider tests with multiple test types
         //create tech record from JSON
         TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + techRecordFileName);
@@ -353,12 +318,9 @@ public class NOPInsertionTest {
         //get test result from NOP
         List<TestResult> actualTestResults = SqlGenerator.getTestResultWithVIN(vin, testResultRepository);
 
-        this.techRecord = techRecord;
         this.expectedTestResult = expectedTestResult;
         this.actualTestResultList = actualTestResults;
         this.actualTestResult = actualTestResults.get(0);
-        this.vin = vin;
 
-        this.testSetupFinished = true;
     }
 }
