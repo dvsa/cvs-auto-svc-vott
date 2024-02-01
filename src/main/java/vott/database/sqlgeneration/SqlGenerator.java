@@ -40,7 +40,7 @@ public class SqlGenerator {
                         .collect(Collectors.joining(", "))
         );
 
-      System.out.println(sql);
+      //System.out.println(sql);
        return sql;
     };
 
@@ -91,7 +91,7 @@ public class SqlGenerator {
             String.join(", ", valuePlaceholders),
             String.join(", ", updatePlaceholders)
         );
-        System.out.println(sql);
+        //System.out.println(sql);
         return sql;
     }
 
