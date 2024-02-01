@@ -82,10 +82,10 @@ public class TestResultRepository extends AbstractRepository<TestResult> {
     protected void setFingerprintParameters(PreparedStatement preparedStatement, TestResult entity) throws SQLException {
 
         String testNumber = entity.getTestNumber();
-        System.out.println(testNumber);
+        //System.out.println(testNumber);
         preparedStatement.setString(1, testNumber);
         String testEndTimestamp = entity.getTestTypeEndTimestamp();
-        System.out.println(testEndTimestamp);
+        //System.out.println(testEndTimestamp);
         preparedStatement.setString(2, testEndTimestamp);
     }
 
