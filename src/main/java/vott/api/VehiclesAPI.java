@@ -16,7 +16,7 @@ public class VehiclesAPI {
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private static final Gson gson = GsonInstance.get();
 
-    public static void postVehicleTechnicalRecord(TechRecordPOST techRecord, String token){
+    public static void postVehicleTechnicalRecord(TechRecordPOST techRecord, String token) {
         RESTAssuredBaseURI();
 
         String techRecordJson = gson.toJson(techRecord);
@@ -31,12 +31,12 @@ public class VehiclesAPI {
                     .body(techRecordJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
-            System.out.print(response.getBody().toString());
+            //System.out.print(response.getBody().toString());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
     }
 
-    private static void RESTAssuredBaseURI(){
+    private static void RESTAssuredBaseURI() {
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/vehicles";
     }
 

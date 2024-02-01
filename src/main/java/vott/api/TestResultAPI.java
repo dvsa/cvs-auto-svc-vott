@@ -15,7 +15,7 @@ public class TestResultAPI {
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private static final Gson gson = GsonInstance.get();
 
-    public static void postTestResult(CompleteTestResults testResult, String token){
+    public static void postTestResult(CompleteTestResults testResult, String token) {
         RESTAssuredBaseURI();
 
         String testResultJson = gson.toJson(testResult);
@@ -30,12 +30,12 @@ public class TestResultAPI {
                     .body(testResultJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
-            System.out.print(response.getBody().toString());
+            //System.out.print(response.getBody().toString());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
     }
 
-    private static void RESTAssuredBaseURI(){
+    private static void RESTAssuredBaseURI() {
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/test-results";
     }
 
