@@ -22,8 +22,7 @@ public abstract class AbstractRepository<T> {
         try (Connection connection = connectionFactory.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     sqlGenerator.generatePartialUpsertSql(getTableDetails()),
-                    //Statement.RETURN_GENERATED_KEYS
-                    new String[]{"id"}
+                    Statement.RETURN_GENERATED_KEYS
             );
 
             setParameters(preparedStatement, entity);
