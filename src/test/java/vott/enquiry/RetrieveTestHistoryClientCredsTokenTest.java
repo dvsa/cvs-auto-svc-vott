@@ -126,7 +126,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
         testResultRepository = new TestResultRepository(connectionFactory);
         tr = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
-        testResultPK = testResultRepository.fullUpsert(tr);
+        testResultPK = testResultRepository.fullUpsertIfNotExists(tr);
 
         customDefectRepository = new CustomDefectRepository(connectionFactory);
         cd = SeedData.newTestCustomDefect(testResultPK);
@@ -231,7 +231,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
@@ -342,7 +342,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
@@ -453,7 +453,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());

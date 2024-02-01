@@ -31,6 +31,7 @@ public class VehiclesAPI {
                     .body(techRecordJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
+            System.out.print(response.getBody().toString());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
     }

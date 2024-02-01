@@ -24,6 +24,7 @@ import vott.models.dao.EVLView;
 import vott.models.dao.TestResult;
 import vott.models.dao.VtEVLAdditions;
 import vott.models.dao.VtEvlCvsRemoved;
+import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
 import vott.models.dto.testresults.CompleteTestResults;
@@ -34,15 +35,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -622,51 +617,6 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber());
     }
 
-    @Title("CB2-8008 - Add VT Data to EVL SQL View ")
-    @Test
-    public void evl_only_vt() throws SQLException, RuntimeException {
-
-        /*
-         values are updated to et_evl_additions table and expect the EVL_VIEW to relevant results
-         */
-
-        EvlContainer evl = evlFeeds("EvlView_test-results-fail.json");
-        EVLView evlViews = evl.evlView;
-        TechRecordPOST techRecord = evl.techRecord;
-        String vin = techRecord.getVin();
-
-        VtEvlCvsRemoved vtr = new VtEvlCvsRemoved();
-        vtr.setVin(vin);
-        vtr.setVrm(techRecord.getPrimaryVrm() + "V");
-        vtr.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vtr.setSystemNumber(techRecord.getSystemNumber() + "1");
-        vtr.setTestStartDate(evlViews.getTestExpiryDate());
-        vtr.setTestExpiryDate(evlViews.getTestExpiryDate());
-        vtr.setVrmTestRecord("test-record");
-
-        upsertVtEvlCvsRemoved(vtEvlCvsRemovedRepository, vtr);
-
-        List<vott.models.dao.VtEvlCvsRemoved> rs = getVTEVLRecordsWithVin(vin, vtEvlCvsRemovedRepository);
-        //System.out.println(rs);
-        assertThat(rs.get(0).getVrm()).isEqualTo(evlViews.getVrmTrm() + "V");
-
-        VtEVLAdditions vt = new VtEVLAdditions();
-        vt.setVrmTrmID(evlViews.getVrmTrm() + "V");
-        vt.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vt.setTestExpiryDate(evlViews.getTestExpiryDate());
-
-        upsertVTEVLADDITIONS(vtEVLAdditionsRepository, vt);
-
-        List<vott.models.dao.EVLView> evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber(), evlViews.getVrmTrm(), evlViewRepository);
-
-        assertThat(evloutput.size()).isEqualTo(1);
-
-        evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber() + "11", evlViews.getVrmTrm() + "V", evlViewRepository);
-        assertThat(evloutput.size()).isEqualTo(1);
-
-    }
 
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test

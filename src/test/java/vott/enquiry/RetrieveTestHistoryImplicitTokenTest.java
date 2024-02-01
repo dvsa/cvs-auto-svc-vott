@@ -225,7 +225,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
@@ -337,7 +337,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
@@ -448,7 +448,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());

@@ -28,6 +28,16 @@ public class AuthIntoServicesRepository extends AbstractRepository<AuthIntoServi
         }
 
         @Override
+        protected TableDetails getFingerPrintTableDetails() {
+                return null;
+        }
+
+        @Override
+        protected void setFingerprintParameters(PreparedStatement preparedStatement, AuthIntoServices entity) throws SQLException {
+
+        }
+
+        @Override
         protected void setParameters(PreparedStatement preparedStatement, AuthIntoServices entity) throws SQLException {
                 // 1-indexed
                 preparedStatement.setString(1, entity.getId());

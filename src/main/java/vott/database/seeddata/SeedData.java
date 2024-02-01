@@ -125,7 +125,7 @@ public class SeedData {
         tr.setTestExpiryDate("2022-01-01");
         tr.setTestAnniversaryDate("2022-01-01");
         tr.setTestTypeStartTimestamp("2022-01-01 00:00:00");
-        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00");
+        tr.setTestTypeEndTimestamp("2022-01-01 00:00:00.000");
         tr.setNumberOfSeatbeltsFitted("2");
         tr.setLastSeatbeltInstallationCheckDate("2022-01-01");
         tr.setSeatbeltInstallationCheckDate("1");
