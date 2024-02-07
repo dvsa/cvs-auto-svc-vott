@@ -1,8 +1,9 @@
 package vott.updatestore;
 
+import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.annotations.Title;
-import net.serenitybdd.annotations.WithTag;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -238,10 +239,9 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + testResultFileName);
 
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);
@@ -678,10 +678,9 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);
@@ -872,10 +871,9 @@ public class DynamoNOPDataPipelineTest {
 
     private List<vott.models.dao.TFLView> insertDataViaApiAndGetTFLViewByVIN(TechRecordPOST techRecord, CompleteTestResults testResult) {
         TestTypes ts = testResult.getTestTypes();
-        LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
-        ts.get(0).setTestExpiryDate(ld);
+        ts.get(0).setTestExpiryDate(datetime);
         ts.get(0).setTestTypeStartTimestamp(datetime);
         ts.get(0).setTestTypeEndTimestamp(datetime);
         testResult.setTestTypes(ts);

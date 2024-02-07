@@ -288,7 +288,6 @@ public class NOPInsertionTest {
     }
     private void testResultDateSynchronisation(CompleteTestResults expectedTestResult) {
         TestTypes testTypes = expectedTestResult.getTestTypes();
-        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         expectedTestResult.setTestTypes(testTypes);
         testTypes.get(0).setTestExpiryDate(datetime);

@@ -230,7 +230,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -342,7 +342,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -453,7 +453,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
