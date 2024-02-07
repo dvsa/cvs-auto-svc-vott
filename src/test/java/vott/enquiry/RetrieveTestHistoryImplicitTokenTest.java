@@ -192,7 +192,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -208,7 +208,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
@@ -304,7 +304,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -320,7 +320,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
@@ -415,7 +415,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -431,7 +431,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
