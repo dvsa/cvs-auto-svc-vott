@@ -2,23 +2,24 @@ package vott.database;
 
 
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.TestResult;
 import vott.database.sqlgeneration.TableDetails;
+import vott.models.dao.TestResult;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TestResultRepository extends AbstractRepository<TestResult>{
-    public TestResultRepository(ConnectionFactory connectionFactory) { super(connectionFactory); }
+public class TestResultRepository extends AbstractRepository<TestResult> {
+    public TestResultRepository(ConnectionFactory connectionFactory) {
+        super(connectionFactory);
+    }
 
     @Override
     protected TableDetails getTableDetails() {
 
         TableDetails tableDetails = new TableDetails();
-
         tableDetails.setTableName("test_result");
-        tableDetails.setColumnNames(new String[] {
+        tableDetails.setColumnNames(new String[]{
                 "vehicle_id",
                 "fuel_emission_id",
                 "test_station_id",
@@ -62,6 +63,30 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
         });
 
         return tableDetails;
+    }
+
+
+    protected TableDetails getFingerPrintTableDetails() {
+
+        TableDetails tableDetails = new TableDetails();
+
+        tableDetails.setTableName("test_result");
+        tableDetails.setColumnNames(new String[]{
+                "testNumber",
+                "testTypeEndTimestamp",
+        });
+
+        return tableDetails;
+    }
+
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, TestResult entity) throws SQLException {
+
+        String testNumber = entity.getTestNumber();
+        //System.out.println(testNumber);
+        preparedStatement.setString(1, testNumber);
+        String testEndTimestamp = entity.getTestTypeEndTimestamp();
+        //System.out.println(testEndTimestamp);
+        preparedStatement.setString(2, testEndTimestamp);
     }
 
     @Override
@@ -201,4 +226,5 @@ public class TestResultRepository extends AbstractRepository<TestResult>{
         tr.setLastUpdatedByID(rs.getString("lastUpdatedBy_Id"));
         return tr;
     }
+
 }

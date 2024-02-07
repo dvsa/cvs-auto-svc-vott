@@ -25,6 +25,16 @@ public class EVLViewRepository extends AbstractRepository<EVLView> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, EVLView entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, EVLView entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getTestExpiryDate());

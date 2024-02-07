@@ -26,6 +26,16 @@ public class PreparerRepository extends AbstractRepository<Preparer> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Preparer entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Preparer entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getPreparerID());

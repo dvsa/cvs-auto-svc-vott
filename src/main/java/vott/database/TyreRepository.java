@@ -31,6 +31,16 @@ public class TyreRepository extends AbstractRepository<Tyre>
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Tyre entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Tyre entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getTyreSize());

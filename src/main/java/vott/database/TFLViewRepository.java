@@ -31,6 +31,16 @@ public class TFLViewRepository extends AbstractRepository<TFLView> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, TFLView entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, TFLView entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getVrm());

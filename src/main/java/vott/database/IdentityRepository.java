@@ -29,6 +29,16 @@ public class IdentityRepository extends AbstractRepository<Identity>{
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Identity entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Identity entity) throws SQLException {
         preparedStatement.setString(1, entity.getIdentityID());
         preparedStatement.setString(2, entity.getName());

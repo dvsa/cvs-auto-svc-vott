@@ -30,6 +30,21 @@ public class SqlGenerator {
         );
     }
 
+    public String generateSelectByFingerprint (TableDetails tableDetails) {
+
+        String sql = String.format(
+                "SELECT id FROM %s WHERE testtype_fingerprint = MD5(CONCAT_WS('|', %s))",
+                tableDetails.getTableName(),
+                Arrays.stream(tableDetails.getColumnNames())
+                        .map(c -> "IFNULL(?,'')")
+                        .collect(Collectors.joining(", "))
+        );
+
+      //System.out.println(sql);
+       return sql;
+    };
+
+
     public String generateDeleteSql(TableDetails tableDetails, int primaryKey) {
         return String.format(
             "DELETE FROM `%s` WHERE `%s` = %d",
@@ -67,7 +82,7 @@ public class SqlGenerator {
         String[] valuePlaceholders = new String[tableDetails.getColumnNames().length];
         Arrays.fill(valuePlaceholders, "?");
 
-        return String.format(
+        String sql = String.format(
             "INSERT INTO `%s` (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
             tableDetails.getTableName(),
             Arrays.stream(tableDetails.getColumnNames())
@@ -76,6 +91,8 @@ public class SqlGenerator {
             String.join(", ", valuePlaceholders),
             String.join(", ", updatePlaceholders)
         );
+        //System.out.println(sql);
+        return sql;
     }
 
     private String generateUpsertSqlWithoutID(TableDetails tableDetails) {

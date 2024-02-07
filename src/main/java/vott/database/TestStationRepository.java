@@ -24,6 +24,16 @@ public class TestStationRepository extends AbstractRepository<TestStation> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, TestStation entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, TestStation entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getPNumber());

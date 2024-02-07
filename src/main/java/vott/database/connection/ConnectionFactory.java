@@ -13,10 +13,11 @@ public class ConnectionFactory {
     private final VottConfiguration configuration;
 
     public Connection getConnection() throws SQLException {
+
         return DriverManager.getConnection(
-            configuration.getDatabaseProperties().toJdbcUrl(),
-            configuration.getDatabaseProperties().getUsername(),
-            configuration.getDatabaseProperties().getPassword()
+                configuration.getDatabaseProperties().toJdbcUrl(),
+                configuration.getDatabaseProperties().getUsername(),
+                configuration.getDatabaseProperties().getPassword()
         );
     }
 }

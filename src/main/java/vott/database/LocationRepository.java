@@ -31,6 +31,16 @@ public class LocationRepository extends AbstractRepository<Location> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Location entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Location entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getVertical());

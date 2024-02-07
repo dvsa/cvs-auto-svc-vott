@@ -1,6 +1,7 @@
 package vott.enquiry;
 
 import com.google.gson.Gson;
+
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.annotations.Title;
@@ -23,14 +24,10 @@ import vott.models.dao.*;
 import vott.models.dto.enquiry.TestResult;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
 public class RetrieveTestHistoryClientCredsTokenTest {
@@ -124,7 +121,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
         testResultRepository = new TestResultRepository(connectionFactory);
         tr = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
-        testResultPK = testResultRepository.fullUpsert(tr);
+        testResultPK = testResultRepository.fullUpsertIfNotExists(tr);
 
         customDefectRepository = new CustomDefectRepository(connectionFactory);
         cd = SeedData.newTestCustomDefect(testResultPK);
@@ -162,7 +159,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
     @WithTag("Vott")
     @Title ("VOTT-9 - AC1 - TC31 - Happy Path - Retrieve Test History using client credentials token and a valid vin")
-
+    @Test
     public void RetrieveTestHistoryUsingVinTest() throws InterruptedException {
 
         int tries = 0;
