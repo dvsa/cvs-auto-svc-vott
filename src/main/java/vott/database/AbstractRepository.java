@@ -92,8 +92,6 @@ public abstract class AbstractRepository<T> {
 
     public int fullUpsert(T entity) {
         try (Connection connection = connectionFactory.getConnection()) {
-
-            // String[] columns = {"id"};
             PreparedStatement preparedStatement = connection.prepareStatement(
                     sqlGenerator.generateFullUpsertSql(getTableDetails()),
                     Statement.RETURN_GENERATED_KEYS
