@@ -30,6 +30,16 @@ public class VehicleClassRepository extends AbstractRepository<VehicleClass>{
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, VehicleClass entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, VehicleClass entity) throws SQLException {
         preparedStatement.setString(1, entity.getCode());
         preparedStatement.setString(2, entity.getDescription());

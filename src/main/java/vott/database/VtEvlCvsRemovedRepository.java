@@ -27,6 +27,17 @@ public class VtEvlCvsRemovedRepository extends AbstractRepository<VtEvlCvsRemove
         });
         return tableDetails;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, VtEvlCvsRemoved entity) throws SQLException {
+
+    }
+
     @Override
     protected void setParameters(PreparedStatement preparedStatement, VtEvlCvsRemoved entity) throws SQLException {
         // 1-indexed

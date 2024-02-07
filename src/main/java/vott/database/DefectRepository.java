@@ -34,6 +34,16 @@ public class DefectRepository extends AbstractRepository<Defect> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Defect entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Defect entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getImNumber());

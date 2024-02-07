@@ -27,6 +27,16 @@ public class AxleSpacingRepository extends AbstractRepository<AxleSpacing> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, AxleSpacing entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, AxleSpacing entity) throws SQLException {
         // 1-indexed
         preparedStatement.setString(1, entity.getTechnicalRecordID());

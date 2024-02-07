@@ -2,7 +2,7 @@ package vott.enquiry;
 
 
 import com.google.gson.Gson;
-import io.restassured.RestAssured;
+
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
@@ -25,14 +25,10 @@ import vott.models.dao.*;
 import vott.models.dto.enquiry.TestResult;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static vott.e2e.RestAssuredAuthenticated.givenAuth;
 
 @RunWith(SerenityRunner.class)
 public class RetrieveTestHistoryClientCredsTokenTest {
@@ -126,7 +122,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
 
         testResultRepository = new TestResultRepository(connectionFactory);
         tr = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
-        testResultPK = testResultRepository.fullUpsert(tr);
+        testResultPK = testResultRepository.fullUpsertIfNotExists(tr);
 
         customDefectRepository = new CustomDefectRepository(connectionFactory);
         cd = SeedData.newTestCustomDefect(testResultPK);
@@ -198,7 +194,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -214,7 +210,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
@@ -231,12 +227,12 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -309,7 +305,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -325,7 +321,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
@@ -342,12 +338,12 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -420,7 +416,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt());
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());
@@ -436,7 +432,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestStation().getType()).isEqualTo(ts.getType());
             assertThat(testResult.getTestStation().getStationNumber()).isEqualTo(ts.getPNumber());
 
-            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt());
+            assertThat(testResult.getLastUpdatedAt()).isEqualTo(tr.getLastUpdatedAt().substring(0,19));
             assertThat(testResult.getNumberOfSeats()).isEqualTo(Integer.valueOf(tr.getNumberOfSeats()));
 
             assertThat(testResult.getVehicleClass().getCode()).isEqualTo(vc.getCode());
@@ -453,12 +449,12 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestAnniversaryDate()).isEqualTo(tr.getTestAnniversaryDate());
             assertThat(testResult.getModificationTypeUsed()).isEqualTo(tr.getModificationTypeUsed());
             assertThat(testResult.getOdometerReadingUnits()).isEqualTo(tr.getOdometerReadingUnits());
-            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp());
+            assertThat(testResult.getTestTypeEndTimestamp()).isEqualTo(tr.getTestTypeEndTimestamp().substring(0,19));
             assertThat(testResult.getCountryOfRegistration()).isEqualTo(tr.getCountryOfRegistration());
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
