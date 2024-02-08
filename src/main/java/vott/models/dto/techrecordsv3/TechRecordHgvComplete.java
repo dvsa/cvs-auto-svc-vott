@@ -16,6 +16,47 @@ import com.google.gson.annotations.SerializedName;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordHgvComplete {
+    /**
+     * (Required)
+     * techRecord_reasonForCreation
+     * techRecord_statusCode
+     * techRecord_vehicleType
+     * vin
+     * techRecord_vehicleConfiguration
+     * techRecord_vehicleClass_description
+     * techRecord_approvalType
+     * techRecord_manufactureYear
+     * techRecord_bodyType_code
+     * techRecord_bodyType_description
+     * techRecord_grossGbWeight
+     * techRecord_grossDesignWeight
+     * techRecord_brakes_dtpNumber
+     * techRecord_euVehicleCategory
+     * techRecord_axles
+     * techRecord_euroStandard
+     * techRecord_regnDate
+     * techRecord_speedLimiterMrk
+     * techRecord_tachoExemptMrk
+     * techRecord_fuelPropulsionSystem
+     * techRecord_make
+     * techRecord_model
+     * techRecord_trainGbWeight
+     * techRecord_maxTrainGbWeight
+     * techRecord_tyreUseCode
+     * techRecord_dimensions_length
+     * techRecord_dimensions_width
+     * techRecord_frontAxleTo5thWheelMin
+     * techRecord_frontAxleTo5thWheelMax
+     * techRecord_frontAxleToRearAxle
+     * techRecord_notes
+     * techRecord_roadFriendly
+     * techRecord_drawbarCouplingFitted
+     * techRecord_offRoad
+     * techRecord_applicantDetails_name
+     * techRecord_applicantDetails_address1
+     * techRecord_applicantDetails_address2
+     * techRecord_applicantDetails_postTown
+     */
 
     @SerializedName("secondaryVrms")
     @Expose
@@ -152,35 +193,19 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_adrPassCertificateDetails")
     @Expose
     private List<TechRecordAdrPassCertificateDetail> techRecordAdrPassCertificateDetails;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_applicantDetails_name")
     @Expose
     private String techRecordApplicantDetailsName;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_applicantDetails_address1")
     @Expose
     private String techRecordApplicantDetailsAddress1;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_applicantDetails_address2")
     @Expose
     private String techRecordApplicantDetailsAddress2;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_applicantDetails_postTown")
     @Expose
     private String techRecordApplicantDetailsPostTown;
@@ -199,35 +224,19 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_applicationId")
     @Expose
     private String techRecordApplicationId;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_axles")
     @Expose
     private List<TechRecordAxle> techRecordAxles;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyType_code")
     @Expose
     private String techRecordBodyTypeCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyType_description")
     @Expose
     private String techRecordBodyTypeDescription;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_dtpNumber")
     @Expose
     private String techRecordBrakesDtpNumber;
@@ -243,38 +252,22 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_dimensions_axleSpacing")
     @Expose
     private List<TechRecordDimensionsAxleSpacing> techRecordDimensionsAxleSpacing;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_dimensions_length")
     @Expose
     private Integer techRecordDimensionsLength;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_dimensions_width")
     @Expose
     private Integer techRecordDimensionsWidth;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_drawbarCouplingFitted")
     @Expose
     private Boolean techRecordDrawbarCouplingFitted;
     @SerializedName("techRecord_emissionsLimit")
     @Expose
     private Double techRecordEmissionsLimit;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_euroStandard")
     @Expose
     private String techRecordEuroStandard;
@@ -288,27 +281,15 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
     private TechRecordHgvComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_frontAxleToRearAxle")
     @Expose
     private Integer techRecordFrontAxleToRearAxle;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_frontAxleTo5thWheelMin")
     @Expose
     private Integer techRecordFrontAxleTo5thWheelMin;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_frontAxleTo5thWheelMax")
     @Expose
     private Integer techRecordFrontAxleTo5thWheelMax;
@@ -318,49 +299,29 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_frontVehicleTo5thWheelCouplingMax")
     @Expose
     private Integer techRecordFrontVehicleTo5thWheelCouplingMax;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_fuelPropulsionSystem")
     @Expose
     private Object techRecordFuelPropulsionSystem;
     @SerializedName("techRecord_functionCode")
     @Expose
     private String techRecordFunctionCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_grossDesignWeight")
     @Expose
     private Integer techRecordGrossDesignWeight;
     @SerializedName("techRecord_grossEecWeight")
     @Expose
     private Integer techRecordGrossEecWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_grossGbWeight")
     @Expose
     private Integer techRecordGrossGbWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_make")
     @Expose
     private String techRecordMake;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_maxTrainGbWeight")
     @Expose
     private Double techRecordMaxTrainGbWeight;
@@ -370,11 +331,7 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_maxTrainDesignWeight")
     @Expose
     private Double techRecordMaxTrainDesignWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_manufactureYear")
     @Expose
     private Object techRecordManufactureYear;
@@ -387,57 +344,33 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_microfilm_microfilmSerialNumber")
     @Expose
     private String techRecordMicrofilmMicrofilmSerialNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_model")
     @Expose
     private String techRecordModel;
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Object techRecordNoOfAxles;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_notes")
     @Expose
     private String techRecordNotes;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_offRoad")
     @Expose
     private Boolean techRecordOffRoad;
     @SerializedName("techRecord_plates")
     @Expose
     private List<TechRecordPlate> techRecordPlates;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_regnDate")
     @Expose
     private Object techRecordRegnDate;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_roadFriendly")
     @Expose
     private Boolean techRecordRoadFriendly;
@@ -451,19 +384,11 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordHgvComplete.TechRecordStatusCode techRecordStatusCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_speedLimiterMrk")
     @Expose
     private Boolean techRecordSpeedLimiterMrk;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_tachoExemptMrk")
     @Expose
     private Boolean techRecordTachoExemptMrk;
@@ -473,43 +398,23 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_trainEecWeight")
     @Expose
     private Double techRecordTrainEecWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_trainGbWeight")
     @Expose
     private Double techRecordTrainGbWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_tyreUseCode")
     @Expose
     private Object techRecordTyreUseCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
     private Object techRecordVehicleClassDescription;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private Object techRecordVehicleConfiguration;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_approvalType")
     @Expose
     private Object techRecordApprovalType;
@@ -525,22 +430,14 @@ public class TechRecordHgvComplete {
     @SerializedName("techRecord_variantVersionNumber")
     @Expose
     private String techRecordVariantVersionNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
     @SerializedName("primaryVrm")
     @Expose
     private String primaryVrm;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("vin")
     @Expose
     private String vin;
@@ -911,74 +808,42 @@ public class TechRecordHgvComplete {
         this.techRecordAdrPassCertificateDetails = techRecordAdrPassCertificateDetails;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordApplicantDetailsName() {
         return techRecordApplicantDetailsName;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordApplicantDetailsName(String techRecordApplicantDetailsName) {
         this.techRecordApplicantDetailsName = techRecordApplicantDetailsName;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordApplicantDetailsAddress1() {
         return techRecordApplicantDetailsAddress1;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordApplicantDetailsAddress1(String techRecordApplicantDetailsAddress1) {
         this.techRecordApplicantDetailsAddress1 = techRecordApplicantDetailsAddress1;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordApplicantDetailsAddress2() {
         return techRecordApplicantDetailsAddress2;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordApplicantDetailsAddress2(String techRecordApplicantDetailsAddress2) {
         this.techRecordApplicantDetailsAddress2 = techRecordApplicantDetailsAddress2;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordApplicantDetailsPostTown() {
         return techRecordApplicantDetailsPostTown;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordApplicantDetailsPostTown(String techRecordApplicantDetailsPostTown) {
         this.techRecordApplicantDetailsPostTown = techRecordApplicantDetailsPostTown;
     }
@@ -1023,74 +888,42 @@ public class TechRecordHgvComplete {
         this.techRecordApplicationId = techRecordApplicationId;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public List<TechRecordAxle> getTechRecordAxles() {
         return techRecordAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordAxles(List<TechRecordAxle> techRecordAxles) {
         this.techRecordAxles = techRecordAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyTypeCode() {
         return techRecordBodyTypeCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyTypeCode(String techRecordBodyTypeCode) {
         this.techRecordBodyTypeCode = techRecordBodyTypeCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyTypeDescription() {
         return techRecordBodyTypeDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyTypeDescription(String techRecordBodyTypeDescription) {
         this.techRecordBodyTypeDescription = techRecordBodyTypeDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBrakesDtpNumber() {
         return techRecordBrakesDtpNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesDtpNumber(String techRecordBrakesDtpNumber) {
         this.techRecordBrakesDtpNumber = techRecordBrakesDtpNumber;
     }
@@ -1127,56 +960,32 @@ public class TechRecordHgvComplete {
         this.techRecordDimensionsAxleSpacing = techRecordDimensionsAxleSpacing;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordDimensionsLength() {
         return techRecordDimensionsLength;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDimensionsLength(Integer techRecordDimensionsLength) {
         this.techRecordDimensionsLength = techRecordDimensionsLength;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordDimensionsWidth() {
         return techRecordDimensionsWidth;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDimensionsWidth(Integer techRecordDimensionsWidth) {
         this.techRecordDimensionsWidth = techRecordDimensionsWidth;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordDrawbarCouplingFitted() {
         return techRecordDrawbarCouplingFitted;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDrawbarCouplingFitted(Boolean techRecordDrawbarCouplingFitted) {
         this.techRecordDrawbarCouplingFitted = techRecordDrawbarCouplingFitted;
     }
@@ -1189,20 +998,12 @@ public class TechRecordHgvComplete {
         this.techRecordEmissionsLimit = techRecordEmissionsLimit;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordEuroStandard() {
         return techRecordEuroStandard;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordEuroStandard(String techRecordEuroStandard) {
         this.techRecordEuroStandard = techRecordEuroStandard;
     }
@@ -1229,56 +1030,32 @@ public class TechRecordHgvComplete {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordFrontAxleToRearAxle() {
         return techRecordFrontAxleToRearAxle;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFrontAxleToRearAxle(Integer techRecordFrontAxleToRearAxle) {
         this.techRecordFrontAxleToRearAxle = techRecordFrontAxleToRearAxle;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordFrontAxleTo5thWheelMin() {
         return techRecordFrontAxleTo5thWheelMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFrontAxleTo5thWheelMin(Integer techRecordFrontAxleTo5thWheelMin) {
         this.techRecordFrontAxleTo5thWheelMin = techRecordFrontAxleTo5thWheelMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordFrontAxleTo5thWheelMax() {
         return techRecordFrontAxleTo5thWheelMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFrontAxleTo5thWheelMax(Integer techRecordFrontAxleTo5thWheelMax) {
         this.techRecordFrontAxleTo5thWheelMax = techRecordFrontAxleTo5thWheelMax;
     }
@@ -1299,20 +1076,12 @@ public class TechRecordHgvComplete {
         this.techRecordFrontVehicleTo5thWheelCouplingMax = techRecordFrontVehicleTo5thWheelCouplingMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordFuelPropulsionSystem() {
         return techRecordFuelPropulsionSystem;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFuelPropulsionSystem(Object techRecordFuelPropulsionSystem) {
         this.techRecordFuelPropulsionSystem = techRecordFuelPropulsionSystem;
     }
@@ -1325,20 +1094,12 @@ public class TechRecordHgvComplete {
         this.techRecordFunctionCode = techRecordFunctionCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordGrossDesignWeight() {
         return techRecordGrossDesignWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordGrossDesignWeight(Integer techRecordGrossDesignWeight) {
         this.techRecordGrossDesignWeight = techRecordGrossDesignWeight;
     }
@@ -1351,56 +1112,32 @@ public class TechRecordHgvComplete {
         this.techRecordGrossEecWeight = techRecordGrossEecWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordGrossGbWeight() {
         return techRecordGrossGbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordGrossGbWeight(Integer techRecordGrossGbWeight) {
         this.techRecordGrossGbWeight = techRecordGrossGbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordMake() {
         return techRecordMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordMake(String techRecordMake) {
         this.techRecordMake = techRecordMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Double getTechRecordMaxTrainGbWeight() {
         return techRecordMaxTrainGbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordMaxTrainGbWeight(Double techRecordMaxTrainGbWeight) {
         this.techRecordMaxTrainGbWeight = techRecordMaxTrainGbWeight;
     }
@@ -1421,20 +1158,12 @@ public class TechRecordHgvComplete {
         this.techRecordMaxTrainDesignWeight = techRecordMaxTrainDesignWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordManufactureYear() {
         return techRecordManufactureYear;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordManufactureYear(Object techRecordManufactureYear) {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
@@ -1463,20 +1192,12 @@ public class TechRecordHgvComplete {
         this.techRecordMicrofilmMicrofilmSerialNumber = techRecordMicrofilmMicrofilmSerialNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordModel() {
         return techRecordModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordModel(String techRecordModel) {
         this.techRecordModel = techRecordModel;
     }
@@ -1489,38 +1210,22 @@ public class TechRecordHgvComplete {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordNotes() {
         return techRecordNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNotes(String techRecordNotes) {
         this.techRecordNotes = techRecordNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordOffRoad() {
         return techRecordOffRoad;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordOffRoad(Boolean techRecordOffRoad) {
         this.techRecordOffRoad = techRecordOffRoad;
     }
@@ -1533,56 +1238,32 @@ public class TechRecordHgvComplete {
         this.techRecordPlates = techRecordPlates;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordRegnDate() {
         return techRecordRegnDate;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordRegnDate(Object techRecordRegnDate) {
         this.techRecordRegnDate = techRecordRegnDate;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordRoadFriendly() {
         return techRecordRoadFriendly;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordRoadFriendly(Boolean techRecordRoadFriendly) {
         this.techRecordRoadFriendly = techRecordRoadFriendly;
     }
@@ -1609,38 +1290,22 @@ public class TechRecordHgvComplete {
         this.techRecordStatusCode = techRecordStatusCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordSpeedLimiterMrk() {
         return techRecordSpeedLimiterMrk;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordSpeedLimiterMrk(Boolean techRecordSpeedLimiterMrk) {
         this.techRecordSpeedLimiterMrk = techRecordSpeedLimiterMrk;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordTachoExemptMrk() {
         return techRecordTachoExemptMrk;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordTachoExemptMrk(Boolean techRecordTachoExemptMrk) {
         this.techRecordTachoExemptMrk = techRecordTachoExemptMrk;
     }
@@ -1661,92 +1326,52 @@ public class TechRecordHgvComplete {
         this.techRecordTrainEecWeight = techRecordTrainEecWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Double getTechRecordTrainGbWeight() {
         return techRecordTrainGbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordTrainGbWeight(Double techRecordTrainGbWeight) {
         this.techRecordTrainGbWeight = techRecordTrainGbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordTyreUseCode() {
         return techRecordTyreUseCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordTyreUseCode(Object techRecordTyreUseCode) {
         this.techRecordTyreUseCode = techRecordTyreUseCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleClassDescription(Object techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(Object techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordApprovalType() {
         return techRecordApprovalType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordApprovalType(Object techRecordApprovalType) {
         this.techRecordApprovalType = techRecordApprovalType;
     }
@@ -1783,20 +1408,12 @@ public class TechRecordHgvComplete {
         this.techRecordVariantVersionNumber = techRecordVariantVersionNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
@@ -1809,20 +1426,12 @@ public class TechRecordHgvComplete {
         this.primaryVrm = primaryVrm;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -1892,13 +1501,6 @@ public class TechRecordHgvComplete {
 
     }
 
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 

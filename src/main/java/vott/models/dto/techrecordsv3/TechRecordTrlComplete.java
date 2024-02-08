@@ -16,7 +16,36 @@ import com.google.gson.annotations.SerializedName;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordTrlComplete {
-
+    /**
+     * (Required)
+     * techRecord_noOfAxles
+     * techRecord_make
+     * techRecord_model
+     * techRecord_firstUseDate
+     * techRecord_maxLoadOnCoupling
+     * techRecord_tyreUseCode
+     * techRecord_suspensionType
+     * techRecord_couplingType
+     * techRecord_dimensions_length
+     * techRecord_dimensions_width
+     * techRecord_frontAxleToRearAxle
+     * techRecord_rearAxleToRearTrl
+     * techRecord_couplingCenterToRearAxleMin
+     * techRecord_couplingCenterToRearAxleMax
+     * techRecord_couplingCenterToRearTrlMax
+     * techRecord_couplingCenterToRearTrlMin
+     * techRecord_notes
+     * techRecord_roadFriendly
+     * techRecord_reasonForCreation
+     * techRecord_statusCode
+     * techRecord_vehicleClass_description
+     * techRecord_vehicleType
+     * techRecord_bodyType_description
+     * techRecord_bodyType_code
+     * techRecord_vehicleConfiguration
+     * vin
+     * techRecord_euVehicleCategory
+     */
     @SerializedName("partialVin")
     @Expose
     private String partialVin;
@@ -188,19 +217,11 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_batchId")
     @Expose
     private String techRecordBatchId;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyType_code")
     @Expose
     private String techRecordBodyTypeCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyType_description")
     @Expose
     private String techRecordBodyTypeDescription;
@@ -219,91 +240,49 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_conversionRefNo")
     @Expose
     private String techRecordConversionRefNo;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_couplingCenterToRearAxleMax")
     @Expose
     private Integer techRecordCouplingCenterToRearAxleMax;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_couplingCenterToRearAxleMin")
     @Expose
     private Integer techRecordCouplingCenterToRearAxleMin;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_couplingCenterToRearTrlMax")
     @Expose
     private Integer techRecordCouplingCenterToRearTrlMax;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_couplingCenterToRearTrlMin")
     @Expose
     private Integer techRecordCouplingCenterToRearTrlMin;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_couplingType")
     @Expose
     private String techRecordCouplingType;
     @SerializedName("techRecord_departmentalVehicleMarker")
     @Expose
     private Boolean techRecordDepartmentalVehicleMarker;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_dimensions_length")
     @Expose
     private Integer techRecordDimensionsLength;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_dimensions_width")
     @Expose
     private Integer techRecordDimensionsWidth;
-    /**
-     * EU vehicle category
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
     private TechRecordTrlComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_firstUseDate")
     @Expose
     private String techRecordFirstUseDate;
     @SerializedName("techRecord_frameDescription")
     @Expose
     private Object techRecordFrameDescription;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_frontAxleToRearAxle")
     @Expose
     private Integer techRecordFrontAxleToRearAxle;
@@ -331,11 +310,7 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_letterOfAuth_letterIssuer")
     @Expose
     private String techRecordLetterOfAuthLetterIssuer;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_make")
     @Expose
     private String techRecordMake;
@@ -345,11 +320,7 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_manufacturerDetails")
     @Expose
     private String techRecordManufacturerDetails;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_maxLoadOnCoupling")
     @Expose
     private Integer techRecordMaxLoadOnCoupling;
@@ -362,27 +333,15 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_microfilm_microfilmSerialNumber")
     @Expose
     private String techRecordMicrofilmMicrofilmSerialNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_model")
     @Expose
     private String techRecordModel;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Integer techRecordNoOfAxles;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_notes")
     @Expose
     private String techRecordNotes;
@@ -452,56 +411,30 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_manufacturerDetails_telephoneNumber")
     @Expose
     private String techRecordManufacturerDetailsTelephoneNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_rearAxleToRearTrl")
     @Expose
     private Integer techRecordRearAxleToRearTrl;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
     @SerializedName("techRecord_regnDate")
     @Expose
     private Object techRecordRegnDate;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_roadFriendly")
     @Expose
     private Boolean techRecordRoadFriendly;
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordTrlComplete.TechRecordStatusCode techRecordStatusCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_suspensionType")
     @Expose
     private String techRecordSuspensionType;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_tyreUseCode")
     @Expose
     private Object techRecordTyreUseCode;
@@ -511,40 +444,22 @@ public class TechRecordTrlComplete {
     @SerializedName("techRecord_variantVersionNumber")
     @Expose
     private String techRecordVariantVersionNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
     private Object techRecordVehicleClassDescription;
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private TechRecordTrlComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
     @SerializedName("trailerId")
     @Expose
     private String trailerId;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("vin")
     @Expose
     private String vin;
@@ -1032,38 +947,22 @@ public class TechRecordTrlComplete {
         this.techRecordBatchId = techRecordBatchId;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyTypeCode() {
         return techRecordBodyTypeCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyTypeCode(String techRecordBodyTypeCode) {
         this.techRecordBodyTypeCode = techRecordBodyTypeCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyTypeDescription() {
         return techRecordBodyTypeDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyTypeDescription(String techRecordBodyTypeDescription) {
         this.techRecordBodyTypeDescription = techRecordBodyTypeDescription;
     }
@@ -1108,92 +1007,52 @@ public class TechRecordTrlComplete {
         this.techRecordConversionRefNo = techRecordConversionRefNo;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordCouplingCenterToRearAxleMax() {
         return techRecordCouplingCenterToRearAxleMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordCouplingCenterToRearAxleMax(Integer techRecordCouplingCenterToRearAxleMax) {
         this.techRecordCouplingCenterToRearAxleMax = techRecordCouplingCenterToRearAxleMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordCouplingCenterToRearAxleMin() {
         return techRecordCouplingCenterToRearAxleMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordCouplingCenterToRearAxleMin(Integer techRecordCouplingCenterToRearAxleMin) {
         this.techRecordCouplingCenterToRearAxleMin = techRecordCouplingCenterToRearAxleMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordCouplingCenterToRearTrlMax() {
         return techRecordCouplingCenterToRearTrlMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordCouplingCenterToRearTrlMax(Integer techRecordCouplingCenterToRearTrlMax) {
         this.techRecordCouplingCenterToRearTrlMax = techRecordCouplingCenterToRearTrlMax;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordCouplingCenterToRearTrlMin() {
         return techRecordCouplingCenterToRearTrlMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordCouplingCenterToRearTrlMin(Integer techRecordCouplingCenterToRearTrlMin) {
         this.techRecordCouplingCenterToRearTrlMin = techRecordCouplingCenterToRearTrlMin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordCouplingType() {
         return techRecordCouplingType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordCouplingType(String techRecordCouplingType) {
         this.techRecordCouplingType = techRecordCouplingType;
     }
@@ -1206,78 +1065,42 @@ public class TechRecordTrlComplete {
         this.techRecordDepartmentalVehicleMarker = techRecordDepartmentalVehicleMarker;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordDimensionsLength() {
         return techRecordDimensionsLength;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDimensionsLength(Integer techRecordDimensionsLength) {
         this.techRecordDimensionsLength = techRecordDimensionsLength;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordDimensionsWidth() {
         return techRecordDimensionsWidth;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDimensionsWidth(Integer techRecordDimensionsWidth) {
         this.techRecordDimensionsWidth = techRecordDimensionsWidth;
     }
 
-    /**
-     * EU vehicle category
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordTrlComplete.TechRecordEuVehicleCategory getTechRecordEuVehicleCategory() {
         return techRecordEuVehicleCategory;
     }
 
-    /**
-     * EU vehicle category
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordEuVehicleCategory(TechRecordTrlComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory) {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordFirstUseDate() {
         return techRecordFirstUseDate;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFirstUseDate(String techRecordFirstUseDate) {
         this.techRecordFirstUseDate = techRecordFirstUseDate;
     }
@@ -1290,20 +1113,12 @@ public class TechRecordTrlComplete {
         this.techRecordFrameDescription = techRecordFrameDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordFrontAxleToRearAxle() {
         return techRecordFrontAxleToRearAxle;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordFrontAxleToRearAxle(Integer techRecordFrontAxleToRearAxle) {
         this.techRecordFrontAxleToRearAxle = techRecordFrontAxleToRearAxle;
     }
@@ -1372,20 +1187,12 @@ public class TechRecordTrlComplete {
         this.techRecordLetterOfAuthLetterIssuer = techRecordLetterOfAuthLetterIssuer;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordMake() {
         return techRecordMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordMake(String techRecordMake) {
         this.techRecordMake = techRecordMake;
     }
@@ -1406,20 +1213,12 @@ public class TechRecordTrlComplete {
         this.techRecordManufacturerDetails = techRecordManufacturerDetails;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordMaxLoadOnCoupling() {
         return techRecordMaxLoadOnCoupling;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordMaxLoadOnCoupling(Integer techRecordMaxLoadOnCoupling) {
         this.techRecordMaxLoadOnCoupling = techRecordMaxLoadOnCoupling;
     }
@@ -1448,56 +1247,32 @@ public class TechRecordTrlComplete {
         this.techRecordMicrofilmMicrofilmSerialNumber = techRecordMicrofilmMicrofilmSerialNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordModel() {
         return techRecordModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordModel(String techRecordModel) {
         this.techRecordModel = techRecordModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordNotes() {
         return techRecordNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNotes(String techRecordNotes) {
         this.techRecordNotes = techRecordNotes;
     }
@@ -1678,38 +1453,22 @@ public class TechRecordTrlComplete {
         this.techRecordManufacturerDetailsTelephoneNumber = techRecordManufacturerDetailsTelephoneNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordRearAxleToRearTrl() {
         return techRecordRearAxleToRearTrl;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordRearAxleToRearTrl(Integer techRecordRearAxleToRearTrl) {
         this.techRecordRearAxleToRearTrl = techRecordRearAxleToRearTrl;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
@@ -1722,78 +1481,42 @@ public class TechRecordTrlComplete {
         this.techRecordRegnDate = techRecordRegnDate;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordRoadFriendly() {
         return techRecordRoadFriendly;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordRoadFriendly(Boolean techRecordRoadFriendly) {
         this.techRecordRoadFriendly = techRecordRoadFriendly;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordTrlComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStatusCode(TechRecordTrlComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordSuspensionType() {
         return techRecordSuspensionType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordSuspensionType(String techRecordSuspensionType) {
         this.techRecordSuspensionType = techRecordSuspensionType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordTyreUseCode() {
         return techRecordTyreUseCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordTyreUseCode(Object techRecordTyreUseCode) {
         this.techRecordTyreUseCode = techRecordTyreUseCode;
     }
@@ -1814,60 +1537,32 @@ public class TechRecordTrlComplete {
         this.techRecordVariantVersionNumber = techRecordVariantVersionNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleClassDescription(Object techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordTrlComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(TechRecordTrlComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
@@ -1880,20 +1575,12 @@ public class TechRecordTrlComplete {
         this.trailerId = trailerId;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -1970,13 +1657,6 @@ public class TechRecordTrlComplete {
         this.techRecordDimensionsAxleSpacing = techRecordDimensionsAxleSpacing;
     }
 
-
-    /**
-     * EU vehicle category
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordEuVehicleCategory {
 
@@ -2049,13 +1729,6 @@ public class TechRecordTrlComplete {
 
     }
 
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -2098,13 +1771,6 @@ public class TechRecordTrlComplete {
 
     }
 
-
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleConfiguration {
 

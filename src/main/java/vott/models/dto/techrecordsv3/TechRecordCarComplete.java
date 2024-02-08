@@ -19,9 +19,14 @@ import com.google.gson.annotations.SerializedName;
 public class TechRecordCarComplete {
 
     /**
-     *
      * (Required)
-     *
+     * vin
+     * techRecord_vehicleSubclass
+     * techRecord_vehicleType
+     * techRecord_statusCode
+     * techRecord_noOfAxles
+     * techRecord_reasonForCreation
+     * techRecord_vehicleConfiguration
      */
     @SerializedName("vin")
     @Expose
@@ -29,29 +34,15 @@ public class TechRecordCarComplete {
     @SerializedName("primaryVrm")
     @Expose
     private String primaryVrm;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordCarComplete.TechRecordStatusCode techRecordStatusCode;
@@ -61,24 +52,14 @@ public class TechRecordCarComplete {
     @SerializedName("techRecord_manufactureYear")
     @Expose
     private Integer techRecordManufactureYear;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Integer techRecordNoOfAxles;
     @SerializedName("techRecord_notes")
     @Expose
     private String techRecordNotes;
-    /**
-     * Vehicle Subclass
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleSubclass")
     @Expose
     private List<TechRecordVehicleSubclass> techRecordVehicleSubclass;
@@ -91,13 +72,7 @@ public class TechRecordCarComplete {
     @SerializedName("secondaryVrms")
     @Expose
     private List<String> secondaryVrms;
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private TechRecordCarComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration;
@@ -129,20 +104,12 @@ public class TechRecordCarComplete {
     @Expose
     private String techRecordApplicantDetailsEmailAddress;
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -155,60 +122,31 @@ public class TechRecordCarComplete {
         this.primaryVrm = primaryVrm;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordCarComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStatusCode(TechRecordCarComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
@@ -229,20 +167,11 @@ public class TechRecordCarComplete {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
@@ -255,24 +184,12 @@ public class TechRecordCarComplete {
         this.techRecordNotes = techRecordNotes;
     }
 
-    /**
-     * Vehicle Subclass
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public List<TechRecordVehicleSubclass> getTechRecordVehicleSubclass() {
         return techRecordVehicleSubclass;
     }
 
-    /**
-     * Vehicle Subclass
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleSubclass(List<TechRecordVehicleSubclass> techRecordVehicleSubclass) {
         this.techRecordVehicleSubclass = techRecordVehicleSubclass;
     }
@@ -301,24 +218,12 @@ public class TechRecordCarComplete {
         this.secondaryVrms = secondaryVrms;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordCarComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(TechRecordCarComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
@@ -395,13 +300,6 @@ public class TechRecordCarComplete {
         this.techRecordApplicantDetailsEmailAddress = techRecordApplicantDetailsEmailAddress;
     }
 
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -444,13 +342,6 @@ public class TechRecordCarComplete {
 
     }
 
-
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleConfiguration {
 

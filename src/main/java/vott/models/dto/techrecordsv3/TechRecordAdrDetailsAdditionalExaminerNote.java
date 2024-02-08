@@ -2,13 +2,8 @@ package vott.models.dto.techrecordsv3;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import javax.annotation.processing.Generated;
 
-/**
- * Additional Examiner Notes
- * <p>
- */
 @Generated("jsonschema2pojo")
 public class TechRecordAdrDetailsAdditionalExaminerNote {
 

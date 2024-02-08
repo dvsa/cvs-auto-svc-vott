@@ -15,6 +15,36 @@ import com.google.gson.annotations.SerializedName;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordSmallTrlComplete {
+    /**
+     * (Required)
+     * techRecord_noOfAxles
+     * techRecord_make
+     * techRecord_model
+     * techRecord_firstUseDate
+     * techRecord_maxLoadOnCoupling
+     * techRecord_tyreUseCode
+     * techRecord_suspensionType
+     * techRecord_couplingType
+     * techRecord_dimensions_length
+     * techRecord_dimensions_width
+     * techRecord_frontAxleToRearAxle
+     * techRecord_rearAxleToRearTrl
+     * techRecord_couplingCenterToRearAxleMin
+     * techRecord_couplingCenterToRearAxleMax
+     * techRecord_couplingCenterToRearTrlMax
+     * techRecord_couplingCenterToRearTrlMin
+     * techRecord_notes
+     * techRecord_roadFriendly
+     * techRecord_reasonForCreation
+     * techRecord_statusCode
+     * techRecord_vehicleClass_description
+     * techRecord_vehicleType
+     * techRecord_bodyType_description
+     * techRecord_bodyType_code
+     * techRecord_vehicleConfiguration
+     * vin
+     * techRecord_euVehicleCategory
+     */
 
     @SerializedName("techRecord_applicantDetails_address1")
     @Expose
@@ -40,82 +70,44 @@ public class TechRecordSmallTrlComplete {
     @SerializedName("techRecord_applicantDetails_telephoneNumber")
     @Expose
     private String techRecordApplicantDetailsTelephoneNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
     private TechRecordSmallTrlComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory;
     @SerializedName("techRecord_manufactureYear")
     @Expose
     private Integer techRecordManufactureYear;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Integer techRecordNoOfAxles;
     @SerializedName("techRecord_notes")
     @Expose
     private String techRecordNotes;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordSmallTrlComplete.TechRecordStatusCode techRecordStatusCode;
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
     private TechRecordSmallTrlComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription;
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private TechRecordSmallTrlComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration;
     @SerializedName("techRecord_vehicleSubclass")
     @Expose
     private Object techRecordVehicleSubclass;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("vin")
     @Expose
     private String vin;
@@ -190,20 +182,12 @@ public class TechRecordSmallTrlComplete {
         this.techRecordApplicantDetailsTelephoneNumber = techRecordApplicantDetailsTelephoneNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordSmallTrlComplete.TechRecordEuVehicleCategory getTechRecordEuVehicleCategory() {
         return techRecordEuVehicleCategory;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordEuVehicleCategory(TechRecordSmallTrlComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory) {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
@@ -216,20 +200,12 @@ public class TechRecordSmallTrlComplete {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
@@ -242,86 +218,42 @@ public class TechRecordSmallTrlComplete {
         this.techRecordNotes = techRecordNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordSmallTrlComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStatusCode(TechRecordSmallTrlComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordSmallTrlComplete.TechRecordVehicleClassDescription getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleClassDescription(TechRecordSmallTrlComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordSmallTrlComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(TechRecordSmallTrlComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
@@ -334,38 +266,22 @@ public class TechRecordSmallTrlComplete {
         this.techRecordVehicleSubclass = techRecordVehicleSubclass;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -425,14 +341,6 @@ public class TechRecordSmallTrlComplete {
         }
 
     }
-
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -475,13 +383,6 @@ public class TechRecordSmallTrlComplete {
 
     }
 
-
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleClassDescription {
 
@@ -540,13 +441,6 @@ public class TechRecordSmallTrlComplete {
 
     }
 
-
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleConfiguration {
 

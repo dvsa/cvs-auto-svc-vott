@@ -17,6 +17,16 @@ import com.google.gson.annotations.SerializedName;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordMotorcycleComplete {
+    /**
+     * (Required)
+     * techRecord_numberOfWheelsDriven
+     * techRecord_vehicleClass_description
+     * techRecord_reasonForCreation
+     * techRecord_vehicleType
+     * techRecord_statusCode
+     * techRecord_vehicleConfiguration
+     * vin
+     */
 
     @SerializedName("secondaryVrms")
     @Expose
@@ -69,68 +79,34 @@ public class TechRecordMotorcycleComplete {
     @SerializedName("techRecord_notes")
     @Expose
     private String techRecordNotes;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
     @SerializedName("techRecord_regnDate")
     @Expose
     private String techRecordRegnDate;
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordMotorcycleComplete.TechRecordStatusCode techRecordStatusCode;
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
     private TechRecordMotorcycleComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription;
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private TechRecordMotorcycleComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("vin")
     @Expose
     private String vin;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_numberOfWheelsDriven")
     @Expose
     private Integer techRecordNumberOfWheelsDriven;
@@ -277,20 +253,12 @@ public class TechRecordMotorcycleComplete {
         this.techRecordNotes = techRecordNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
@@ -303,122 +271,62 @@ public class TechRecordMotorcycleComplete {
         this.techRecordRegnDate = techRecordRegnDate;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordMotorcycleComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStatusCode(TechRecordMotorcycleComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordMotorcycleComplete.TechRecordVehicleClassDescription getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleClassDescription(TechRecordMotorcycleComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordMotorcycleComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(TechRecordMotorcycleComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordNumberOfWheelsDriven() {
         return techRecordNumberOfWheelsDriven;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNumberOfWheelsDriven(Integer techRecordNumberOfWheelsDriven) {
         this.techRecordNumberOfWheelsDriven = techRecordNumberOfWheelsDriven;
     }
@@ -438,14 +346,7 @@ public class TechRecordMotorcycleComplete {
     public void setTechRecordUpdateType(String techRecordUpdateType) {
         this.techRecordUpdateType = techRecordUpdateType;
     }
-
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
+    
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -487,14 +388,7 @@ public class TechRecordMotorcycleComplete {
         }
 
     }
-
-
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     *
-     */
+    
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleClassDescription {
 
@@ -553,13 +447,6 @@ public class TechRecordMotorcycleComplete {
 
     }
 
-
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleConfiguration {
 

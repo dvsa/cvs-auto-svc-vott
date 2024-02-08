@@ -18,6 +18,13 @@ public class TechRecordLgvComplete {
 
     /**
      * (Required)
+     * techRecord_vehicleSubclass
+     * vin
+     * techRecord_vehicleType
+     * techRecord_statusCode
+     * techRecord_reasonForCreation
+     * techRecord_noOfAxles
+     * techRecord_vehicleConfiguration
      */
     @SerializedName("vin")
     @Expose
@@ -178,15 +185,11 @@ public class TechRecordLgvComplete {
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
     private Object techRecordEuVehicleCategory;
-    /**
-     * (Required)
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
-    /**
-     * (Required)
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
@@ -205,9 +208,7 @@ public class TechRecordLgvComplete {
     @SerializedName("techRecord_manufactureYear")
     @Expose
     private Integer techRecordManufactureYear;
-    /**
-     * (Required)
-     */
+
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Integer techRecordNoOfAxles;
@@ -232,23 +233,17 @@ public class TechRecordLgvComplete {
     @SerializedName("secondaryVrms")
     @Expose
     private List<String> secondaryVrms;
-    /**
-     * (Required)
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private Object techRecordVehicleConfiguration;
 
-    /**
-     * (Required)
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     * (Required)
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -669,50 +664,30 @@ public class TechRecordLgvComplete {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
 
-    /**
-     * (Required)
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     * (Required)
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-    /**
-     * (Required)
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     * (Required)
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-    /**
-     * Status Code
-     * <p>
-     * <p>
-     * (Required)
-     */
     public TechRecordLgvComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     * <p>
-     * (Required)
-     */
     public void setTechRecordStatusCode(TechRecordLgvComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
@@ -733,16 +708,12 @@ public class TechRecordLgvComplete {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-    /**
-     * (Required)
-     */
+
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
 
-    /**
-     * (Required)
-     */
+
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
@@ -755,22 +726,10 @@ public class TechRecordLgvComplete {
         this.techRecordNotes = techRecordNotes;
     }
 
-    /**
-     * Vehicle Subclass
-     * <p>
-     * <p>
-     * (Required)
-     */
     public List<TechRecordVehicleSubclass> getTechRecordVehicleSubclasss() {
         return techRecordVehicleSubclass;
     }
 
-    /**
-     * Vehicle Subclass
-     * <p>
-     * <p>
-     * (Required)
-     */
     public void setTechRecordVehicleSubclasss(List<TechRecordVehicleSubclass> techRecordVehicleSubclass) {
         this.techRecordVehicleSubclass = techRecordVehicleSubclass;
     }
@@ -799,25 +758,16 @@ public class TechRecordLgvComplete {
         this.secondaryVrms = secondaryVrms;
     }
 
-    /**
-     * (Required)
-     */
+
     public Object getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * (Required)
-     */
+
     public void setTechRecordVehicleConfiguration(Object techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
-
-    /**
-     * Status Code
-     * <p>
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 

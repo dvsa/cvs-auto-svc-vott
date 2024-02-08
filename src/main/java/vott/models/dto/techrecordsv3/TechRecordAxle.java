@@ -11,46 +11,40 @@ import javax.annotation.processing.Generated;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordAxle {
-
+    /**
+     * (Required)
+     * weights_gbWeight
+     * weights_designWeight
+     * tyres_tyreCode
+     * tyres_tyreSize
+     * tyres_fitmentCode
+     */
     @SerializedName("parkingBrakeMrk")
     @Expose
     private Boolean parkingBrakeMrk;
     @SerializedName("axleNumber")
     @Expose
     private Integer axleNumber;
-    /**
-     * (Required)
-     */
+
     @SerializedName("weights_gbWeight")
     @Expose
     private Integer weightsGbWeight;
-    /**
-     * (Required)
-     */
+
     @SerializedName("weights_designWeight")
     @Expose
     private Integer weightsDesignWeight;
     @SerializedName("weights_eecWeight")
     @Expose
     private Integer weightsEecWeight;
-    /**
-     * (Required)
-     */
     @SerializedName("tyres_tyreCode")
     @Expose
     private Integer tyresTyreCode;
-    /**
-     * (Required)
-     */
     @SerializedName("tyres_tyreSize")
     @Expose
     private String tyresTyreSize;
     @SerializedName("tyres_plyRating")
     @Expose
     private String tyresPlyRating;
-    /**
-     * (Required)
-     */
     @SerializedName("tyres_fitmentCode")
     @Expose
     private Object tyresFitmentCode;
@@ -74,30 +68,18 @@ public class TechRecordAxle {
         this.axleNumber = axleNumber;
     }
 
-    /**
-     * (Required)
-     */
     public Integer getWeightsGbWeight() {
         return weightsGbWeight;
     }
 
-    /**
-     * (Required)
-     */
     public void setWeightsGbWeight(Integer weightsGbWeight) {
         this.weightsGbWeight = weightsGbWeight;
     }
 
-    /**
-     * (Required)
-     */
     public Integer getWeightsDesignWeight() {
         return weightsDesignWeight;
     }
 
-    /**
-     * (Required)
-     */
     public void setWeightsDesignWeight(Integer weightsDesignWeight) {
         this.weightsDesignWeight = weightsDesignWeight;
     }
@@ -110,30 +92,18 @@ public class TechRecordAxle {
         this.weightsEecWeight = weightsEecWeight;
     }
 
-    /**
-     * (Required)
-     */
     public Integer getTyresTyreCode() {
         return tyresTyreCode;
     }
 
-    /**
-     * (Required)
-     */
     public void setTyresTyreCode(Integer tyresTyreCode) {
         this.tyresTyreCode = tyresTyreCode;
     }
 
-    /**
-     * (Required)
-     */
     public String getTyresTyreSize() {
         return tyresTyreSize;
     }
 
-    /**
-     * (Required)
-     */
     public void setTyresTyreSize(String tyresTyreSize) {
         this.tyresTyreSize = tyresTyreSize;
     }
@@ -146,16 +116,10 @@ public class TechRecordAxle {
         this.tyresPlyRating = tyresPlyRating;
     }
 
-    /**
-     * (Required)
-     */
     public Object getTyresFitmentCode() {
         return tyresFitmentCode;
     }
 
-    /**
-     * (Required)
-     */
     public void setTyresFitmentCode(Object tyresFitmentCode) {
         this.tyresFitmentCode = tyresFitmentCode;
     }

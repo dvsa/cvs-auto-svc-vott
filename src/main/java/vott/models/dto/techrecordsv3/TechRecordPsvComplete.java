@@ -16,11 +16,38 @@ import com.google.gson.annotations.SerializedName;
  */
 @Generated("jsonschema2pojo")
 public class TechRecordPsvComplete {
-
     /**
-     *
      * (Required)
-     *
+     * vin
+     * techRecord_vehicleConfiguration
+     * techRecord_vehicleSize
+     * techRecord_seatsLowerDeck
+     * techRecord_seatsUpperDeck
+     * techRecord_vehicleType
+     * techRecord_noOfAxles
+     * techRecord_statusCode
+     * techRecord_reasonForCreation
+     * techRecord_vehicleClass_description
+     * techRecord_axles
+     * techRecord_standingCapacity
+     * techRecord_numberOfSeatbelts
+     * techRecord_bodyMake
+     * techRecord_bodyModel
+     * techRecord_chassisMake
+     * techRecord_chassisModel
+     * techRecord_grossKerbWeight
+     * techRecord_grossLadenWeight
+     * techRecord_dda_certificateIssued
+     * techRecord_brakes_brakeCode
+     * techRecord_brakes_dataTrBrakeOne
+     * techRecord_brakes_dataTrBrakeTwo
+     * techRecord_brakes_dataTrBrakeThree
+     * techRecord_brakes_brakeForceWheelsNotLocked_parkingBrakeForceA
+     * techRecord_brakes_brakeForceWheelsNotLocked_secondaryBrakeForceA
+     * techRecord_brakes_brakeForceWheelsNotLocked_serviceBrakeForceA
+     * techRecord_brakes_brakeForceWheelsUpToHalfLocked_parkingBrakeForceB
+     * techRecord_brakes_brakeForceWheelsUpToHalfLocked_secondaryBrakeForceB
+     * techRecord_brakes_brakeForceWheelsUpToHalfLocked_serviceBrakeForceB
      */
     @SerializedName("vin")
     @Expose
@@ -34,75 +61,35 @@ public class TechRecordPsvComplete {
     @SerializedName("primaryVrm")
     @Expose
     private String primaryVrm;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleType")
     @Expose
     private Object techRecordVehicleType;
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_statusCode")
     @Expose
     private TechRecordPsvComplete.TechRecordStatusCode techRecordStatusCode;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_reasonForCreation")
     @Expose
     private String techRecordReasonForCreation;
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
     private TechRecordPsvComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration;
-    /**
-     * Vehicle Size
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleSize")
     @Expose
     private TechRecordPsvComplete.TechRecordVehicleSize techRecordVehicleSize;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_seatsLowerDeck")
     @Expose
     private Integer techRecordSeatsLowerDeck;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_seatsUpperDeck")
     @Expose
     private Integer techRecordSeatsUpperDeck;
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
     private TechRecordPsvComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription;
@@ -121,11 +108,7 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_manufactureYear")
     @Expose
     private Object techRecordManufactureYear;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_noOfAxles")
     @Expose
     private Integer techRecordNoOfAxles;
@@ -168,11 +151,7 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_grossDesignWeight")
     @Expose
     private Integer techRecordGrossDesignWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_dda_certificateIssued")
     @Expose
     private Boolean techRecordDdaCertificateIssued;
@@ -209,11 +188,7 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_dda_ddaNotes")
     @Expose
     private String techRecordDdaDdaNotes;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_standingCapacity")
     @Expose
     private Integer techRecordStandingCapacity;
@@ -235,11 +210,7 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_trainDesignWeight")
     @Expose
     private Integer techRecordTrainDesignWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_numberOfSeatbelts")
     @Expose
     private String techRecordNumberOfSeatbelts;
@@ -255,35 +226,19 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_coifDate")
     @Expose
     private Object techRecordCoifDate;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyMake")
     @Expose
     private String techRecordBodyMake;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_bodyModel")
     @Expose
     private String techRecordBodyModel;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_chassisMake")
     @Expose
     private String techRecordChassisMake;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_chassisModel")
     @Expose
     private String techRecordChassisModel;
@@ -293,19 +248,11 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_speedRestriction")
     @Expose
     private Double techRecordSpeedRestriction;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_grossKerbWeight")
     @Expose
     private Double techRecordGrossKerbWeight;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_grossLadenWeight")
     @Expose
     private Double techRecordGrossLadenWeight;
@@ -333,11 +280,7 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_dispensations")
     @Expose
     private String techRecordDispensations;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_axles")
     @Expose
     private List<TechRecordAxle> techRecordAxles;
@@ -368,38 +311,22 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_brakes_dtpNumber")
     @Expose
     private String techRecordBrakesDtpNumber;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeCode")
     @Expose
     private String techRecordBrakesBrakeCode;
     @SerializedName("techRecord_brakes_brakeCodeOriginal")
     @Expose
     private String techRecordBrakesBrakeCodeOriginal;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_dataTrBrakeOne")
     @Expose
     private String techRecordBrakesDataTrBrakeOne;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_dataTrBrakeTwo")
     @Expose
     private String techRecordBrakesDataTrBrakeTwo;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_dataTrBrakeThree")
     @Expose
     private String techRecordBrakesDataTrBrakeThree;
@@ -409,51 +336,27 @@ public class TechRecordPsvComplete {
     @SerializedName("techRecord_brakes_retarderBrakeTwo")
     @Expose
     private Object techRecordBrakesRetarderBrakeTwo;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsNotLocked_parkingBrakeForceA")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsNotLocked_secondaryBrakeForceA")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsNotLocked_serviceBrakeForceA")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsUpToHalfLocked_parkingBrakeForceB")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsUpToHalfLocked_secondaryBrakeForceB")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB;
-    /**
-     *
-     * (Required)
-     *
-     */
+
     @SerializedName("techRecord_brakes_brakeForceWheelsUpToHalfLocked_serviceBrakeForceB")
     @Expose
     private Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB;
@@ -479,20 +382,12 @@ public class TechRecordPsvComplete {
     @Expose
     private String techRecordApplicationId;
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getVin() {
         return vin;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setVin(String vin) {
         this.vin = vin;
     }
@@ -521,162 +416,82 @@ public class TechRecordPsvComplete {
         this.primaryVrm = primaryVrm;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordPsvComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStatusCode(TechRecordPsvComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordPsvComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleConfiguration(TechRecordPsvComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
-    /**
-     * Vehicle Size
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordPsvComplete.TechRecordVehicleSize getTechRecordVehicleSize() {
         return techRecordVehicleSize;
     }
 
-    /**
-     * Vehicle Size
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleSize(TechRecordPsvComplete.TechRecordVehicleSize techRecordVehicleSize) {
         this.techRecordVehicleSize = techRecordVehicleSize;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordSeatsLowerDeck() {
         return techRecordSeatsLowerDeck;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordSeatsLowerDeck(Integer techRecordSeatsLowerDeck) {
         this.techRecordSeatsLowerDeck = techRecordSeatsLowerDeck;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordSeatsUpperDeck() {
         return techRecordSeatsUpperDeck;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordSeatsUpperDeck(Integer techRecordSeatsUpperDeck) {
         this.techRecordSeatsUpperDeck = techRecordSeatsUpperDeck;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public TechRecordPsvComplete.TechRecordVehicleClassDescription getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordVehicleClassDescription(TechRecordPsvComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
@@ -721,20 +536,12 @@ public class TechRecordPsvComplete {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
     }
@@ -843,20 +650,12 @@ public class TechRecordPsvComplete {
         this.techRecordGrossDesignWeight = techRecordGrossDesignWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Boolean getTechRecordDdaCertificateIssued() {
         return techRecordDdaCertificateIssued;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordDdaCertificateIssued(Boolean techRecordDdaCertificateIssued) {
         this.techRecordDdaCertificateIssued = techRecordDdaCertificateIssued;
     }
@@ -949,20 +748,12 @@ public class TechRecordPsvComplete {
         this.techRecordDdaDdaNotes = techRecordDdaDdaNotes;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordStandingCapacity() {
         return techRecordStandingCapacity;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordStandingCapacity(Integer techRecordStandingCapacity) {
         this.techRecordStandingCapacity = techRecordStandingCapacity;
     }
@@ -1015,20 +806,12 @@ public class TechRecordPsvComplete {
         this.techRecordTrainDesignWeight = techRecordTrainDesignWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordNumberOfSeatbelts() {
         return techRecordNumberOfSeatbelts;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordNumberOfSeatbelts(String techRecordNumberOfSeatbelts) {
         this.techRecordNumberOfSeatbelts = techRecordNumberOfSeatbelts;
     }
@@ -1065,74 +848,42 @@ public class TechRecordPsvComplete {
         this.techRecordCoifDate = techRecordCoifDate;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyMake() {
         return techRecordBodyMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyMake(String techRecordBodyMake) {
         this.techRecordBodyMake = techRecordBodyMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBodyModel() {
         return techRecordBodyModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBodyModel(String techRecordBodyModel) {
         this.techRecordBodyModel = techRecordBodyModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordChassisMake() {
         return techRecordChassisMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordChassisMake(String techRecordChassisMake) {
         this.techRecordChassisMake = techRecordChassisMake;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordChassisModel() {
         return techRecordChassisModel;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordChassisModel(String techRecordChassisModel) {
         this.techRecordChassisModel = techRecordChassisModel;
     }
@@ -1153,38 +904,22 @@ public class TechRecordPsvComplete {
         this.techRecordSpeedRestriction = techRecordSpeedRestriction;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Double getTechRecordGrossKerbWeight() {
         return techRecordGrossKerbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordGrossKerbWeight(Double techRecordGrossKerbWeight) {
         this.techRecordGrossKerbWeight = techRecordGrossKerbWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Double getTechRecordGrossLadenWeight() {
         return techRecordGrossLadenWeight;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordGrossLadenWeight(Double techRecordGrossLadenWeight) {
         this.techRecordGrossLadenWeight = techRecordGrossLadenWeight;
     }
@@ -1253,20 +988,12 @@ public class TechRecordPsvComplete {
         this.techRecordDispensations = techRecordDispensations;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public List<TechRecordAxle> getTechRecordAxles() {
         return techRecordAxles;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordAxles(List<TechRecordAxle> techRecordAxles) {
         this.techRecordAxles = techRecordAxles;
     }
@@ -1343,20 +1070,12 @@ public class TechRecordPsvComplete {
         this.techRecordBrakesDtpNumber = techRecordBrakesDtpNumber;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBrakesBrakeCode() {
         return techRecordBrakesBrakeCode;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeCode(String techRecordBrakesBrakeCode) {
         this.techRecordBrakesBrakeCode = techRecordBrakesBrakeCode;
     }
@@ -1369,56 +1088,32 @@ public class TechRecordPsvComplete {
         this.techRecordBrakesBrakeCodeOriginal = techRecordBrakesBrakeCodeOriginal;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBrakesDataTrBrakeOne() {
         return techRecordBrakesDataTrBrakeOne;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesDataTrBrakeOne(String techRecordBrakesDataTrBrakeOne) {
         this.techRecordBrakesDataTrBrakeOne = techRecordBrakesDataTrBrakeOne;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBrakesDataTrBrakeTwo() {
         return techRecordBrakesDataTrBrakeTwo;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesDataTrBrakeTwo(String techRecordBrakesDataTrBrakeTwo) {
         this.techRecordBrakesDataTrBrakeTwo = techRecordBrakesDataTrBrakeTwo;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public String getTechRecordBrakesDataTrBrakeThree() {
         return techRecordBrakesDataTrBrakeThree;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesDataTrBrakeThree(String techRecordBrakesDataTrBrakeThree) {
         this.techRecordBrakesDataTrBrakeThree = techRecordBrakesDataTrBrakeThree;
     }
@@ -1439,110 +1134,62 @@ public class TechRecordPsvComplete {
         this.techRecordBrakesRetarderBrakeTwo = techRecordBrakesRetarderBrakeTwo;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA() {
         return techRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA(Integer techRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA) {
         this.techRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA = techRecordBrakesBrakeForceWheelsNotLockedParkingBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA() {
         return techRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA(Integer techRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA) {
         this.techRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA = techRecordBrakesBrakeForceWheelsNotLockedSecondaryBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA() {
         return techRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA(Integer techRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA) {
         this.techRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA = techRecordBrakesBrakeForceWheelsNotLockedServiceBrakeForceA;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB() {
         return techRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB(Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB) {
         this.techRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB = techRecordBrakesBrakeForceWheelsUpToHalfLockedParkingBrakeForceB;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB() {
         return techRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB(Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB) {
         this.techRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB = techRecordBrakesBrakeForceWheelsUpToHalfLockedSecondaryBrakeForceB;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public Integer getTechRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB() {
         return techRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB;
     }
 
-    /**
-     *
-     * (Required)
-     *
-     */
+
     public void setTechRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB(Integer techRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB) {
         this.techRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB = techRecordBrakesBrakeForceWheelsUpToHalfLockedServiceBrakeForceB;
     }
@@ -1602,14 +1249,6 @@ public class TechRecordPsvComplete {
     public void setTechRecordApplicationId(String techRecordApplicationId) {
         this.techRecordApplicationId = techRecordApplicationId;
     }
-
-
-    /**
-     * Status Code
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -1652,13 +1291,6 @@ public class TechRecordPsvComplete {
 
     }
 
-
-    /**
-     * Vehicle Class Description
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleClassDescription {
 
@@ -1699,13 +1331,6 @@ public class TechRecordPsvComplete {
 
     }
 
-
-    /**
-     * Vehicle Configuration
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleConfiguration {
 
@@ -1746,13 +1371,6 @@ public class TechRecordPsvComplete {
 
     }
 
-
-    /**
-     * Vehicle Size
-     * <p>
-     *
-     *
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleSize {
 
