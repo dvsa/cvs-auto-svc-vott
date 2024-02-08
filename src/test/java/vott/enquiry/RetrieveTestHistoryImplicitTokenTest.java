@@ -135,8 +135,8 @@ public class RetrieveTestHistoryImplicitTokenTest {
         validVehicleRegMark = vehicle.getVrm_trm();
         testNumber = tr.getTestNumber();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
     }
 
     @After

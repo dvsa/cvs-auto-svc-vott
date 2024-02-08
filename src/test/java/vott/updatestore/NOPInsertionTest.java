@@ -81,7 +81,7 @@ public class NOPInsertionTest {
     }
 
     @TestData
-    @WithTag("Vott")
+    @WithTag("Remediation")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 {"technical-records_hgv_annual_2_axles.json", "test-results_hgv_annual_2_axles.json"}
@@ -95,7 +95,7 @@ public class NOPInsertionTest {
     }
 
     @Test
-    @WithTag("Vott")
+    @WithTag("Remediation")
     @Title("CB2-9237 - test inserts data in NOP")
     public void insertNopTest()
     {

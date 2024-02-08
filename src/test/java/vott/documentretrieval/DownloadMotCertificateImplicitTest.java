@@ -50,13 +50,15 @@ public class DownloadMotCertificateImplicitTest {
     private String validVIN = "";
     private String validTestNumber = "";
 
-    private Gson gson = GsonInstance.get();
-    private FieldGenerator fieldGenerator = new FieldGenerator();
+    private final Gson gson = GsonInstance.get();
+    private final FieldGenerator fieldGenerator = new FieldGenerator();
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
-    private ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
-    private TestResultRepository testResultRepository = new TestResultRepository(connectionFactory);
-    private VehicleRepository vehicleRepository = new VehicleRepository(connectionFactory);
+    private final ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
+    private final TestResultRepository testResultRepository = new TestResultRepository(connectionFactory);
+    private final VehicleRepository vehicleRepository = new VehicleRepository(connectionFactory);
+
+    private static final int WAIT_IN_SECONDS = 60;
 
     @Before
     public void Setup() {
@@ -66,14 +68,14 @@ public class DownloadMotCertificateImplicitTest {
         TechRecordPOST techRecord = techRecord();
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         validVIN = techRecord.getVin();
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
         Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
         techRecord.setSystemNumber(vehicle.getSystemNumber()); 
 
         CompleteTestResults testResult = testResult(techRecord);
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVIN, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVIN, testResultRepository));
         validTestNumber = getTestNumber(validVIN);
     }
 

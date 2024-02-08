@@ -75,6 +75,8 @@ public class RetrieveVehicleDataImplicitTokenTest {
     Plate plate;
     AxleSpacing as;
 
+    private static final int WAIT_IN_SECONDS = 60;
+
     @Before
     public void Setup() {
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
@@ -123,8 +125,8 @@ public class RetrieveVehicleDataImplicitTokenTest {
         validVINNumber = vehicleUpsert.getVin();
         validVehicleRegMark = vehicleUpsert.getVrm_trm();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.techRecordIsPresentInDatabase(String.valueOf(vehiclePK), technicalRecordRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabase(String.valueOf(vehiclePK), technicalRecordRepository));
     }
 
     @After

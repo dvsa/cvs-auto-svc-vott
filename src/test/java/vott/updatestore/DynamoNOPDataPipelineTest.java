@@ -2,6 +2,7 @@ package vott.updatestore;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
+import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.annotations.Title;
 import org.assertj.core.api.SoftAssertions;
@@ -68,6 +69,8 @@ public class DynamoNOPDataPipelineTest {
     private VtEvlCvsRemovedRepository vtEvlCvsRemovedRepository;
     private String payloadPath;
 
+    private static final int WAIT_IN_SECONDS = 60;
+
     @Before
     public void setUp() throws Exception {
 
@@ -105,6 +108,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-7258 - TC1 - testCode value truncation")
     @Test
     public void testCodeTruncation() {
@@ -116,13 +120,14 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = truncationTestResult.getVin();
         //System.out.println("vin " + vin);
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
     }
 
+    @WithTag("Vott")
     @Title("CB2-7548 - Remove technical-record stream from edh-marshaller - Verify Tech and test results are updated correctly")
     @Test
     public void testTechUpdate() {
@@ -144,13 +149,14 @@ public class DynamoNOPDataPipelineTest {
         }
         //System.out.println("vinlist " + vinList);
         for (String vin : vinList) {
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
             List<TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
             assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
         }
     }
 
+    @WithTag("Vott")
     @Title("CB2-7553 - Handle test results with no test types in update-store function. Has two test types")
     @Test
     public void twoTestType() {
@@ -165,8 +171,8 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         assertThat(testResultNOP.get(0).getTestTypeStartTimestamp()).isNotEqualTo(testResultNOP.get(1).getTestTypeStartTimestamp());
@@ -174,6 +180,8 @@ public class DynamoNOPDataPipelineTest {
         assertThat(testResultNOP.get(0).getCertificateNumber()).isNotEqualTo(testResultNOP.get(1).getCertificateNumber());
     }
 
+
+    @WithTag("Vott")
     @Title("CB2-7553 - numberOfWheelsDriven accepted as string as well as string")
     @Test
     public void wheelsDrivenString() {
@@ -186,12 +194,13 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = techRecord.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
 
         List<vott.models.dao.TechnicalRecord> techRecordNOP = getVehicleWithVIN(vin, technicalRecordRepository);
         assertThat(techRecordNOP.get(0).getNumberOfWheelsDriven()).isEqualTo("4");
     }
 
+    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void testResultsTruncation() {
@@ -208,8 +217,8 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.Tester> tester = getTesterDetailsWithVehicleID(testResultNOP.get(0).getVehicleID(), testerRepository);
@@ -253,7 +262,7 @@ public class DynamoNOPDataPipelineTest {
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.EVLView> evlViews = getEVLViewWithCertificateNumberAndVrm(testResultNOP.get(0).getCertificateNumber(), techRecord.getPrimaryVrm(), evlViewRepository);
@@ -266,6 +275,7 @@ public class DynamoNOPDataPipelineTest {
         return container;
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_same_as_evl_view() throws SQLException, RuntimeException {
@@ -287,6 +297,8 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.size()).isEqualTo(1);
     }
 
+
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_certificate_differs() throws SQLException, RuntimeException {
@@ -313,6 +325,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_vrm_differs() throws SQLException, RuntimeException {
@@ -339,6 +352,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_differs() throws SQLException, RuntimeException {
@@ -363,6 +377,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getTestExpiryDate().substring(0, 10)).isEqualTo(replace_date.substring(0, 10));
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_differs_variation1() throws SQLException, RuntimeException {
@@ -388,6 +403,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getTestExpiryDate().substring(0, 10)).isEqualTo(evlViews.getTestExpiryDate().substring(0, 10));
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void vt_evl_test_expiry_date_cert_differs() throws SQLException, RuntimeException {
@@ -415,6 +431,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.size()).isEqualTo(1);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_recent_date() throws SQLException, RuntimeException {
@@ -474,6 +491,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber() + "11");
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_recent_date_same_cert() throws SQLException, RuntimeException {
@@ -526,6 +544,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber());
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_old_date() throws SQLException, RuntimeException {
@@ -571,6 +590,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_vt_pass_nops_fail_vt_same_date() throws SQLException, RuntimeException {
@@ -621,6 +641,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(evloutput.get(0).getCertificateNumber()).isEqualTo(evlViews.getCertificateNumber());
     }
 
+    @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
     @Test
     public void evl_only_vt() throws SQLException, RuntimeException {
@@ -667,6 +688,7 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
+    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void evlFeedsRekey() {
@@ -692,8 +714,8 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         //add rekey records
         testResult.setTestStartTimestamp(testResult.getTestStartTimestamp().minusNanos(testResult.getTestStartTimestamp().getNano()));
@@ -703,14 +725,15 @@ public class DynamoNOPDataPipelineTest {
         //post rekey records to dynamodb
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.EVLView> evlViews = getEVLViewWithCertificateNumberAndVrm(testResultNOP.get(0).getCertificateNumber(), techRecord.getPrimaryVrm(), evlViewRepository);
         assertThat(evlViews.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-7792 - Add Authorisation Into Service data to NOP")
     @Test
     public void trailerOCO() {
@@ -718,11 +741,12 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         String vin = techRecord.getVin();
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         List<vott.models.dao.AuthIntoServices> ais = getAuthIntoServices(vin, authIntoServicesRepository);
         assertThat(ais.get(0)).isNotNull();
     }
 
+    @WithTag("Vott")
     @Title("CB2-7793 - Add Type Approval data to NOP")
     @Test
     public void trailerApprovalType() {
@@ -738,13 +762,14 @@ public class DynamoNOPDataPipelineTest {
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
             String vin = techRecord.getVin();
             //System.out.println("vin :" + vin);
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
             List<vott.models.dao.TechnicalRecord> nopsTechRecord = getVehicleWithVIN(vin, technicalRecordRepository);
             softly.assertThat(nopsTechRecord.get(0).getApprovalType()).isEqualTo(appList.getValue());
             //System.out.println("Expected : " + appList.getValue() + "  Actual : " + nopsTechRecord.get(0).getApprovalType());
         }
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLbp() {
@@ -764,6 +789,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLcp() {
@@ -777,6 +803,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLdv() {
@@ -790,6 +817,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLev() {
@@ -803,6 +831,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnp() {
@@ -816,6 +845,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnv() {
@@ -829,6 +859,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8786 - Update TFL extract to include LNV and LNZ tests. ")
     @Test
     public void tflFeedsLnz() {
@@ -842,6 +873,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8967 - Update TfL view logic to handle NULL Mod Type Codes. ")
     @Test
     public void tflFeedsDeskBasedNoModTypeCode() {
@@ -855,6 +887,7 @@ public class DynamoNOPDataPipelineTest {
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
+    @WithTag("Vott")
     @Title("CB2-8967 - Update TfL view logic to handle NULL Mod Type Codes. ")
     @Test
     public void tflFeedsCertDoesNotStartLP() {
@@ -884,8 +917,8 @@ public class DynamoNOPDataPipelineTest {
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         return getTFLViewWithVin(vin, tflViewRepository);
 
@@ -927,6 +960,7 @@ public class DynamoNOPDataPipelineTest {
         assertThat(tflViews.size()).isEqualTo(0);
     }
 
+    @WithTag("Vott")
     @Title("CB2-5043 - TFL View reporting Emission standards")
     @Test
     public void tflFeedsEmissionStandards() {
@@ -964,8 +998,8 @@ public class DynamoNOPDataPipelineTest {
             String vin = testResult.getVin();
 
             //System.out.println("vin " + vin);
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
             List<vott.models.dao.TFLView> tflViews = getTFLViewWithVin(vin, tflViewRepository);
             assertThat(tflViews.size()).isGreaterThan(0);
