@@ -1,17 +1,16 @@
 package vott.models.dto.techrecordsv3;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * Tech Record PUT Small TRL Complete
  * <p>
- *
- *
  */
 @Generated("jsonschema2pojo")
 public class TechRecordSmallTrlComplete {
@@ -309,26 +308,18 @@ public class TechRecordSmallTrlComplete {
         O_1("o1"),
         @SerializedName("o2")
         O_2("o2");
-        private final String value;
         private final static Map<String, TechRecordSmallTrlComplete.TechRecordEuVehicleCategory> CONSTANTS = new HashMap<String, TechRecordSmallTrlComplete.TechRecordEuVehicleCategory>();
 
         static {
-            for (TechRecordSmallTrlComplete.TechRecordEuVehicleCategory c: values()) {
+            for (TechRecordSmallTrlComplete.TechRecordEuVehicleCategory c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordEuVehicleCategory(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordSmallTrlComplete.TechRecordEuVehicleCategory fromValue(String value) {
@@ -340,29 +331,6 @@ public class TechRecordSmallTrlComplete {
             }
         }
 
-    }
-    @Generated("jsonschema2pojo")
-    public enum TechRecordStatusCode {
-
-        @SerializedName("provisional")
-        PROVISIONAL("provisional"),
-        @SerializedName("current")
-        CURRENT("current"),
-        @SerializedName("archived")
-        ARCHIVED("archived");
-        private final String value;
-        private final static Map<String, TechRecordSmallTrlComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordSmallTrlComplete.TechRecordStatusCode>();
-
-        static {
-            for (TechRecordSmallTrlComplete.TechRecordStatusCode c: values()) {
-                CONSTANTS.put(c.value, c);
-            }
-        }
-
-        TechRecordStatusCode(String value) {
-            this.value = value;
-        }
-
         @Override
         public String toString() {
             return this.value;
@@ -372,6 +340,31 @@ public class TechRecordSmallTrlComplete {
             return this.value;
         }
 
+    }
+
+    @Generated("jsonschema2pojo")
+    public enum TechRecordStatusCode {
+
+        @SerializedName("provisional")
+        PROVISIONAL("provisional"),
+        @SerializedName("current")
+        CURRENT("current"),
+        @SerializedName("archived")
+        ARCHIVED("archived");
+        private final static Map<String, TechRecordSmallTrlComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordSmallTrlComplete.TechRecordStatusCode>();
+
+        static {
+            for (TechRecordSmallTrlComplete.TechRecordStatusCode c : values()) {
+                CONSTANTS.put(c.value, c);
+            }
+        }
+
+        private final String value;
+
+        TechRecordStatusCode(String value) {
+            this.value = value;
+        }
+
         public static TechRecordSmallTrlComplete.TechRecordStatusCode fromValue(String value) {
             TechRecordSmallTrlComplete.TechRecordStatusCode constant = CONSTANTS.get(value);
             if (constant == null) {
@@ -379,6 +372,15 @@ public class TechRecordSmallTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -408,26 +410,18 @@ public class TechRecordSmallTrlComplete {
         MOT_CLASS_7("MOT class 7"),
         @SerializedName("MOT class 5")
         MOT_CLASS_5("MOT class 5");
-        private final String value;
         private final static Map<String, TechRecordSmallTrlComplete.TechRecordVehicleClassDescription> CONSTANTS = new HashMap<String, TechRecordSmallTrlComplete.TechRecordVehicleClassDescription>();
 
         static {
-            for (TechRecordSmallTrlComplete.TechRecordVehicleClassDescription c: values()) {
+            for (TechRecordSmallTrlComplete.TechRecordVehicleClassDescription c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleClassDescription(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordSmallTrlComplete.TechRecordVehicleClassDescription fromValue(String value) {
@@ -437,6 +431,15 @@ public class TechRecordSmallTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -468,26 +471,18 @@ public class TechRecordSmallTrlComplete {
         DOLLY("dolly"),
         @SerializedName("full drawbar")
         FULL_DRAWBAR("full drawbar");
-        private final String value;
         private final static Map<String, TechRecordSmallTrlComplete.TechRecordVehicleConfiguration> CONSTANTS = new HashMap<String, TechRecordSmallTrlComplete.TechRecordVehicleConfiguration>();
 
         static {
-            for (TechRecordSmallTrlComplete.TechRecordVehicleConfiguration c: values()) {
+            for (TechRecordSmallTrlComplete.TechRecordVehicleConfiguration c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleConfiguration(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordSmallTrlComplete.TechRecordVehicleConfiguration fromValue(String value) {
@@ -497,6 +492,15 @@ public class TechRecordSmallTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

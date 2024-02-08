@@ -1,18 +1,17 @@
 package vott.models.dto.techrecordsv3;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
  * Tech Record PUT HGV Complete
  * <p>
- *
- *
  */
 @Generated("jsonschema2pojo")
 public class TechRecordHgvComplete {
@@ -274,9 +273,8 @@ public class TechRecordHgvComplete {
     /**
      * EU vehicle category
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
@@ -377,9 +375,8 @@ public class TechRecordHgvComplete {
     /**
      * Status Code
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     @SerializedName("techRecord_statusCode")
     @Expose
@@ -1011,9 +1008,8 @@ public class TechRecordHgvComplete {
     /**
      * EU vehicle category
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     public TechRecordHgvComplete.TechRecordEuVehicleCategory getTechRecordEuVehicleCategory() {
         return techRecordEuVehicleCategory;
@@ -1022,9 +1018,8 @@ public class TechRecordHgvComplete {
     /**
      * EU vehicle category
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     public void setTechRecordEuVehicleCategory(TechRecordHgvComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory) {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
@@ -1271,9 +1266,8 @@ public class TechRecordHgvComplete {
     /**
      * Status Code
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     public TechRecordHgvComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
@@ -1282,9 +1276,8 @@ public class TechRecordHgvComplete {
     /**
      * Status Code
      * <p>
-     *
+     * <p>
      * (Required)
-     *
      */
     public void setTechRecordStatusCode(TechRecordHgvComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
@@ -1456,8 +1449,6 @@ public class TechRecordHgvComplete {
     /**
      * EU vehicle category
      * <p>
-     *
-     *
      */
     @Generated("jsonschema2pojo")
     public enum TechRecordEuVehicleCategory {
@@ -1468,26 +1459,18 @@ public class TechRecordHgvComplete {
         N_2("n2"),
         @SerializedName("n3")
         N_3("n3");
-        private final String value;
         private final static Map<String, TechRecordHgvComplete.TechRecordEuVehicleCategory> CONSTANTS = new HashMap<String, TechRecordHgvComplete.TechRecordEuVehicleCategory>();
 
         static {
-            for (TechRecordHgvComplete.TechRecordEuVehicleCategory c: values()) {
+            for (TechRecordHgvComplete.TechRecordEuVehicleCategory c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordEuVehicleCategory(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordHgvComplete.TechRecordEuVehicleCategory fromValue(String value) {
@@ -1497,6 +1480,15 @@ public class TechRecordHgvComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -1510,26 +1502,18 @@ public class TechRecordHgvComplete {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
-        private final String value;
         private final static Map<String, TechRecordHgvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordHgvComplete.TechRecordStatusCode>();
 
         static {
-            for (TechRecordHgvComplete.TechRecordStatusCode c: values()) {
+            for (TechRecordHgvComplete.TechRecordStatusCode c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordStatusCode(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordHgvComplete.TechRecordStatusCode fromValue(String value) {
@@ -1539,6 +1523,15 @@ public class TechRecordHgvComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

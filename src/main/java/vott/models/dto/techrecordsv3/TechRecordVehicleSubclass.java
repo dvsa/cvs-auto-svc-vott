@@ -31,7 +31,6 @@ public enum TechRecordVehicleSubclass {
     R("r"),
     @SerializedName("w")
     W("w");
-    private final String value;
     private final static Map<String, TechRecordVehicleSubclass> CONSTANTS = new HashMap<String, TechRecordVehicleSubclass>();
 
     static {
@@ -40,17 +39,10 @@ public enum TechRecordVehicleSubclass {
         }
     }
 
+    private final String value;
+
     TechRecordVehicleSubclass(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
-    }
-
-    public String value() {
-        return this.value;
     }
 
     public static TechRecordVehicleSubclass fromValue(String value) {
@@ -60,6 +52,15 @@ public enum TechRecordVehicleSubclass {
         } else {
             return constant;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
+
+    public String value() {
+        return this.value;
     }
 
 }

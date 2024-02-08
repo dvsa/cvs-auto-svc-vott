@@ -1,19 +1,17 @@
-
 package vott.models.dto.techrecordsv3;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
  * Tech Record PUT Motorcycle Complete
  * <p>
- *
- *
  */
 @Generated("jsonschema2pojo")
 public class TechRecordMotorcycleComplete {
@@ -346,7 +344,7 @@ public class TechRecordMotorcycleComplete {
     public void setTechRecordUpdateType(String techRecordUpdateType) {
         this.techRecordUpdateType = techRecordUpdateType;
     }
-    
+
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -356,26 +354,18 @@ public class TechRecordMotorcycleComplete {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
-        private final String value;
         private final static Map<String, TechRecordMotorcycleComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordMotorcycleComplete.TechRecordStatusCode>();
 
         static {
-            for (TechRecordMotorcycleComplete.TechRecordStatusCode c: values()) {
+            for (TechRecordMotorcycleComplete.TechRecordStatusCode c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordStatusCode(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordMotorcycleComplete.TechRecordStatusCode fromValue(String value) {
@@ -387,8 +377,17 @@ public class TechRecordMotorcycleComplete {
             }
         }
 
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
+        }
+
     }
-    
+
     @Generated("jsonschema2pojo")
     public enum TechRecordVehicleClassDescription {
 
@@ -414,26 +413,18 @@ public class TechRecordMotorcycleComplete {
         MOT_CLASS_7("MOT class 7"),
         @SerializedName("MOT class 5")
         MOT_CLASS_5("MOT class 5");
-        private final String value;
         private final static Map<String, TechRecordMotorcycleComplete.TechRecordVehicleClassDescription> CONSTANTS = new HashMap<String, TechRecordMotorcycleComplete.TechRecordVehicleClassDescription>();
 
         static {
-            for (TechRecordMotorcycleComplete.TechRecordVehicleClassDescription c: values()) {
+            for (TechRecordMotorcycleComplete.TechRecordVehicleClassDescription c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleClassDescription(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordMotorcycleComplete.TechRecordVehicleClassDescription fromValue(String value) {
@@ -443,6 +434,15 @@ public class TechRecordMotorcycleComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -474,26 +474,18 @@ public class TechRecordMotorcycleComplete {
         DOLLY("dolly"),
         @SerializedName("full drawbar")
         FULL_DRAWBAR("full drawbar");
-        private final String value;
         private final static Map<String, TechRecordMotorcycleComplete.TechRecordVehicleConfiguration> CONSTANTS = new HashMap<String, TechRecordMotorcycleComplete.TechRecordVehicleConfiguration>();
 
         static {
-            for (TechRecordMotorcycleComplete.TechRecordVehicleConfiguration c: values()) {
+            for (TechRecordMotorcycleComplete.TechRecordVehicleConfiguration c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleConfiguration(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordMotorcycleComplete.TechRecordVehicleConfiguration fromValue(String value) {
@@ -503,6 +495,15 @@ public class TechRecordMotorcycleComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

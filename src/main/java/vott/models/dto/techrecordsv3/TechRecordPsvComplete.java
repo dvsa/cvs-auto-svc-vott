@@ -1,18 +1,17 @@
 package vott.models.dto.techrecordsv3;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
  * Tech Record PUT PSV Complete
  * <p>
- *
- *
  */
 @Generated("jsonschema2pojo")
 public class TechRecordPsvComplete {
@@ -1249,6 +1248,7 @@ public class TechRecordPsvComplete {
     public void setTechRecordApplicationId(String techRecordApplicationId) {
         this.techRecordApplicationId = techRecordApplicationId;
     }
+
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
@@ -1258,26 +1258,18 @@ public class TechRecordPsvComplete {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
-        private final String value;
         private final static Map<String, TechRecordPsvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordPsvComplete.TechRecordStatusCode>();
 
         static {
-            for (TechRecordPsvComplete.TechRecordStatusCode c: values()) {
+            for (TechRecordPsvComplete.TechRecordStatusCode c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordStatusCode(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordPsvComplete.TechRecordStatusCode fromValue(String value) {
@@ -1289,6 +1281,15 @@ public class TechRecordPsvComplete {
             }
         }
 
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
+        }
+
     }
 
     @Generated("jsonschema2pojo")
@@ -1298,26 +1299,18 @@ public class TechRecordPsvComplete {
         SMALL_PSV_IE_LESS_THAN_OR_EQUAL_TO_22_SEATS("small psv (ie: less than or equal to 22 seats)"),
         @SerializedName("large psv(ie: greater than 23 seats)")
         LARGE_PSV_IE_GREATER_THAN_23_SEATS("large psv(ie: greater than 23 seats)");
-        private final String value;
         private final static Map<String, TechRecordPsvComplete.TechRecordVehicleClassDescription> CONSTANTS = new HashMap<String, TechRecordPsvComplete.TechRecordVehicleClassDescription>();
 
         static {
-            for (TechRecordPsvComplete.TechRecordVehicleClassDescription c: values()) {
+            for (TechRecordPsvComplete.TechRecordVehicleClassDescription c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleClassDescription(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordPsvComplete.TechRecordVehicleClassDescription fromValue(String value) {
@@ -1329,6 +1322,15 @@ public class TechRecordPsvComplete {
             }
         }
 
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
+        }
+
     }
 
     @Generated("jsonschema2pojo")
@@ -1338,26 +1340,18 @@ public class TechRecordPsvComplete {
         RIGID("rigid"),
         @SerializedName("articulated")
         ARTICULATED("articulated");
-        private final String value;
         private final static Map<String, TechRecordPsvComplete.TechRecordVehicleConfiguration> CONSTANTS = new HashMap<String, TechRecordPsvComplete.TechRecordVehicleConfiguration>();
 
         static {
-            for (TechRecordPsvComplete.TechRecordVehicleConfiguration c: values()) {
+            for (TechRecordPsvComplete.TechRecordVehicleConfiguration c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleConfiguration(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordPsvComplete.TechRecordVehicleConfiguration fromValue(String value) {
@@ -1369,28 +1363,6 @@ public class TechRecordPsvComplete {
             }
         }
 
-    }
-
-    @Generated("jsonschema2pojo")
-    public enum TechRecordVehicleSize {
-
-        @SerializedName("small")
-        SMALL("small"),
-        @SerializedName("large")
-        LARGE("large");
-        private final String value;
-        private final static Map<String, TechRecordPsvComplete.TechRecordVehicleSize> CONSTANTS = new HashMap<String, TechRecordPsvComplete.TechRecordVehicleSize>();
-
-        static {
-            for (TechRecordPsvComplete.TechRecordVehicleSize c: values()) {
-                CONSTANTS.put(c.value, c);
-            }
-        }
-
-        TechRecordVehicleSize(String value) {
-            this.value = value;
-        }
-
         @Override
         public String toString() {
             return this.value;
@@ -1400,6 +1372,29 @@ public class TechRecordPsvComplete {
             return this.value;
         }
 
+    }
+
+    @Generated("jsonschema2pojo")
+    public enum TechRecordVehicleSize {
+
+        @SerializedName("small")
+        SMALL("small"),
+        @SerializedName("large")
+        LARGE("large");
+        private final static Map<String, TechRecordPsvComplete.TechRecordVehicleSize> CONSTANTS = new HashMap<String, TechRecordPsvComplete.TechRecordVehicleSize>();
+
+        static {
+            for (TechRecordPsvComplete.TechRecordVehicleSize c : values()) {
+                CONSTANTS.put(c.value, c);
+            }
+        }
+
+        private final String value;
+
+        TechRecordVehicleSize(String value) {
+            this.value = value;
+        }
+
         public static TechRecordPsvComplete.TechRecordVehicleSize fromValue(String value) {
             TechRecordPsvComplete.TechRecordVehicleSize constant = CONSTANTS.get(value);
             if (constant == null) {
@@ -1407,6 +1402,15 @@ public class TechRecordPsvComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

@@ -1,12 +1,12 @@
 package vott.models.dto.techrecordsv3;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.Generated;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
@@ -777,7 +777,6 @@ public class TechRecordLgvComplete {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
-        private final String value;
         private final static Map<String, TechRecordLgvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordLgvComplete.TechRecordStatusCode>();
 
         static {
@@ -786,17 +785,10 @@ public class TechRecordLgvComplete {
             }
         }
 
+        private final String value;
+
         TechRecordStatusCode(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordLgvComplete.TechRecordStatusCode fromValue(String value) {
@@ -806,6 +798,15 @@ public class TechRecordLgvComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

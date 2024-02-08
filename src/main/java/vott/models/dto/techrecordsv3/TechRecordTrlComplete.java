@@ -1,18 +1,17 @@
 package vott.models.dto.techrecordsv3;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
  * Tech Record PUT TRL Complete
  * <p>
- *
- *
  */
 @Generated("jsonschema2pojo")
 public class TechRecordTrlComplete {
@@ -1696,26 +1695,18 @@ public class TechRecordTrlComplete {
         L_6_E("l6e"),
         @SerializedName("l7e")
         L_7_E("l7e");
-        private final String value;
         private final static Map<String, TechRecordTrlComplete.TechRecordEuVehicleCategory> CONSTANTS = new HashMap<String, TechRecordTrlComplete.TechRecordEuVehicleCategory>();
 
         static {
-            for (TechRecordTrlComplete.TechRecordEuVehicleCategory c: values()) {
+            for (TechRecordTrlComplete.TechRecordEuVehicleCategory c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordEuVehicleCategory(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordTrlComplete.TechRecordEuVehicleCategory fromValue(String value) {
@@ -1725,6 +1716,15 @@ public class TechRecordTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -1738,26 +1738,18 @@ public class TechRecordTrlComplete {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
-        private final String value;
         private final static Map<String, TechRecordTrlComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordTrlComplete.TechRecordStatusCode>();
 
         static {
-            for (TechRecordTrlComplete.TechRecordStatusCode c: values()) {
+            for (TechRecordTrlComplete.TechRecordStatusCode c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordStatusCode(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordTrlComplete.TechRecordStatusCode fromValue(String value) {
@@ -1767,6 +1759,15 @@ public class TechRecordTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
@@ -1794,26 +1795,18 @@ public class TechRecordTrlComplete {
         DOLLY("dolly"),
         @SerializedName("full drawbar")
         FULL_DRAWBAR("full drawbar");
-        private final String value;
         private final static Map<String, TechRecordTrlComplete.TechRecordVehicleConfiguration> CONSTANTS = new HashMap<String, TechRecordTrlComplete.TechRecordVehicleConfiguration>();
 
         static {
-            for (TechRecordTrlComplete.TechRecordVehicleConfiguration c: values()) {
+            for (TechRecordTrlComplete.TechRecordVehicleConfiguration c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         TechRecordVehicleConfiguration(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static TechRecordTrlComplete.TechRecordVehicleConfiguration fromValue(String value) {
@@ -1823,6 +1816,15 @@ public class TechRecordTrlComplete {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }
