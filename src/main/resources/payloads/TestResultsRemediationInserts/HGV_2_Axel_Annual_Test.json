@@ -1,0 +1,59 @@
+{
+  "countryOfRegistration": "gb",
+  "euVehicleCategory": "n3",
+  "noOfAxles": 2,
+  "numberOfWheelsDriven": 2,
+  "odometerReading": 209277,
+  "odometerReadingUnits": "kilometres",
+  "preparerId": "1",
+  "preparerName": "preparer one",
+  "reasonForCancellation": "no reason",
+  "regnDate": "2012-01-24",
+  "shouldEmailCertificate": "false",
+  "systemNumber": "10000101",
+  "testEndTimestamp": "2022-11-28T14:16:45.000000Z",
+  "testResultId": "f8b9609b-6ada-4071-af81-433567941f2d",
+  "testStartTimestamp": "2022-11-28T14:14:19.000000Z",
+  "testStationName": "atf station",
+  "testStationPNumber": "P12345",
+  "testStationType": "atf",
+  "testStatus": "submitted",
+  "testTypes": [
+    {
+      "additionalCommentsForAbandon": "abandon comments",
+      "additionalNotesRecorded": "additional notes",
+      "certificateNumber": "A12345678",
+      "customDefects": [],
+      "defects": [
+      ],
+      "emissionStandard": "Euro V",
+      "fuelType": "fuel cell",
+      "lastUpdatedAt": "2023-11-06T12:54:11.792000Z",
+      "modType": {
+        "code": "p",
+        "description": "particulate trap"
+      },
+      "name": "Annual test",
+      "prohibitionIssued": true,
+      "reasonForAbandoning": "abandon reason",
+      "secondaryCertificateNumber": "secondcert1235",
+      "testExpiryDate": "2023-11-30T00:00:00.000000Z",
+      "testResult": "pass",
+      "testTypeEndTimestamp": "2022-11-28T14:16:45.000000Z",
+      "testTypeId": "94",
+      "testTypeName": "Annual test",
+      "testTypeStartTimestamp": "2022-11-28T14:14:19.000000Z"
+    }
+  ],
+  "testerEmailAddress": "cvs_migrated_tester@dvsa.gov.uk",
+  "testerName": "testername",
+  "testerStaffId": "staffid",
+  "vehicleClass": {
+    "code": "v",
+    "description": "heavy goods vehicle"
+  },
+  "vehicleConfiguration": "rigid",
+  "vehicleType": "hgv",
+  "vin": "testvinnumber",
+  "vrm": "AB12CDE"
+}

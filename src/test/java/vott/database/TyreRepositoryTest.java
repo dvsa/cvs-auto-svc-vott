@@ -1,8 +1,8 @@
 package vott.database;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

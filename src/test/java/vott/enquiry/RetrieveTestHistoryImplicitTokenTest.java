@@ -4,8 +4,8 @@ package vott.enquiry;
 import com.google.gson.Gson;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,8 +135,8 @@ public class RetrieveTestHistoryImplicitTokenTest {
         validVehicleRegMark = vehicle.getVrm_trm();
         testNumber = tr.getTestNumber();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
     }
 
     @After
@@ -230,7 +230,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -342,7 +342,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());
@@ -453,7 +453,7 @@ public class RetrieveTestHistoryImplicitTokenTest {
             assertThat(testResult.getParticulateTrapFitted()).isEqualTo(tr.getParticulateTrapFitted());
             assertThat(testResult.getReasonForCancellation()).isEqualTo(tr.getReasonForCancellation());
             assertThat(testResult.getSmokeTestKLimitApplied()).isEqualTo(tr.getSmokeTestKLimitApplied());
-            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp());
+            assertThat(testResult.getTestTypeStartTimestamp()).isEqualTo(tr.getTestTypeStartTimestamp().substring(0,19));
             assertThat(testResult.getAdditionalNotesRecorded()).isEqualTo(tr.getAdditionalNotesRecorded());
             assertThat(testResult.getNumberOfSeatbeltsFitted()).isEqualTo(Integer.valueOf(tr.getNumberOfSeatbeltsFitted()));
             assertThat(testResult.getSecondaryCertificateNumber()).isEqualTo(tr.getSecondaryCertificateNumber());

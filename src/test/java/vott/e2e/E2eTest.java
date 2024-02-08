@@ -5,8 +5,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,6 @@ import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
-import vott.models.dao.Vehicle;
 import vott.models.dto.enquiry.TestResult;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.testresults.CompleteTestResults;
@@ -33,7 +32,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -54,6 +52,8 @@ public class E2eTest {
 
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
+
+    private static final int WAIT_IN_SECONDS = 60;
 
     @Before
     public void setUp() throws Exception {
@@ -108,8 +108,8 @@ public class E2eTest {
 
         String vin = testResult.getVin();
 
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         vott.models.dto.enquiry.Vehicle actualVehicle = retrieveVehicle(vin);
         List<TestResult> actualTestResults = retrieveTestResults(vin);
@@ -151,16 +151,16 @@ public class E2eTest {
     @SneakyThrows(IOException.class)
     private TechRecordPOST readTechRecord(String path) {
         return gson.fromJson(
-            Files.newBufferedReader(Paths.get(path)),
-            TechRecordPOST.class
+                Files.newBufferedReader(Paths.get(path)),
+                TechRecordPOST.class
         );
     }
 
     @SneakyThrows(IOException.class)
     private CompleteTestResults readTestResult(String path) {
         return gson.fromJson(
-            Files.newBufferedReader(Paths.get(path)),
-            CompleteTestResults.class
+                Files.newBufferedReader(Paths.get(path)),
+                CompleteTestResults.class
         );
     }
 
@@ -187,11 +187,11 @@ public class E2eTest {
         String bearerToken = v1ImplicitTokens.getBearerToken();
 
         Response response = givenAuth(bearerToken, configuration.getApiKeys().getEnquiryServiceApiKey())
-            .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-            .accept(ContentType.JSON)
-            .queryParam("vinNumber", vinNumber)
-            .get("v1/enquiry/vehicle")
-            .thenReturn();
+                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                .accept(ContentType.JSON)
+                .queryParam("vinNumber", vinNumber)
+                .get("v1/enquiry/vehicle")
+                .thenReturn();
 
         assertThat(response.statusCode()).isBetween(200, 300);
 
@@ -202,14 +202,15 @@ public class E2eTest {
         String bearerToken = v1ImplicitTokens.getBearerToken();
 
         Response response = givenAuth(bearerToken, configuration.getApiKeys().getEnquiryServiceApiKey())
-            .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
-            .accept(ContentType.JSON)
-            .queryParam("vinNumber", vinNumber)
-            .get("v1/enquiry/testResults")
-            .thenReturn();
+                .baseUri(configuration.getApiProperties().getBranchSpecificUrl())
+                .accept(ContentType.JSON)
+                .queryParam("vinNumber", vinNumber)
+                .get("v1/enquiry/testResults")
+                .thenReturn();
 
         assertThat(response.statusCode()).isBetween(200, 300);
 
-        return gson.fromJson(response.asString(), new TypeToken<List<TestResult>>(){}.getType());
+        return gson.fromJson(response.asString(), new TypeToken<List<TestResult>>() {
+        }.getType());
     }
 }

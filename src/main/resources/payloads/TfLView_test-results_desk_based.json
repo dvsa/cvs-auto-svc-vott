@@ -22,7 +22,7 @@
       "particulateTrapFitted": "yes",
       "particulateTrapSerialNumber": "1234",
       "modificationTypeUsed": "modification",
-      "testExpiryDate": "2024-06-24",
+      "testExpiryDate": "2024-06-24T00:00:00.000000Z",
       "testResult": "pass",
       "prohibitionIssued": false,
       "reasonForAbandoning": null,

@@ -1,0 +1,85 @@
+{
+  "testResultId": "d94ef56e-4d6b-4245-b071-f0c8d8d60e2f",
+  "systemNumber": "10000021",
+  "vin": "HGV10INSERTSTEST",
+  "testStationName": "Rowe,WunschandWisoky",
+  "testStationPNumber": "87-1369561",
+  "testStationType": "atf",
+  "testerName": "Koska Reeves",
+  "testerEmailAddress": "someone@email.com",
+  "testerStaffId": "133",
+  "testStartTimestamp": "2023-04-02T09:42:05.280Z",
+  "testEndTimestamp": "2023-04-02T16:45:06.915Z",
+  "testStatus": "submitted",
+  "vehicleType": "hgv",
+  "vehicleConfiguration": "semi-car transporter",
+  "noOfAxles": 2,
+  "preparerId": "BL5545",
+  "preparerName": "DurrellVehiclesLimited",
+  "euVehicleCategory": "n2",
+  "countryOfRegistration": "gb",
+  "vrm": "HGV10VRM",
+  "odometerReading": 12110,
+  "odometerReadingUnits": "kilometres",
+  "shouldEmailCertificate": "0",
+  "vehicleClass": {
+    "code": "v",
+    "description": "heavy goods vehicle"
+  },
+  "numberOfWheelsDriven": 2,
+  "reasonForCancellation": "no reason",
+  "contingencyTestNumber": "123456",
+  "testTypes": [
+    {
+      "name": "Annualtest",
+      "testTypeName": "Annualtest",
+      "testTypeId": "94",
+      "testTypeStartTimestamp": "2023-04-02T10:12:05.280Z",
+      "testTypeEndTimestamp": "2023-04-02T11:01:06.918Z",
+      "certificateNumber": "12345678",
+      "prohibitionIssued": false,
+      "reasonForAbandoning": "no reason",
+      "testResult": "pass",
+      "additionalNotesRecorded": "additionalnotes",
+      "additionalCommentsForAbandon": "no comments",
+      "secondaryCertificateNumber": "secondarycertnumber",
+      "customDefects": [
+        {
+          "referenceNumber": "1",
+          "defectName": "customdefect1",
+          "defectNotes": "customdefects1notes"
+        }
+      ],
+      "defects": [
+        {
+          "imNumber": 1000,
+          "imDescription": "imdescription1",
+          "itemNumber": 1500,
+          "itemDescription": "itemdescription1",
+          "deficiencyRef": "deficiencyreference(1)*",
+          "deficiencyId": "b",
+          "deficiencySubId": "d",
+          "deficiencyCategory": "advisory",
+          "deficiencyText": "deficinecytextstring",
+          "stdForProhibition": true,
+          "prs": true,
+          "prohibitionIssued": true,
+          "additionalInformation": {
+            "location": {
+              "vertical": "upper",
+              "horizontal": "outer",
+              "lateral": "centre",
+              "longitudinal": "front",
+              "rowNumber": "1",
+              "seatNumber": "2",
+              "axleNumber": "3"
+            },
+            "notes": "defect notes"
+          }
+        }
+
+      ],
+      "emissionStandard": "Euro 3"
+    }
+  ]
+}

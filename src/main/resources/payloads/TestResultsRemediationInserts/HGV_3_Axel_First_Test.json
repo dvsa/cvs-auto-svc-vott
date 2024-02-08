@@ -1,0 +1,116 @@
+{
+  "testResultId": "81bdd7e1-edf2-4999-acd8-c43170886119",
+  "systemNumber": "10000008",
+  "vin": "HGV33AXELVIN",
+  "testStationName": "Rowe,WunschandWisoky",
+  "testStationPNumber": "87-1369561",
+  "testStationType": "atf",
+  "testerName": "Gica",
+  "testerEmailAddress": "someone@email.com",
+  "testerStaffId": "133",
+  "testStartTimestamp": "2023-02-06T09:42:05.280Z",
+  "testEndTimestamp": "2023-02-06T16:45:06.915Z",
+  "testStatus": "submitted",
+  "vehicleType": "hgv",
+  "vehicleConfiguration": "semi-car transporter",
+  "noOfAxles": 3,
+  "preparerId": "BL5545",
+  "preparerName": "DurrellVehiclesLimited",
+  "euVehicleCategory": "n2",
+  "countryOfRegistration": "gb",
+  "vrm": "HGV33VRM",
+  "odometerReading": 42000,
+  "odometerReadingUnits": "kilometres",
+  "shouldEmailCertificate": "0",
+  "vehicleClass": {
+    "code": "v",
+    "description": "heavy goods vehicle"
+  },
+  "numberOfWheelsDriven": 2,
+  "reasonForCancellation": "no reason",
+  "contingencyTestNumber": "123456",
+  "testTypes": [
+    {
+      "name": "First Test",
+      "testTypeName": "First Test",
+      "testTypeId": "95",
+      "testTypeStartTimestamp": "2023-02-06T10:12:05.280Z",
+      "testTypeEndTimestamp": "2023-02-06T11:01:06.918Z",
+      "certificateNumber": "12345678",
+      "prohibitionIssued": false,
+      "reasonForAbandoning": "no reason",
+      "testResult": "pass",
+      "additionalNotesRecorded": "additionalnotes",
+      "additionalCommentsForAbandon": "no comments",
+      "secondaryCertificateNumber": "secondarycertnumber",
+      "customDefects": [
+        {
+          "referenceNumber": "1",
+          "defectName": "customdefect1",
+          "defectNotes": "customdefects1notes"
+        },
+        {
+          "referenceNumber": "2",
+          "defectName": "customdefect2",
+          "defectNotes": "customdefects2notes"
+        }
+      ],
+      "defects": [
+        {
+          "imNumber": 1000,
+          "imDescription": "imdescription1",
+          "itemNumber": 1500,
+          "itemDescription": "itemdescription1",
+          "deficiencyRef": "deficiencyreference(1)*",
+          "deficiencyId": "b",
+          "deficiencySubId": "d",
+          "deficiencyCategory": "advisory",
+          "deficiencyText": "deficinecytextstring",
+          "stdForProhibition": true,
+          "prs": true,
+          "prohibitionIssued": true,
+          "additionalInformation": {
+            "location": {
+              "vertical": "upper",
+              "horizontal": "outer",
+              "lateral": "centre",
+              "longitudinal": "front",
+              "rowNumber": 1,
+              "seatNumber": 2,
+              "axleNumber": 3
+            },
+            "notes": "defect notes"
+          }
+        },
+        {
+          "imNumber": 1001,
+          "imDescription": "imdescriptiond2",
+          "itemNumber": 1600,
+          "itemDescription": "itemdescriptiond2",
+          "deficiencyRef": "deficiencyreference(2)*",
+          "deficiencyId": "b",
+          "deficiencySubId": "d",
+          "deficiencyCategory": "advisory",
+          "deficiencyText": "deficinecytextstringtwo",
+          "stdForProhibition": true,
+          "prs": true,
+          "prohibitionIssued": true,
+          "additionalInformation": {
+            "location": {
+              "vertical": "upper",
+              "horizontal": "outer",
+              "lateral": "centre",
+              "longitudinal": "front",
+              "rowNumber": 1,
+              "seatNumber": 2,
+              "axleNumber": 3
+            },
+            "notes": "defect notes two"
+          }
+        }
+
+      ],
+      "emissionStandard": "Euro 3"
+    }
+  ]
+}

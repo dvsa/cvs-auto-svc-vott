@@ -1,0 +1,53 @@
+{
+  "testResultId": "30eacdee-4b71-4f66-bdf5-c86124b8b6a1",
+  "systemNumber": "10000009",
+  "vin": "HGV44AXELVIN",
+  "testStationName": "Rowe,WunschandWisoky",
+  "testStationPNumber": "87-1369561",
+  "testStationType": "atf",
+  "testerName": "Gica",
+  "testerEmailAddress": "someone@email.com",
+  "testerStaffId": "133",
+  "testStartTimestamp": "2023-04-05T09:42:05.280Z",
+  "testEndTimestamp": "2023-04-05T16:45:06.915Z",
+  "testStatus": "submitted",
+  "vehicleType": "hgv",
+  "vehicleConfiguration": "semi-car transporter",
+  "noOfAxles": 4,
+  "preparerId": "BL5545",
+  "preparerName": "DurrellVehiclesLimited",
+  "euVehicleCategory": "n2",
+  "countryOfRegistration": "gb",
+  "vrm": "HGV44VRM",
+  "odometerReading": 52341,
+  "odometerReadingUnits": "kilometres",
+  "shouldEmailCertificate": "0",
+  "vehicleClass": {
+    "code": "v",
+    "description": "heavy goods vehicle"
+  },
+  "numberOfWheelsDriven": 4,
+  "reasonForCancellation": "no reason",
+  "contingencyTestNumber": "123456",
+  "testTypes": [
+    {
+      "name": "Retest",
+      "testTypeName": "Retest",
+      "testTypeId": "53",
+      "testTypeStartTimestamp": "2023-04-05T10:12:05.280Z",
+      "testTypeEndTimestamp": "2023-04-05T11:01:06.918Z",
+      "certificateNumber": "12345678",
+      "prohibitionIssued": false,
+      "reasonForAbandoning": "no reason",
+      "testResult": "pass",
+      "additionalNotesRecorded": "additionalnotes",
+      "additionalCommentsForAbandon": "no comments",
+      "secondaryCertificateNumber": "secondarycertnumber",
+      "customDefects": [
+      ],
+      "defects": [
+      ],
+      "emissionStandard": "Euro 3"
+    }
+  ]
+}

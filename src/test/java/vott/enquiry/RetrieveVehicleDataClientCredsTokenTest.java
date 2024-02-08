@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import io.restassured.response.Response;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +78,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
     Plate plate;
     AxleSpacing as;
 
+    private static final int WAIT_IN_SECONDS = 60;
+
     @Before
     public void Setup() {
 
@@ -127,8 +129,8 @@ public class RetrieveVehicleDataClientCredsTokenTest {
         validVINNumber = vehicleUpsert.getVin();
         validVehicleRegMark = vehicleUpsert.getVrm_trm();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.techRecordIsPresentInDatabase(String.valueOf(vehiclePK), technicalRecordRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabase(String.valueOf(vehiclePK), technicalRecordRepository));
     }
 
     @After

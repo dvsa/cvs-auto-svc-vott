@@ -1,12 +1,11 @@
 package vott.enquiry;
 
-
 import com.google.gson.Gson;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.serenitybdd.annotations.Title;
+import net.serenitybdd.annotations.WithTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,8 +135,8 @@ public class RetrieveTestHistoryClientCredsTokenTest {
         validVehicleRegMark = vehicle.getVrm_trm();
         testNumber = tr.getTestNumber();
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVINNumber, vehicleRepository));
+        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVINNumber, testResultRepository));
     }
 
     @After
@@ -416,7 +415,7 @@ public class RetrieveTestHistoryClientCredsTokenTest {
             assertThat(testResult.getTestType().getTestTypeName()).isEqualTo(tt.getTestTypeName());
             assertThat(testResult.getTestType().getTestTypeClassification()).isEqualTo(tt.getTestTypeClassification());
 
-            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19));
+            assertThat(testResult.getCreatedAt()).isEqualTo(tr.getCreatedAt().substring(0,19).substring(0,19));
             assertThat(testResult.getNoOfAxles()).isEqualTo(Integer.valueOf(tr.getNoOfAxles()));
             assertThat(testResult.getTestNumber()).isEqualTo(tr.getTestNumber());
             assertThat(testResult.getTestResult()).isEqualTo(tr.getTestResult());

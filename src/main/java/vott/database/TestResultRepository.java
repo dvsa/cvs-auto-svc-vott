@@ -224,7 +224,6 @@ public class TestResultRepository extends AbstractRepository<TestResult> {
         tr.setSmokeTestKLimitApplied(rs.getString("smokeTestKLimitApplied"));
         tr.setCreatedByID(rs.getString("createdBy_Id"));
         tr.setLastUpdatedByID(rs.getString("lastUpdatedBy_Id"));
-
         return tr;
     }
 
