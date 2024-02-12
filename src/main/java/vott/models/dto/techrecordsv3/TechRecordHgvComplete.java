@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.processing.Generated;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Map;
  * <p>
  */
 @Generated("jsonschema2pojo")
-public class TechRecordHgvComplete {
+public class TechRecordHgvComplete extends TechRecordV3 {
     /**
      * (Required)
      * techRecord_reasonForCreation
@@ -71,13 +72,13 @@ public class TechRecordHgvComplete {
     private String techRecordAdrDetailsVehicleDetailsType;
     @SerializedName("techRecord_adrDetails_vehicleDetails_approvalDate")
     @Expose
-    private Object techRecordAdrDetailsVehicleDetailsApprovalDate;
+    private String techRecordAdrDetailsVehicleDetailsApprovalDate;
     @SerializedName("techRecord_adrDetails_permittedDangerousGoods")
     @Expose
     private List<String> techRecordAdrDetailsPermittedDangerousGoods;
     @SerializedName("techRecord_adrDetails_compatibilityGroupJ")
     @Expose
-    private Object techRecordAdrDetailsCompatibilityGroupJ;
+    private String techRecordAdrDetailsCompatibilityGroupJ;
     @SerializedName("techRecord_adrDetails_additionalExaminerNotes")
     @Expose
     private List<TechRecordAdrDetailsAdditionalExaminerNote> techRecordAdrDetailsAdditionalExaminerNotes;
@@ -158,13 +159,13 @@ public class TechRecordHgvComplete {
     private String techRecordAdrDetailsTankTankDetailsSpecialProvisions;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tc2Details_tc2Type")
     @Expose
-    private Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
+    private String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tc2Details_tc2IntermediateApprovalNo")
     @Expose
     private String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tc2Details_tc2IntermediateExpiryDate")
     @Expose
-    private Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
+    private String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tc3Details")
     @Expose
     private List<TechRecordAdrDetailsTankTankDetailsTc3Detail> techRecordAdrDetailsTankTankDetailsTc3Details;
@@ -173,7 +174,7 @@ public class TechRecordHgvComplete {
     private String techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tankStatement_select")
     @Expose
-    private Object techRecordAdrDetailsTankTankDetailsTankStatementSelect;
+    private String techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     @SerializedName("techRecord_adrDetails_tank_tankDetails_tankStatement_statement")
     @Expose
     private String techRecordAdrDetailsTankTankDetailsTankStatementStatement;
@@ -332,7 +333,7 @@ public class TechRecordHgvComplete {
 
     @SerializedName("techRecord_manufactureYear")
     @Expose
-    private Object techRecordManufactureYear;
+    private String techRecordManufactureYear;
     @SerializedName("techRecord_microfilm_microfilmDocumentType")
     @Expose
     private Object techRecordMicrofilmMicrofilmDocumentType;
@@ -406,15 +407,15 @@ public class TechRecordHgvComplete {
 
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
-    private Object techRecordVehicleClassDescription;
+    private String techRecordVehicleClassDescription;
 
     @SerializedName("techRecord_vehicleConfiguration")
     @Expose
-    private Object techRecordVehicleConfiguration;
+    private String techRecordVehicleConfiguration;
 
     @SerializedName("techRecord_approvalType")
     @Expose
-    private Object techRecordApprovalType;
+    private String techRecordApprovalType;
     @SerializedName("techRecord_approvalTypeNumber")
     @Expose
     private String techRecordApprovalTypeNumber;
@@ -430,7 +431,7 @@ public class TechRecordHgvComplete {
 
     @SerializedName("techRecord_vehicleType")
     @Expose
-    private Object techRecordVehicleType;
+    private String techRecordVehicleType;
     @SerializedName("primaryVrm")
     @Expose
     private String primaryVrm;
@@ -477,11 +478,11 @@ public class TechRecordHgvComplete {
         this.techRecordAdrDetailsVehicleDetailsType = techRecordAdrDetailsVehicleDetailsType;
     }
 
-    public Object getTechRecordAdrDetailsVehicleDetailsApprovalDate() {
+    public String getTechRecordAdrDetailsVehicleDetailsApprovalDate() {
         return techRecordAdrDetailsVehicleDetailsApprovalDate;
     }
 
-    public void setTechRecordAdrDetailsVehicleDetailsApprovalDate(Object techRecordAdrDetailsVehicleDetailsApprovalDate) {
+    public void setTechRecordAdrDetailsVehicleDetailsApprovalDate(String techRecordAdrDetailsVehicleDetailsApprovalDate) {
         this.techRecordAdrDetailsVehicleDetailsApprovalDate = techRecordAdrDetailsVehicleDetailsApprovalDate;
     }
 
@@ -493,11 +494,11 @@ public class TechRecordHgvComplete {
         this.techRecordAdrDetailsPermittedDangerousGoods = techRecordAdrDetailsPermittedDangerousGoods;
     }
 
-    public Object getTechRecordAdrDetailsCompatibilityGroupJ() {
+    public String getTechRecordAdrDetailsCompatibilityGroupJ() {
         return techRecordAdrDetailsCompatibilityGroupJ;
     }
 
-    public void setTechRecordAdrDetailsCompatibilityGroupJ(Object techRecordAdrDetailsCompatibilityGroupJ) {
+    public void setTechRecordAdrDetailsCompatibilityGroupJ(String techRecordAdrDetailsCompatibilityGroupJ) {
         this.techRecordAdrDetailsCompatibilityGroupJ = techRecordAdrDetailsCompatibilityGroupJ;
     }
 
@@ -709,11 +710,11 @@ public class TechRecordHgvComplete {
         this.techRecordAdrDetailsTankTankDetailsSpecialProvisions = techRecordAdrDetailsTankTankDetailsSpecialProvisions;
     }
 
-    public Object getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type() {
+    public String getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type() {
         return techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type) {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     }
 
@@ -725,11 +726,11 @@ public class TechRecordHgvComplete {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
     }
 
-    public Object getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate() {
+    public String getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate() {
         return techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate) {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     }
 
@@ -749,11 +750,11 @@ public class TechRecordHgvComplete {
         this.techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted = techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
     }
 
-    public Object getTechRecordAdrDetailsTankTankDetailsTankStatementSelect() {
+    public String getTechRecordAdrDetailsTankTankDetailsTankStatementSelect() {
         return techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSelect(Object techRecordAdrDetailsTankTankDetailsTankStatementSelect) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSelect(String techRecordAdrDetailsTankTankDetailsTankStatementSelect) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementSelect = techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     }
 
@@ -1005,26 +1006,12 @@ public class TechRecordHgvComplete {
         this.techRecordEuroStandard = techRecordEuroStandard;
     }
 
-    /**
-     * EU vehicle category
-     * <p>
-     * <p>
-     * (Required)
-     */
     public TechRecordHgvComplete.TechRecordEuVehicleCategory getTechRecordEuVehicleCategory() {
         return techRecordEuVehicleCategory;
     }
-
-    /**
-     * EU vehicle category
-     * <p>
-     * <p>
-     * (Required)
-     */
     public void setTechRecordEuVehicleCategory(TechRecordHgvComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory) {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
-
 
     public Integer getTechRecordFrontAxleToRearAxle() {
         return techRecordFrontAxleToRearAxle;
@@ -1154,12 +1141,12 @@ public class TechRecordHgvComplete {
     }
 
 
-    public Object getTechRecordManufactureYear() {
+    public String getTechRecordManufactureYear() {
         return techRecordManufactureYear;
     }
 
 
-    public void setTechRecordManufactureYear(Object techRecordManufactureYear) {
+    public void setTechRecordManufactureYear(String techRecordManufactureYear) {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
@@ -1263,22 +1250,10 @@ public class TechRecordHgvComplete {
         this.techRecordRoadFriendly = techRecordRoadFriendly;
     }
 
-    /**
-     * Status Code
-     * <p>
-     * <p>
-     * (Required)
-     */
     public TechRecordHgvComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
 
-    /**
-     * Status Code
-     * <p>
-     * <p>
-     * (Required)
-     */
     public void setTechRecordStatusCode(TechRecordHgvComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
     }
@@ -1340,32 +1315,32 @@ public class TechRecordHgvComplete {
     }
 
 
-    public Object getTechRecordVehicleClassDescription() {
+    public String getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
 
-    public void setTechRecordVehicleClassDescription(Object techRecordVehicleClassDescription) {
+    public void setTechRecordVehicleClassDescription(String techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 
 
-    public Object getTechRecordVehicleConfiguration() {
+    public String getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
 
-    public void setTechRecordVehicleConfiguration(Object techRecordVehicleConfiguration) {
+    public void setTechRecordVehicleConfiguration(String techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
 
-    public Object getTechRecordApprovalType() {
+    public String getTechRecordApprovalType() {
         return techRecordApprovalType;
     }
 
 
-    public void setTechRecordApprovalType(Object techRecordApprovalType) {
+    public void setTechRecordApprovalType(String techRecordApprovalType) {
         this.techRecordApprovalType = techRecordApprovalType;
     }
 
@@ -1402,12 +1377,12 @@ public class TechRecordHgvComplete {
     }
 
 
-    public Object getTechRecordVehicleType() {
+    public String getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
 
 
-    public void setTechRecordVehicleType(Object techRecordVehicleType) {
+    public void setTechRecordVehicleType(String techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
@@ -1445,11 +1420,6 @@ public class TechRecordHgvComplete {
         this.techRecordUpdateType = techRecordUpdateType;
     }
 
-
-    /**
-     * EU vehicle category
-     * <p>
-     */
     @Generated("jsonschema2pojo")
     public enum TechRecordEuVehicleCategory {
 

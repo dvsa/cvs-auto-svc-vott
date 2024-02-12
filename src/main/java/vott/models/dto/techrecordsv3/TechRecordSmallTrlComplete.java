@@ -13,7 +13,7 @@ import java.util.Map;
  * <p>
  */
 @Generated("jsonschema2pojo")
-public class TechRecordSmallTrlComplete {
+public class TechRecordSmallTrlComplete extends TechRecordV3 {
     /**
      * (Required)
      * techRecord_noOfAxles

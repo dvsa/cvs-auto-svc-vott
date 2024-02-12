@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  */
 @Generated("jsonschema2pojo")
-public class TechRecordPsvComplete {
+public class TechRecordPsvComplete extends TechRecordV3{
     /**
      * (Required)
      * vin

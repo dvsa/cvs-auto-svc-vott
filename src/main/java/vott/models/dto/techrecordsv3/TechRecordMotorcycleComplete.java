@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  */
 @Generated("jsonschema2pojo")
-public class TechRecordMotorcycleComplete {
+public class TechRecordMotorcycleComplete extends TechRecordV3 {
     /**
      * (Required)
      * techRecord_numberOfWheelsDriven
