@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.processing.Generated;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -675,7 +675,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsYearOfManufacture(Integer techRecordAdrDetailsTankTankDetailsYearOfManufacture) {
-        this.techRecordAdrDetailsTankTankDetailsYearOfManufacture = techRecordAdrDetailsTankTankDetailsYearOfManufacture;
+        this.techRecordAdrDetailsTankTankDetailsYearOfManufacture =
+                techRecordAdrDetailsTankTankDetailsYearOfManufacture;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo() {
@@ -683,7 +684,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(String techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo) {
-        this.techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo = techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo;
+        this.techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo =
+                techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankTypeAppNo() {
@@ -707,7 +709,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(String techRecordAdrDetailsTankTankDetailsSpecialProvisions) {
-        this.techRecordAdrDetailsTankTankDetailsSpecialProvisions = techRecordAdrDetailsTankTankDetailsSpecialProvisions;
+        this.techRecordAdrDetailsTankTankDetailsSpecialProvisions =
+                techRecordAdrDetailsTankTankDetailsSpecialProvisions;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type() {
@@ -715,7 +718,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type) {
-        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
+        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type =
+                techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo() {
@@ -723,7 +727,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo) {
-        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
+        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo =
+                techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate() {
@@ -731,7 +736,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate) {
-        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
+        this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate =
+                techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     }
 
     public List<TechRecordAdrDetailsTankTankDetailsTc3Detail> getTechRecordAdrDetailsTankTankDetailsTc3Details() {
@@ -747,7 +753,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(String techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted = techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted =
+                techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankStatementSelect() {
@@ -755,7 +762,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementSelect(String techRecordAdrDetailsTankTankDetailsTankStatementSelect) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementSelect = techRecordAdrDetailsTankTankDetailsTankStatementSelect;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementSelect =
+                techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankStatementStatement() {
@@ -763,7 +771,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementStatement(String techRecordAdrDetailsTankTankDetailsTankStatementStatement) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementStatement = techRecordAdrDetailsTankTankDetailsTankStatementStatement;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementStatement =
+                techRecordAdrDetailsTankTankDetailsTankStatementStatement;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo() {
@@ -771,7 +780,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(String techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo = techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo =
+                techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo;
     }
 
     public List<String> getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo() {
@@ -779,7 +789,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(List<String> techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo = techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo =
+                techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo;
     }
 
     public String getTechRecordAdrDetailsTankTankDetailsTankStatementProductList() {
@@ -787,7 +798,8 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
     public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(String techRecordAdrDetailsTankTankDetailsTankStatementProductList) {
-        this.techRecordAdrDetailsTankTankDetailsTankStatementProductList = techRecordAdrDetailsTankTankDetailsTankStatementProductList;
+        this.techRecordAdrDetailsTankTankDetailsTankStatementProductList =
+                techRecordAdrDetailsTankTankDetailsTankStatementProductList;
     }
 
     public Boolean getTechRecordAlterationMarker() {
@@ -1009,6 +1021,7 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     public TechRecordHgvComplete.TechRecordEuVehicleCategory getTechRecordEuVehicleCategory() {
         return techRecordEuVehicleCategory;
     }
+
     public void setTechRecordEuVehicleCategory(TechRecordHgvComplete.TechRecordEuVehicleCategory techRecordEuVehicleCategory) {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
@@ -1420,16 +1433,191 @@ public class TechRecordHgvComplete extends TechRecordV3 {
         this.techRecordUpdateType = techRecordUpdateType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TechRecordHgvComplete that = (TechRecordHgvComplete) o;
+        return Objects.equals(getSecondaryVrms(), that.getSecondaryVrms())
+                && Objects.equals(getPartialVin(), that.getPartialVin())
+                && Objects.equals(getTechRecordAdrDetailsDangerousGoods(), that.getTechRecordAdrDetailsDangerousGoods())
+                && Objects.equals(getTechRecordAdrDetailsVehicleDetailsType(), that.getTechRecordAdrDetailsVehicleDetailsType())
+                && Objects.equals(getTechRecordAdrDetailsVehicleDetailsApprovalDate(), that.getTechRecordAdrDetailsVehicleDetailsApprovalDate())
+                && Objects.equals(getTechRecordAdrDetailsPermittedDangerousGoods(), that.getTechRecordAdrDetailsPermittedDangerousGoods())
+                && Objects.equals(getTechRecordAdrDetailsCompatibilityGroupJ(), that.getTechRecordAdrDetailsCompatibilityGroupJ())
+                && Objects.equals(getTechRecordAdrDetailsAdditionalExaminerNotes(), that.getTechRecordAdrDetailsAdditionalExaminerNotes())
+                && Objects.equals(getTechRecordAdrDetailsApplicantDetailsName(), that.getTechRecordAdrDetailsApplicantDetailsName())
+                && Objects.equals(getTechRecordAdrDetailsApplicantDetailsStreet(), that.getTechRecordAdrDetailsApplicantDetailsStreet())
+                && Objects.equals(getTechRecordAdrDetailsApplicantDetailsTown(), that.getTechRecordAdrDetailsApplicantDetailsTown())
+                && Objects.equals(getTechRecordAdrDetailsApplicantDetailsCity(), that.getTechRecordAdrDetailsApplicantDetailsCity())
+                && Objects.equals(getTechRecordAdrDetailsApplicantDetailsPostcode(), that.getTechRecordAdrDetailsApplicantDetailsPostcode())
+                && Objects.equals(getTechRecordAdrDetailsMemosApply(), that.getTechRecordAdrDetailsMemosApply())
+                && Objects.equals(getTechRecordAdrDetailsDocuments(), that.getTechRecordAdrDetailsDocuments())
+                && Objects.equals(getTechRecordAdrDetailsListStatementApplicable(), that.getTechRecordAdrDetailsListStatementApplicable())
+                && Objects.equals(getTechRecordAdrDetailsBatteryListNumber(), that.getTechRecordAdrDetailsBatteryListNumber())
+                && Objects.equals(getTechRecordAdrDetailsBrakeDeclarationsSeen(), that.getTechRecordAdrDetailsBrakeDeclarationsSeen())
+                && Objects.equals(getTechRecordAdrDetailsBrakeDeclarationIssuer(), that.getTechRecordAdrDetailsBrakeDeclarationIssuer())
+                && Objects.equals(getTechRecordAdrDetailsBrakeEndurance(), that.getTechRecordAdrDetailsBrakeEndurance())
+                && Objects.equals(getTechRecordAdrDetailsWeight(), that.getTechRecordAdrDetailsWeight())
+                && Objects.equals(getTechRecordAdrDetailsDeclarationsSeen(), that.getTechRecordAdrDetailsDeclarationsSeen())
+                && Objects.equals(getTechRecordAdrDetailsM145Statement(), that.getTechRecordAdrDetailsM145Statement())
+                && Objects.equals(getTechRecordAdrDetailsNewCertificateRequested(), that.getTechRecordAdrDetailsNewCertificateRequested())
+                && Objects.equals(getTechRecordAdrDetailsAdditionalNotesNumber(), that.getTechRecordAdrDetailsAdditionalNotesNumber())
+                && Objects.equals(getTechRecordAdrDetailsAdrTypeApprovalNo(), that.getTechRecordAdrDetailsAdrTypeApprovalNo())
+                && Objects.equals(getTechRecordAdrDetailsAdrCertificateNotes(), that.getTechRecordAdrDetailsAdrCertificateNotes())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankManufacturer(), that.getTechRecordAdrDetailsTankTankDetailsTankManufacturer())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsYearOfManufacture(), that.getTechRecordAdrDetailsTankTankDetailsYearOfManufacture())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(), that.getTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankTypeAppNo(), that.getTechRecordAdrDetailsTankTankDetailsTankTypeAppNo())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankCode(), that.getTechRecordAdrDetailsTankTankDetailsTankCode())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), that.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), that.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), that.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), that.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTc3Details(), that.getTechRecordAdrDetailsTankTankDetailsTc3Details())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementSelect(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementSelect())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementStatement(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo())
+                && Objects.equals(getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), that.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList())
+                && Objects.equals(getTechRecordAlterationMarker(), that.getTechRecordAlterationMarker())
+                && Objects.equals(getTechRecordAdrPassCertificateDetails(), that.getTechRecordAdrPassCertificateDetails())
+                && Objects.equals(getTechRecordApplicantDetailsName(), that.getTechRecordApplicantDetailsName())
+                && Objects.equals(getTechRecordApplicantDetailsAddress1(), that.getTechRecordApplicantDetailsAddress1())
+                && Objects.equals(getTechRecordApplicantDetailsAddress2(), that.getTechRecordApplicantDetailsAddress2())
+                && Objects.equals(getTechRecordApplicantDetailsPostTown(), that.getTechRecordApplicantDetailsPostTown())
+                && Objects.equals(getTechRecordApplicantDetailsAddress3(), that.getTechRecordApplicantDetailsAddress3())
+                && Objects.equals(getTechRecordApplicantDetailsPostCode(), that.getTechRecordApplicantDetailsPostCode())
+                && Objects.equals(getTechRecordApplicantDetailsTelephoneNumber(), that.getTechRecordApplicantDetailsTelephoneNumber())
+                && Objects.equals(getTechRecordApplicantDetailsEmailAddress(), that.getTechRecordApplicantDetailsEmailAddress())
+                && Objects.equals(getTechRecordApplicationId(), that.getTechRecordApplicationId())
+                && Objects.equals(getTechRecordAxles(), that.getTechRecordAxles())
+                && Objects.equals(getTechRecordBodyTypeCode(), that.getTechRecordBodyTypeCode())
+                && Objects.equals(getTechRecordBodyTypeDescription(), that.getTechRecordBodyTypeDescription())
+                && Objects.equals(getTechRecordBrakesDtpNumber(), that.getTechRecordBrakesDtpNumber())
+                && Objects.equals(getTechRecordBrakesLoadSensingValve(), that.getTechRecordBrakesLoadSensingValve())
+                && Objects.equals(getTechRecordConversionRefNo(), that.getTechRecordConversionRefNo())
+                && Objects.equals(getTechRecordDepartmentalVehicleMarker(), that.getTechRecordDepartmentalVehicleMarker())
+                && Objects.equals(getTechRecordDimensionsAxleSpacing(), that.getTechRecordDimensionsAxleSpacing())
+                && Objects.equals(getTechRecordDimensionsLength(), that.getTechRecordDimensionsLength())
+                && Objects.equals(getTechRecordDimensionsWidth(), that.getTechRecordDimensionsWidth())
+                && Objects.equals(getTechRecordDrawbarCouplingFitted(), that.getTechRecordDrawbarCouplingFitted())
+                && Objects.equals(getTechRecordEmissionsLimit(), that.getTechRecordEmissionsLimit())
+                && Objects.equals(getTechRecordEuroStandard(), that.getTechRecordEuroStandard())
+                && getTechRecordEuVehicleCategory() == that.getTechRecordEuVehicleCategory()
+                && Objects.equals(getTechRecordFrontAxleToRearAxle(), that.getTechRecordFrontAxleToRearAxle())
+                && Objects.equals(getTechRecordFrontAxleTo5thWheelMin(), that.getTechRecordFrontAxleTo5thWheelMin())
+                && Objects.equals(getTechRecordFrontAxleTo5thWheelMax(), that.getTechRecordFrontAxleTo5thWheelMax())
+                && Objects.equals(getTechRecordFrontVehicleTo5thWheelCouplingMin(), that.getTechRecordFrontVehicleTo5thWheelCouplingMin())
+                && Objects.equals(getTechRecordFrontVehicleTo5thWheelCouplingMax(), that.getTechRecordFrontVehicleTo5thWheelCouplingMax())
+                && Objects.equals(getTechRecordFuelPropulsionSystem(), that.getTechRecordFuelPropulsionSystem())
+                && Objects.equals(getTechRecordFunctionCode(), that.getTechRecordFunctionCode())
+                && Objects.equals(getTechRecordGrossDesignWeight(), that.getTechRecordGrossDesignWeight())
+                && Objects.equals(getTechRecordGrossEecWeight(), that.getTechRecordGrossEecWeight())
+                && Objects.equals(getTechRecordGrossGbWeight(), that.getTechRecordGrossGbWeight())
+                && Objects.equals(getTechRecordMake(), that.getTechRecordMake())
+                && Objects.equals(getTechRecordMaxTrainGbWeight(), that.getTechRecordMaxTrainGbWeight())
+                && Objects.equals(getTechRecordMaxTrainEecWeight(), that.getTechRecordMaxTrainEecWeight())
+                && Objects.equals(getTechRecordMaxTrainDesignWeight(), that.getTechRecordMaxTrainDesignWeight())
+                && Objects.equals(getTechRecordManufactureYear(), that.getTechRecordManufactureYear())
+                && Objects.equals(getTechRecordMicrofilmMicrofilmDocumentType(), that.getTechRecordMicrofilmMicrofilmDocumentType())
+                && Objects.equals(getTechRecordMicrofilmMicrofilmRollNumber(), that.getTechRecordMicrofilmMicrofilmRollNumber())
+                && Objects.equals(getTechRecordMicrofilmMicrofilmSerialNumber(), that.getTechRecordMicrofilmMicrofilmSerialNumber())
+                && Objects.equals(getTechRecordModel(), that.getTechRecordModel())
+                && Objects.equals(getTechRecordNoOfAxles(), that.getTechRecordNoOfAxles())
+                && Objects.equals(getTechRecordNotes(), that.getTechRecordNotes())
+                && Objects.equals(getTechRecordOffRoad(), that.getTechRecordOffRoad())
+                && Objects.equals(getTechRecordPlates(), that.getTechRecordPlates())
+                && Objects.equals(getTechRecordReasonForCreation(), that.getTechRecordReasonForCreation())
+                && Objects.equals(getTechRecordRegnDate(), that.getTechRecordRegnDate())
+                && Objects.equals(getTechRecordRoadFriendly(), that.getTechRecordRoadFriendly())
+                && getTechRecordStatusCode() == that.getTechRecordStatusCode()
+                && Objects.equals(getTechRecordSpeedLimiterMrk(), that.getTechRecordSpeedLimiterMrk())
+                && Objects.equals(getTechRecordTachoExemptMrk(), that.getTechRecordTachoExemptMrk())
+                && Objects.equals(getTechRecordTrainDesignWeight(), that.getTechRecordTrainDesignWeight())
+                && Objects.equals(getTechRecordTrainEecWeight(), that.getTechRecordTrainEecWeight())
+                && Objects.equals(getTechRecordTrainGbWeight(), that.getTechRecordTrainGbWeight())
+                && Objects.equals(getTechRecordTyreUseCode(), that.getTechRecordTyreUseCode())
+                && Objects.equals(getTechRecordVehicleClassDescription(), that.getTechRecordVehicleClassDescription())
+                && Objects.equals(getTechRecordVehicleConfiguration(), that.getTechRecordVehicleConfiguration())
+                && Objects.equals(getTechRecordApprovalType(), that.getTechRecordApprovalType())
+                && Objects.equals(getTechRecordApprovalTypeNumber(), that.getTechRecordApprovalTypeNumber())
+                && Objects.equals(getTechRecordNtaNumber(), that.getTechRecordNtaNumber())
+                && Objects.equals(getTechRecordVariantNumber(), that.getTechRecordVariantNumber())
+                && Objects.equals(getTechRecordVariantVersionNumber(), that.getTechRecordVariantVersionNumber())
+                && Objects.equals(getTechRecordVehicleType(), that.getTechRecordVehicleType())
+                && Objects.equals(getPrimaryVrm(), that.getPrimaryVrm())
+                && Objects.equals(getVin(), that.getVin())
+                && Objects.equals(getTechRecordHiddenInVta(), that.getTechRecordHiddenInVta())
+                && Objects.equals(getTechRecordUpdateType(), that.getTechRecordUpdateType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSecondaryVrms(), getPartialVin(), getTechRecordAdrDetailsDangerousGoods(),
+                getTechRecordAdrDetailsVehicleDetailsType(), getTechRecordAdrDetailsVehicleDetailsApprovalDate(),
+                getTechRecordAdrDetailsPermittedDangerousGoods(), getTechRecordAdrDetailsCompatibilityGroupJ(),
+                getTechRecordAdrDetailsAdditionalExaminerNotes(), getTechRecordAdrDetailsApplicantDetailsName(),
+                getTechRecordAdrDetailsApplicantDetailsStreet(), getTechRecordAdrDetailsApplicantDetailsTown(),
+                getTechRecordAdrDetailsApplicantDetailsCity(), getTechRecordAdrDetailsApplicantDetailsPostcode(),
+                getTechRecordAdrDetailsMemosApply(), getTechRecordAdrDetailsDocuments(),
+                getTechRecordAdrDetailsListStatementApplicable(), getTechRecordAdrDetailsBatteryListNumber(),
+                getTechRecordAdrDetailsBrakeDeclarationsSeen(), getTechRecordAdrDetailsBrakeDeclarationIssuer(),
+                getTechRecordAdrDetailsBrakeEndurance(), getTechRecordAdrDetailsWeight(),
+                getTechRecordAdrDetailsDeclarationsSeen(), getTechRecordAdrDetailsM145Statement(),
+                getTechRecordAdrDetailsNewCertificateRequested(), getTechRecordAdrDetailsAdditionalNotesNumber(),
+                getTechRecordAdrDetailsAdrTypeApprovalNo(), getTechRecordAdrDetailsAdrCertificateNotes(),
+                getTechRecordAdrDetailsTankTankDetailsTankManufacturer(),
+                getTechRecordAdrDetailsTankTankDetailsYearOfManufacture(),
+                getTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(),
+                getTechRecordAdrDetailsTankTankDetailsTankTypeAppNo(),
+                getTechRecordAdrDetailsTankTankDetailsTankCode(),
+                getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(),
+                getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(),
+                getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(),
+                getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(),
+                getTechRecordAdrDetailsTankTankDetailsTc3Details(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementSelect(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementStatement(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(),
+                getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), getTechRecordAlterationMarker(),
+                getTechRecordAdrPassCertificateDetails(), getTechRecordApplicantDetailsName(),
+                getTechRecordApplicantDetailsAddress1(), getTechRecordApplicantDetailsAddress2(),
+                getTechRecordApplicantDetailsPostTown(), getTechRecordApplicantDetailsAddress3(),
+                getTechRecordApplicantDetailsPostCode(), getTechRecordApplicantDetailsTelephoneNumber(),
+                getTechRecordApplicantDetailsEmailAddress(), getTechRecordApplicationId(), getTechRecordAxles(),
+                getTechRecordBodyTypeCode(), getTechRecordBodyTypeDescription(), getTechRecordBrakesDtpNumber(),
+                getTechRecordBrakesLoadSensingValve(), getTechRecordConversionRefNo(),
+                getTechRecordDepartmentalVehicleMarker(), getTechRecordDimensionsAxleSpacing(),
+                getTechRecordDimensionsLength(), getTechRecordDimensionsWidth(), getTechRecordDrawbarCouplingFitted()
+                , getTechRecordEmissionsLimit(), getTechRecordEuroStandard(), getTechRecordEuVehicleCategory(),
+                getTechRecordFrontAxleToRearAxle(), getTechRecordFrontAxleTo5thWheelMin(),
+                getTechRecordFrontAxleTo5thWheelMax(), getTechRecordFrontVehicleTo5thWheelCouplingMin(),
+                getTechRecordFrontVehicleTo5thWheelCouplingMax(), getTechRecordFuelPropulsionSystem(),
+                getTechRecordFunctionCode(), getTechRecordGrossDesignWeight(), getTechRecordGrossEecWeight(),
+                getTechRecordGrossGbWeight(), getTechRecordMake(), getTechRecordMaxTrainGbWeight(),
+                getTechRecordMaxTrainEecWeight(), getTechRecordMaxTrainDesignWeight(), getTechRecordManufactureYear()
+                , getTechRecordMicrofilmMicrofilmDocumentType(), getTechRecordMicrofilmMicrofilmRollNumber(),
+                getTechRecordMicrofilmMicrofilmSerialNumber(), getTechRecordModel(), getTechRecordNoOfAxles(),
+                getTechRecordNotes(), getTechRecordOffRoad(), getTechRecordPlates(), getTechRecordReasonForCreation()
+                , getTechRecordRegnDate(), getTechRecordRoadFriendly(), getTechRecordStatusCode(),
+                getTechRecordSpeedLimiterMrk(), getTechRecordTachoExemptMrk(), getTechRecordTrainDesignWeight(),
+                getTechRecordTrainEecWeight(), getTechRecordTrainGbWeight(), getTechRecordTyreUseCode(),
+                getTechRecordVehicleClassDescription(), getTechRecordVehicleConfiguration(),
+                getTechRecordApprovalType(), getTechRecordApprovalTypeNumber(), getTechRecordNtaNumber(),
+                getTechRecordVariantNumber(), getTechRecordVariantVersionNumber(), getTechRecordVehicleType(),
+                getPrimaryVrm(), getVin(), getTechRecordHiddenInVta(), getTechRecordUpdateType());
+    }
+
     @Generated("jsonschema2pojo")
     public enum TechRecordEuVehicleCategory {
 
-        @SerializedName("n1")
-        N_1("n1"),
-        @SerializedName("n2")
-        N_2("n2"),
-        @SerializedName("n3")
-        N_3("n3");
-        private final static Map<String, TechRecordHgvComplete.TechRecordEuVehicleCategory> CONSTANTS = new HashMap<String, TechRecordHgvComplete.TechRecordEuVehicleCategory>();
+        @SerializedName("n1") N_1("n1"), @SerializedName("n2") N_2("n2"), @SerializedName("n3") N_3("n3");
+        private final static Map<String, TechRecordHgvComplete.TechRecordEuVehicleCategory> CONSTANTS =
+                new HashMap<String, TechRecordHgvComplete.TechRecordEuVehicleCategory>();
 
         static {
             for (TechRecordHgvComplete.TechRecordEuVehicleCategory c : values()) {
@@ -1466,13 +1654,10 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     @Generated("jsonschema2pojo")
     public enum TechRecordStatusCode {
 
-        @SerializedName("provisional")
-        PROVISIONAL("provisional"),
-        @SerializedName("current")
-        CURRENT("current"),
-        @SerializedName("archived")
-        ARCHIVED("archived");
-        private final static Map<String, TechRecordHgvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordHgvComplete.TechRecordStatusCode>();
+        @SerializedName("provisional") PROVISIONAL("provisional"), @SerializedName("current") CURRENT("current"),
+        @SerializedName("archived") ARCHIVED("archived");
+        private final static Map<String, TechRecordHgvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String,
+                TechRecordHgvComplete.TechRecordStatusCode>();
 
         static {
             for (TechRecordHgvComplete.TechRecordStatusCode c : values()) {
@@ -1505,7 +1690,6 @@ public class TechRecordHgvComplete extends TechRecordV3 {
         }
 
     }
-
 }
 
 

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.processing.Generated;
+import java.util.Objects;
 
 /**
  * HGV Axles
@@ -47,10 +48,55 @@ public class TechRecordAxle {
     private String tyresPlyRating;
     @SerializedName("tyres_fitmentCode")
     @Expose
-    private Object tyresFitmentCode;
+    private String tyresFitmentCode;
     @SerializedName("tyres_dataTrAxles")
     @Expose
     private Integer tyresDataTrAxles;
+
+    public TechRecordAxle(
+            Boolean parkingBrakeMrk,
+            Integer axleNumber,
+            Integer weightsGbWeight,
+            Integer weightsDesignWeight,
+            Integer weightsEecWeight,
+            Integer tyresTyreCode,
+            String tyresTyreSize,
+            String tyresPlyRating,
+            String tyresFitmentCode,
+            Integer tyresDataTrAxles) {
+        this.parkingBrakeMrk = parkingBrakeMrk;
+        this.axleNumber = axleNumber;
+        this.weightsGbWeight = weightsGbWeight;
+        this.weightsDesignWeight = weightsDesignWeight;
+        this.weightsEecWeight = weightsEecWeight;
+        this.tyresTyreCode = tyresTyreCode;
+        this.tyresTyreSize = tyresTyreSize;
+        this.tyresPlyRating = tyresPlyRating;
+        this.tyresFitmentCode = tyresFitmentCode;
+        this.tyresDataTrAxles = tyresDataTrAxles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TechRecordAxle that = (TechRecordAxle) o;
+        return Objects.equals(getParkingBrakeMrk(), that.getParkingBrakeMrk())
+                && Objects.equals(getAxleNumber(), that.getAxleNumber())
+                && Objects.equals(getWeightsGbWeight(), that.getWeightsGbWeight())
+                && Objects.equals(getWeightsDesignWeight(), that.getWeightsDesignWeight())
+                && Objects.equals(getWeightsEecWeight(), that.getWeightsEecWeight())
+                && Objects.equals(getTyresTyreCode(), that.getTyresTyreCode())
+                && Objects.equals(getTyresTyreSize(), that.getTyresTyreSize())
+                && Objects.equals(getTyresPlyRating(), that.getTyresPlyRating())
+                && Objects.equals(getTyresFitmentCode(), that.getTyresFitmentCode())
+                && Objects.equals(getTyresDataTrAxles(), that.getTyresDataTrAxles());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getParkingBrakeMrk(), getAxleNumber(), getWeightsGbWeight(), getWeightsDesignWeight(), getWeightsEecWeight(), getTyresTyreCode(), getTyresTyreSize(), getTyresPlyRating(), getTyresFitmentCode(), getTyresDataTrAxles());
+    }
 
     public Boolean getParkingBrakeMrk() {
         return parkingBrakeMrk;
@@ -116,11 +162,11 @@ public class TechRecordAxle {
         this.tyresPlyRating = tyresPlyRating;
     }
 
-    public Object getTyresFitmentCode() {
+    public String getTyresFitmentCode() {
         return tyresFitmentCode;
     }
 
-    public void setTyresFitmentCode(Object tyresFitmentCode) {
+    public void setTyresFitmentCode(String tyresFitmentCode) {
         this.tyresFitmentCode = tyresFitmentCode;
     }
 
