@@ -33,6 +33,7 @@ import vott.models.dto.testresults.TestTypes;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -813,7 +814,7 @@ public class DynamoNOPDataPipelineTest {
          Then test is returned in view results
          */
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_ldv.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_result_ldv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -827,7 +828,7 @@ public class DynamoNOPDataPipelineTest {
          Then test is returned in view results
          */
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lev.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lev.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_results_lev.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -855,7 +856,7 @@ public class DynamoNOPDataPipelineTest {
          Then test is returned in view results
          */
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lnv.json");
-        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lnv.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_results_lnv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -1028,7 +1029,7 @@ public class DynamoNOPDataPipelineTest {
     @SneakyThrows(IOException.class)
     private CompleteTestResults readTestResult(String path) {
         return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
+                Files.newBufferedReader(Path.of(path)),
                 CompleteTestResults.class
         );
     }
