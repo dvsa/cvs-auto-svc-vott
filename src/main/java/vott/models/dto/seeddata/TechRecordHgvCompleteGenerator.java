@@ -13,6 +13,4 @@ public class TechRecordHgvCompleteGenerator extends AbstractTechRecordGenerator<
         trHGV.setPrimaryVrm(randomString(MAX_VRM_LENGTH));
         return trHGV;
     }
-
-
 }

@@ -3,10 +3,11 @@ package vott.api;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import vott.config.VottConfiguration;
 import vott.json.GsonInstance;
-import vott.models.dto.techrecords.TechRecordPOSTV3;
+import vott.models.dto.techrecordsv3.TechRecordV3;
 
 import static io.restassured.RestAssured.given;
 
@@ -16,7 +17,31 @@ public class TechnicalRecordsV3 {
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private static final Gson gson = GsonInstance.get();
 
-    public static Integer postTechnicalRecordV3(TechRecordPOSTV3 techRecord, String token){
+    /*
+    public static int postTechnicalRecordV3String(String techRecordJson, String token){
+        RESTAssuredBaseURI();
+
+        String techRecordJsonOld = gson.toJson(techRecordJson);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(token, apiKey)
+                    .body(techRecordJson)
+                    .post().thenReturn();
+            statusCode = response.statusCode();
+//            ResponseBody responseBody = response.getBody();
+//            System.out.println(responseBody.prettyPrint());
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+        return statusCode;
+    }
+    */
+
+    public static int postTechnicalRecordV3Object(TechRecordV3 techRecord, String token){
         RESTAssuredBaseURI();
 
         String techRecordJson = gson.toJson(techRecord);
@@ -31,8 +56,8 @@ public class TechnicalRecordsV3 {
                     .body(techRecordJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
-            //ResponseBody responseBody = response.getBody();
-            //System.out.println(responseBody.prettyPrint());
+//            ResponseBody responseBody = response.getBody();
+//            System.out.println(responseBody.prettyPrint());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
         return statusCode;

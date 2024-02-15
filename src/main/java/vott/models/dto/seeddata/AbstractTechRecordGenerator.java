@@ -17,6 +17,8 @@ public abstract class AbstractTechRecordGenerator<T extends TechRecordV3> {
     protected static final SecureRandom rnd = new SecureRandom();
     protected static final int MAX_VIN_LENGTH = 21;
     protected static final int MAX_VRM_LENGTH = 9;
+    protected static final int MAX_TRAILER_ID_LENGTH = 8;
+
 
     public AbstractTechRecordGenerator(T content) {
         this.content = content;
@@ -38,11 +40,11 @@ public abstract class AbstractTechRecordGenerator<T extends TechRecordV3> {
         }
     }
 
-    public T createCompleteHGVFromJsonString(String json) {
+    public T createTechRecordFromJsonString(String json) {
         return (T) gson.fromJson(json, getClassOfT());
     }
 
-    public String createCompleteHGVToJson(T techRecord) {
+    public String createJsonStringFromTechRecord(T techRecord) {
         return gson.toJson(techRecord);
     }
 
