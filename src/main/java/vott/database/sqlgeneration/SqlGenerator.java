@@ -144,6 +144,8 @@ public class SqlGenerator {
         };
     }
 
+
+
     public static Callable<Boolean> testResultIsPresentInDatabase(String vin, TestResultRepository testResultRepository) {
         return () -> {
             List<vott.models.dao.TestResult> testResults = testResultRepository.select(String.format(
@@ -165,6 +167,19 @@ public class SqlGenerator {
                             + "WHERE `vehicle_id` = '%s'", vehicleID
             ));
             return !testResults.isEmpty();
+        };
+    }
+
+    public static Callable<Boolean> techRecordIsPresentInDatabaseByVin(String vin, TechnicalRecordRepository technicalRecordRepository) {
+        return () -> {       
+            List<vott.models.dao.TechnicalRecord> techRecord = technicalRecordRepository.select(String.format(
+                "SELECT technical_record.*\n"
+                        + "FROM `vehicle`\n"
+                        + "JOIN `technical_record`\n"
+                        + "ON `technical_record`.`vehicle_id` = `vehicle`.`id`\n"
+                        + "WHERE `vehicle`.`vin` = '%s'", vin
+        ));
+            return !techRecord.isEmpty();
         };
     }
 
@@ -382,7 +397,7 @@ public class SqlGenerator {
         return testResults;
     }
 
-    public static List<vott.models.dao.TechnicalRecord> getVehicleWithVIN(String vin, TechnicalRecordRepository technicalRecordRepository) {
+    public static List<vott.models.dao.TechnicalRecord> getTechRecordWithVIN(String vin, TechnicalRecordRepository technicalRecordRepository) {
         List<vott.models.dao.TechnicalRecord> techRecord = technicalRecordRepository.select(String.format(
                 "SELECT technical_record.*\n"
                         + "FROM `vehicle`\n"

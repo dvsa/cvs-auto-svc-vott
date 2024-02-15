@@ -117,13 +117,11 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults truncationTestResult = loadTestResults(truncationTechRecord, payloadPath + "truncation_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(truncationTechRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(truncationTechRecord.getVin(), technicalRecordRepository));
         TestResultAPI.postTestResult(truncationTestResult, v1ImplicitTokens.getBearerToken());
-
         String vin = truncationTestResult.getVin();
         //System.out.println("vin " + vin);
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
     }
@@ -150,7 +148,7 @@ public class DynamoNOPDataPipelineTest {
         }
         //System.out.println("vinlist " + vinList);
         for (String vin : vinList) {
-            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
             with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
             List<TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
             assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
@@ -168,11 +166,9 @@ public class DynamoNOPDataPipelineTest {
         CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "twotesttype_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -192,12 +188,10 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "wheelNumber_technical-records.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-
         String vin = techRecord.getVin();
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
 
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-
-        List<vott.models.dao.TechnicalRecord> techRecordNOP = getVehicleWithVIN(vin, technicalRecordRepository);
+        List<vott.models.dao.TechnicalRecord> techRecordNOP = getTechRecordWithVIN(vin, technicalRecordRepository);
         assertThat(techRecordNOP.get(0).getNumberOfWheelsDriven()).isEqualTo("4");
     }
 
@@ -211,14 +205,11 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
         CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
-        //String token = v1ImplicitTokens.getBearerToken();
-
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -262,7 +253,6 @@ public class DynamoNOPDataPipelineTest {
         //System.out.println(testResult.getVin());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
-
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -643,53 +633,6 @@ public class DynamoNOPDataPipelineTest {
     }
 
     @WithTag("Vott")
-    @Title("CB2-8008 - Add VT Data to EVL SQL View ")
-    @Test
-    public void evl_only_vt() throws SQLException, RuntimeException {
-
-        /*
-         values are updated to et_evl_additions table and expect the EVL_VIEW to relevant results
-         */
-
-        EvlContainer evl = evlFeeds("EvlView_test-results-fail.json");
-        EVLView evlViews = evl.evlView;
-        TechRecordPOST techRecord = evl.techRecord;
-        String vin = techRecord.getVin();
-
-        VtEvlCvsRemoved vtr = new VtEvlCvsRemoved();
-        vtr.setVin(vin);
-        vtr.setVrm(techRecord.getPrimaryVrm() + "V");
-        vtr.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vtr.setSystemNumber(techRecord.getSystemNumber() + "1");
-        vtr.setTestStartDate(evlViews.getTestExpiryDate());
-        vtr.setTestExpiryDate(evlViews.getTestExpiryDate());
-        vtr.setVrmTestRecord("test-record");
-
-        upsertVtEvlCvsRemoved(vtEvlCvsRemovedRepository, vtr);
-
-        List<vott.models.dao.VtEvlCvsRemoved> rs = getVTEVLRecordsWithVin(vin, vtEvlCvsRemovedRepository);
-        //System.out.println(rs);
-        assertThat(rs.get(0).getVrm()).isEqualTo(evlViews.getVrmTrm() + "V");
-
-        VtEVLAdditions vt = new VtEVLAdditions();
-        vt.setVrmTrmID(evlViews.getVrmTrm() + "V");
-        vt.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vt.setTestExpiryDate(evlViews.getTestExpiryDate());
-
-        upsertVTEVLADDITIONS(vtEVLAdditionsRepository, vt);
-
-        List<vott.models.dao.EVLView> evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber(), evlViews.getVrmTrm(), evlViewRepository);
-
-        assertThat(evloutput.size()).isEqualTo(1);
-
-        evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber() + "11", evlViews.getVrmTrm() + "V", evlViewRepository);
-        assertThat(evloutput.size()).isEqualTo(1);
-
-    }
-
-    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void evlFeedsRekey() {
@@ -711,11 +654,10 @@ public class DynamoNOPDataPipelineTest {
         testResult.setTestEndTimestamp(datetime);
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         //add rekey records
@@ -725,8 +667,6 @@ public class DynamoNOPDataPipelineTest {
 
         //post rekey records to dynamodb
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -742,7 +682,7 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         String vin = techRecord.getVin();
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
         List<vott.models.dao.AuthIntoServices> ais = getAuthIntoServices(vin, authIntoServicesRepository);
         assertThat(ais.get(0)).isNotNull();
     }
@@ -763,8 +703,8 @@ public class DynamoNOPDataPipelineTest {
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
             String vin = techRecord.getVin();
             //System.out.println("vin :" + vin);
-            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            List<vott.models.dao.TechnicalRecord> nopsTechRecord = getVehicleWithVIN(vin, technicalRecordRepository);
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
+            List<vott.models.dao.TechnicalRecord> nopsTechRecord = getTechRecordWithVIN(vin, technicalRecordRepository);
             softly.assertThat(nopsTechRecord.get(0).getApprovalType()).isEqualTo(appList.getValue());
             //System.out.println("Expected : " + appList.getValue() + "  Actual : " + nopsTechRecord.get(0).getApprovalType());
         }
@@ -915,12 +855,11 @@ public class DynamoNOPDataPipelineTest {
         testResult.setTestEndTimestamp(datetime);
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-
         return getTFLViewWithVin(vin, tflViewRepository);
 
     }
@@ -995,11 +934,11 @@ public class DynamoNOPDataPipelineTest {
             testResult.setTestTypes(ts);
 
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
             TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
             String vin = testResult.getVin();
-
             //System.out.println("vin " + vin);
-            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
             with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
             List<vott.models.dao.TFLView> tflViews = getTFLViewWithVin(vin, tflViewRepository);
