@@ -333,7 +333,7 @@ public class TechRecordHgvComplete extends TechRecordV3 {
 
     @SerializedName("techRecord_manufactureYear")
     @Expose
-    private String techRecordManufactureYear;
+    private Integer techRecordManufactureYear;
     @SerializedName("techRecord_microfilm_microfilmDocumentType")
     @Expose
     private Object techRecordMicrofilmMicrofilmDocumentType;
@@ -1154,12 +1154,12 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     }
 
 
-    public String getTechRecordManufactureYear() {
+    public Integer getTechRecordManufactureYear() {
         return techRecordManufactureYear;
     }
 
 
-    public void setTechRecordManufactureYear(String techRecordManufactureYear) {
+    public void setTechRecordManufactureYear(Integer techRecordManufactureYear) {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 

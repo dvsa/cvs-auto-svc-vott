@@ -278,8 +278,8 @@ public class InsertV3TechRecordNewTest {
         Assert.assertEquals(expectedApprovalType, actualApprovalType);
 
 //        techRecord_manufactureYear
-        String actualManufactureYear = actualTechRecordHgv.getTechRecordManufactureYear();
-        String expectedManufactureYear = null;
+        Integer actualManufactureYear = actualTechRecordHgv.getTechRecordManufactureYear();
+        Integer expectedManufactureYear = 2023;
         Assert.assertEquals(expectedManufactureYear, actualManufactureYear);
 //        techRecord_bodyType_code
 //        techRecord_bodyType_description
@@ -323,9 +323,10 @@ public class InsertV3TechRecordNewTest {
     public void postTechRecordTest() {
         trg = new TechRecordGenerator();
 
-        //HGV Posts correctly
         int expected_StatusCode = 201;
-        TechRecordV3 techRecordHgv = trg.createCompleteHGVFromJson(payloadPath + "/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test_Multiple_Test_Types.json");
+
+        //HGV Posts correctly
+        TechRecordV3 techRecordHgv = trg.createCompleteHGVFromJson(payloadPath + "/TechRecordsV3/HGV_2_Axle_Tech_Record_ADR.json");
         int HGV_StatusCode = postTechRecord(techRecordHgv);
         Assert.assertEquals(HGV_StatusCode, expected_StatusCode);
 
@@ -333,6 +334,11 @@ public class InsertV3TechRecordNewTest {
         TechRecordV3 techRecordPsv = trg.createCompletePSVFromJson(payloadPath + "/TechRecordsV3/PSV_Large_Tech_Record_Annual_Test_m2.json");
         int PSV_StatusCode = postTechRecord(techRecordPsv);
         Assert.assertEquals(PSV_StatusCode, expected_StatusCode);
+
+        //TRL Posts correctly
+        TechRecordV3 techRecordTrl = trg.createCompleteTrlFromJson(payloadPath + "/TestInsertionTimeRecords/TechRecords/TRL_1_Axle_Tech_Record_Annual_Test_40.json");
+        int TRL_StatusCode = postTechRecord(techRecordTrl);
+        Assert.assertEquals(TRL_StatusCode, expected_StatusCode);
     }
     public int postTechRecord(TechRecordV3 techRecord)
     {
