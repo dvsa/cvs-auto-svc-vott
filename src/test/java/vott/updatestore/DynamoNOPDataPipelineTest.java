@@ -121,7 +121,6 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = truncationTestResult.getVin();
         //System.out.println("vin " + vin);
-        //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -150,7 +149,6 @@ public class DynamoNOPDataPipelineTest {
         }
         //System.out.println("vinlist " + vinList);
         for (String vin : vinList) {
-            //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
             with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
             List<TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
             assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
@@ -171,8 +169,6 @@ public class DynamoNOPDataPipelineTest {
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();
-
-        //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -218,7 +214,6 @@ public class DynamoNOPDataPipelineTest {
 
         String vin = testResult.getVin();
 
-        //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
@@ -765,7 +760,6 @@ public class DynamoNOPDataPipelineTest {
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
             String vin = techRecord.getVin();
             //System.out.println("vin :" + vin);
-            //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
             with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
             List<vott.models.dao.TechnicalRecord> nopsTechRecord = getTechRecordWithVIN(vin, technicalRecordRepository);
             softly.assertThat(nopsTechRecord.get(0).getApprovalType()).isEqualTo(appList.getValue());
@@ -921,7 +915,6 @@ public class DynamoNOPDataPipelineTest {
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
 
-        //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         return getTFLViewWithVin(vin, tflViewRepository);
@@ -1002,7 +995,6 @@ public class DynamoNOPDataPipelineTest {
             String vin = testResult.getVin();
 
             //System.out.println("vin " + vin);
-            //with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
             with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
             List<vott.models.dao.TFLView> tflViews = getTFLViewWithVin(vin, tflViewRepository);
