@@ -48,4 +48,15 @@ public class AdditionalExaminerNotesNumberRepository extends AbstractRepository<
 
         return additionalExaminerNotesNumber;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {    
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, AdditionalExaminerNotesNumber entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }

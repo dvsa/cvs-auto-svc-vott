@@ -45,6 +45,12 @@ public class TechRecordTrlComplete extends TechRecordV3 {
      * vin
      * techRecord_euVehicleCategory
      */
+    @Expose
+    @SerializedName("systemNumber")
+    private String systemNumber; 
+    @Expose
+    @SerializedName("createdTimestamp")
+    private String createdTimestamp;
     @SerializedName("partialVin")
     @Expose
     private String partialVin;
@@ -489,6 +495,19 @@ public class TechRecordTrlComplete extends TechRecordV3 {
     @SerializedName("techRecord_dimensions_axleSpacing")
     @Expose
     private List<TechRecordDimensionsAxleSpacing> techRecordDimensionsAxleSpacing;
+
+    public String getSystemNumber() {
+        return systemNumber;
+    }
+    public void setSystemNumber(String systemNumber) {
+        this.systemNumber = systemNumber;
+    }
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
 
     public String getPartialVin() {
         return partialVin;

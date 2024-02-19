@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Tech Record PUT LGV Complete
  * <p>
@@ -26,6 +25,12 @@ public class TechRecordLgvComplete extends TechRecordV3 {
      * techRecord_noOfAxles
      * techRecord_vehicleConfiguration
      */
+    @Expose
+    @SerializedName("systemNumber")
+    private String systemNumber;
+    @Expose
+    @SerializedName("createdTimestamp")
+    private String createdTimestamp;
     @SerializedName("vin")
     @Expose
     private String vin;
@@ -238,11 +243,22 @@ public class TechRecordLgvComplete extends TechRecordV3 {
     @Expose
     private Object techRecordVehicleConfiguration;
 
+    public String getSystemNumber() {
+        return systemNumber;
+    }
+    public void setSystemNumber(String systemNumber) {
+        this.systemNumber = systemNumber;
+    }
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
 
     public String getVin() {
         return vin;
     }
-
 
     public void setVin(String vin) {
         this.vin = vin;
@@ -340,7 +356,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsVehicleDetailsApprovalDate;
     }
 
-    public void setTechRecordAdrDetailsVehicleDetailsApprovalDate(Object techRecordAdrDetailsVehicleDetailsApprovalDate) {
+    public void setTechRecordAdrDetailsVehicleDetailsApprovalDate(
+            Object techRecordAdrDetailsVehicleDetailsApprovalDate) {
         this.techRecordAdrDetailsVehicleDetailsApprovalDate = techRecordAdrDetailsVehicleDetailsApprovalDate;
     }
 
@@ -348,7 +365,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsPermittedDangerousGoods;
     }
 
-    public void setTechRecordAdrDetailsPermittedDangerousGoods(List<String> techRecordAdrDetailsPermittedDangerousGoods) {
+    public void setTechRecordAdrDetailsPermittedDangerousGoods(
+            List<String> techRecordAdrDetailsPermittedDangerousGoods) {
         this.techRecordAdrDetailsPermittedDangerousGoods = techRecordAdrDetailsPermittedDangerousGoods;
     }
 
@@ -364,7 +382,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsAdditionalExaminerNotes;
     }
 
-    public void setTechRecordAdrDetailsAdditionalExaminerNotes(List<TechRecordAdrDetailsAdditionalExaminerNote> techRecordAdrDetailsAdditionalExaminerNotes) {
+    public void setTechRecordAdrDetailsAdditionalExaminerNotes(
+            List<TechRecordAdrDetailsAdditionalExaminerNote> techRecordAdrDetailsAdditionalExaminerNotes) {
         this.techRecordAdrDetailsAdditionalExaminerNotes = techRecordAdrDetailsAdditionalExaminerNotes;
     }
 
@@ -524,7 +543,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankManufacturer;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankManufacturer(String techRecordAdrDetailsTankTankDetailsTankManufacturer) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankManufacturer(
+            String techRecordAdrDetailsTankTankDetailsTankManufacturer) {
         this.techRecordAdrDetailsTankTankDetailsTankManufacturer = techRecordAdrDetailsTankTankDetailsTankManufacturer;
     }
 
@@ -532,7 +552,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsYearOfManufacture;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsYearOfManufacture(Integer techRecordAdrDetailsTankTankDetailsYearOfManufacture) {
+    public void setTechRecordAdrDetailsTankTankDetailsYearOfManufacture(
+            Integer techRecordAdrDetailsTankTankDetailsYearOfManufacture) {
         this.techRecordAdrDetailsTankTankDetailsYearOfManufacture = techRecordAdrDetailsTankTankDetailsYearOfManufacture;
     }
 
@@ -540,7 +561,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(String techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(
+            String techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo) {
         this.techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo = techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo;
     }
 
@@ -548,7 +570,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankTypeAppNo;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankTypeAppNo(String techRecordAdrDetailsTankTankDetailsTankTypeAppNo) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankTypeAppNo(
+            String techRecordAdrDetailsTankTankDetailsTankTypeAppNo) {
         this.techRecordAdrDetailsTankTankDetailsTankTypeAppNo = techRecordAdrDetailsTankTankDetailsTankTypeAppNo;
     }
 
@@ -564,7 +587,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsSpecialProvisions;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(String techRecordAdrDetailsTankTankDetailsSpecialProvisions) {
+    public void setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(
+            String techRecordAdrDetailsTankTankDetailsSpecialProvisions) {
         this.techRecordAdrDetailsTankTankDetailsSpecialProvisions = techRecordAdrDetailsTankTankDetailsSpecialProvisions;
     }
 
@@ -572,7 +596,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(
+            Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type) {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type;
     }
 
@@ -580,7 +605,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(
+            String techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo) {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo;
     }
 
@@ -588,7 +614,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(
+            Object techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate) {
         this.techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate = techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate;
     }
 
@@ -596,7 +623,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTc3Details;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTc3Details(List<TechRecordAdrDetailsTankTankDetailsTc3Detail> techRecordAdrDetailsTankTankDetailsTc3Details) {
+    public void setTechRecordAdrDetailsTankTankDetailsTc3Details(
+            List<TechRecordAdrDetailsTankTankDetailsTc3Detail> techRecordAdrDetailsTankTankDetailsTc3Details) {
         this.techRecordAdrDetailsTankTankDetailsTc3Details = techRecordAdrDetailsTankTankDetailsTc3Details;
     }
 
@@ -604,7 +632,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(String techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(
+            String techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted = techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted;
     }
 
@@ -612,7 +641,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSelect(Object techRecordAdrDetailsTankTankDetailsTankStatementSelect) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementSelect(
+            Object techRecordAdrDetailsTankTankDetailsTankStatementSelect) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementSelect = techRecordAdrDetailsTankTankDetailsTankStatementSelect;
     }
 
@@ -620,7 +650,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementStatement;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementStatement(String techRecordAdrDetailsTankTankDetailsTankStatementStatement) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementStatement(
+            String techRecordAdrDetailsTankTankDetailsTankStatementStatement) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementStatement = techRecordAdrDetailsTankTankDetailsTankStatementStatement;
     }
 
@@ -628,7 +659,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(String techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(
+            String techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo = techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo;
     }
 
@@ -636,7 +668,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(List<String> techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(
+            List<String> techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo = techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo;
     }
 
@@ -644,7 +677,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrDetailsTankTankDetailsTankStatementProductList;
     }
 
-    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(String techRecordAdrDetailsTankTankDetailsTankStatementProductList) {
+    public void setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(
+            String techRecordAdrDetailsTankTankDetailsTankStatementProductList) {
         this.techRecordAdrDetailsTankTankDetailsTankStatementProductList = techRecordAdrDetailsTankTankDetailsTankStatementProductList;
     }
 
@@ -652,7 +686,8 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         return techRecordAdrPassCertificateDetails;
     }
 
-    public void setTechRecordAdrPassCertificateDetails(List<TechRecordAdrPassCertificateDetail> techRecordAdrPassCertificateDetails) {
+    public void setTechRecordAdrPassCertificateDetails(
+            List<TechRecordAdrPassCertificateDetail> techRecordAdrPassCertificateDetails) {
         this.techRecordAdrPassCertificateDetails = techRecordAdrPassCertificateDetails;
     }
 
@@ -664,21 +699,17 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         this.techRecordEuVehicleCategory = techRecordEuVehicleCategory;
     }
 
-
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
-
 
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
 
-
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
     }
-
 
     public void setTechRecordVehicleType(Object techRecordVehicleType) {
         this.techRecordVehicleType = techRecordVehicleType;
@@ -708,11 +739,9 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
-
 
     public void setTechRecordNoOfAxles(Integer techRecordNoOfAxles) {
         this.techRecordNoOfAxles = techRecordNoOfAxles;
@@ -758,11 +787,9 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         this.secondaryVrms = secondaryVrms;
     }
 
-
     public Object getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
-
 
     public void setTechRecordVehicleConfiguration(Object techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
@@ -777,6 +804,7 @@ public class TechRecordLgvComplete extends TechRecordV3 {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
+
         private final static Map<String, TechRecordLgvComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordLgvComplete.TechRecordStatusCode>();
 
         static {
@@ -812,4 +840,3 @@ public class TechRecordLgvComplete extends TechRecordV3 {
     }
 
 }
-

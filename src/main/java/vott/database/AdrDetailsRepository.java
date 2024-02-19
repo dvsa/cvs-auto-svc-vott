@@ -1,11 +1,8 @@
 package vott.database;
 
-import vott.database.AbstractRepository;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.TableDetails;
 import vott.models.dao.ADR;
-import vott.models.dao.Defect;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -177,5 +174,15 @@ public class AdrDetailsRepository extends AbstractRepository<ADR> {
         adr.setM145Statement(rs.getString("m145Statement"));
 
         return adr;
+    }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, ADR entity) throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 }
