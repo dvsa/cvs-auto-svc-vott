@@ -7,7 +7,6 @@ import vott.api.TechnicalRecordsV3;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
-import vott.models.dto.seeddata.TechRecordGenerator;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.models.dto.seeddata.TechRecordPsvCompleteGenerator;
 import vott.models.dto.seeddata.TechRecordTrlCompleteGenerator;
@@ -19,7 +18,6 @@ import java.util.List;
 public class InsertV3TechRecordTest {
     private TokenService v1ImplicitTokens;
     private String payloadPath;
-    private TechRecordGenerator trg;
 
 
     @Before
@@ -316,8 +314,6 @@ public class InsertV3TechRecordTest {
         TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
         TechRecordPsvCompleteGenerator psv_trg = new TechRecordPsvCompleteGenerator(new TechRecordPsvComplete());
         TechRecordTrlCompleteGenerator trl_trg = new TechRecordTrlCompleteGenerator(new TechRecordTrlComplete());
-
-        trg = new TechRecordGenerator();
 
         int expected_StatusCode = 201;
 
