@@ -3,7 +3,6 @@ package vott.api;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import vott.config.VottConfiguration;
 import vott.json.GsonInstance;
@@ -11,38 +10,17 @@ import vott.models.dto.techrecordsv3.TechRecordV3;
 
 import static io.restassured.RestAssured.given;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TechnicalRecordsV3 {
 
     private static final VottConfiguration configuration = VottConfiguration.local();
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private static final Gson gson = GsonInstance.get();
 
-    /*
-    public static int postTechnicalRecordV3String(String techRecordJson, String token){
-        RESTAssuredBaseURI();
-
-        String techRecordJsonOld = gson.toJson(techRecordJson);
-
-        Response response;
-        int statusCode;
-
-        int tries = 0;
-        int maxRetries = 3;
-        do {
-            response = givenAuth(token, apiKey)
-                    .body(techRecordJson)
-                    .post().thenReturn();
-            statusCode = response.statusCode();
-//            ResponseBody responseBody = response.getBody();
-//            System.out.println(responseBody.prettyPrint());
-            tries++;
-        } while (statusCode >= 500 && tries < maxRetries);
-        return statusCode;
-    }
-    */
-
-    public static int postTechnicalRecordV3Object(TechRecordV3 techRecord, String token){
-        RESTAssuredBaseURI();
+    public static Map<String,String> postTechnicalRecordV3ObjectResponse(TechRecordV3 techRecord, String token){
+        RESTAssuredBasePostURI();
 
         String techRecordJson = gson.toJson(techRecord);
 
@@ -56,15 +34,67 @@ public class TechnicalRecordsV3 {
                     .body(techRecordJson)
                     .post().thenReturn();
             statusCode = response.statusCode();
-//            ResponseBody responseBody = response.getBody();
-//            System.out.println(responseBody.prettyPrint());
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+        
+        Map<String,String> outcome = new HashMap<>();
+        outcome.put("statusCode", Integer.toString(statusCode));
+        outcome.put("responseBody", response != null ? response.getBody().asString() : null);
+        return outcome;
+    }
+
+
+    public static Map<String,String> updateTechnicalRecord(TechRecordV3 techRecord, String token, String systemNumber, String createdTimestamp){
+        
+        RESTAssuredBasePutURI(systemNumber,createdTimestamp);
+        String techRecordJson = gson.toJson(techRecord);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(token, apiKey)
+                    .body(techRecordJson)
+                    .patch().thenReturn();
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+        
+        Map<String,String> outcome = new HashMap<>();
+        outcome.put("statusCode", Integer.toString(statusCode));
+        outcome.put("responseBody", response != null ? response.getBody().asString() : null);
+        return outcome;
+    }
+
+
+    public static int postTechnicalRecordV3Object(TechRecordV3 techRecord, String token){
+        RESTAssuredBasePostURI();
+
+        String techRecordJson = gson.toJson(techRecord);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(token, apiKey)
+                    .body(techRecordJson)
+                    .post().thenReturn();
+            statusCode = response.statusCode();
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
         return statusCode;
     }
 
-    private static void RESTAssuredBaseURI(){
+    private static void RESTAssuredBasePostURI(){
         RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v3/technical-records";
+    }
+
+    private static void RESTAssuredBasePutURI(String systemNumber, String createdTimestamp){
+        RestAssured.baseURI = configuration.getApiProperties().getBranchSpecificUrl() + "/v3/technical-records/" + systemNumber + "/" + createdTimestamp ;
     }
 
     private static RequestSpecification givenAuth(String bearerToken) {
