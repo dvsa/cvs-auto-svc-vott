@@ -26,6 +26,7 @@ public class TechRecordMotorcycleComplete extends TechRecordV3 {
      * vin
      */
 
+    
     @SerializedName("secondaryVrms")
     @Expose
     private List<String> secondaryVrms;
@@ -62,6 +63,9 @@ public class TechRecordMotorcycleComplete extends TechRecordV3 {
     @SerializedName("systemNumber")
     @Expose
     private String systemNumber;
+    @Expose
+    @SerializedName("createdTimestamp")
+    private String createdTimestamp; 
     @SerializedName("techRecord_euVehicleCategory")
     @Expose
     private Object techRecordEuVehicleCategory;
@@ -209,6 +213,13 @@ public class TechRecordMotorcycleComplete extends TechRecordV3 {
 
     public void setSystemNumber(String systemNumber) {
         this.systemNumber = systemNumber;
+    }
+
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
     }
 
     public Object getTechRecordEuVehicleCategory() {

@@ -57,6 +57,9 @@ public class TechRecordPsvComplete extends TechRecordV3{
     @SerializedName("systemNumber")
     @Expose
     private String systemNumber;
+    @Expose
+    @SerializedName("createdTimestamp")
+    private String createdTimestamp ; 
     @SerializedName("primaryVrm")
     @Expose
     private String primaryVrm;
@@ -405,6 +408,13 @@ public class TechRecordPsvComplete extends TechRecordV3{
 
     public void setSystemNumber(String systemNumber) {
         this.systemNumber = systemNumber;
+    }
+
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
     }
 
     public String getPrimaryVrm() {

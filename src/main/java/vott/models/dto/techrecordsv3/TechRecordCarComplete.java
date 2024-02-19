@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Tech Record PUT Car Complete
  * <p>
@@ -26,6 +25,13 @@ public class TechRecordCarComplete extends TechRecordV3 {
      * techRecord_reasonForCreation
      * techRecord_vehicleConfiguration
      */
+
+    @Expose
+    @SerializedName("systemNumber")
+    private String systemNumber;
+    @Expose
+    @SerializedName("createdTimestamp")
+    private String createdTimestamp;
     @SerializedName("vin")
     @Expose
     private String vin;
@@ -102,11 +108,22 @@ public class TechRecordCarComplete extends TechRecordV3 {
     @Expose
     private String techRecordApplicantDetailsEmailAddress;
 
+    public String getSystemNumber() {
+        return systemNumber;
+    }
+    public void setSystemNumber(String systemNumber) {
+        this.systemNumber = systemNumber;
+    }
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
 
     public String getVin() {
         return vin;
     }
-
 
     public void setVin(String vin) {
         this.vin = vin;
@@ -120,16 +137,13 @@ public class TechRecordCarComplete extends TechRecordV3 {
         this.primaryVrm = primaryVrm;
     }
 
-
     public String getTechRecordReasonForCreation() {
         return techRecordReasonForCreation;
     }
 
-
     public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
         this.techRecordReasonForCreation = techRecordReasonForCreation;
     }
-
 
     public Object getTechRecordVehicleType() {
         return techRecordVehicleType;
@@ -139,11 +153,9 @@ public class TechRecordCarComplete extends TechRecordV3 {
         this.techRecordVehicleType = techRecordVehicleType;
     }
 
-
     public TechRecordCarComplete.TechRecordStatusCode getTechRecordStatusCode() {
         return techRecordStatusCode;
     }
-
 
     public void setTechRecordStatusCode(TechRecordCarComplete.TechRecordStatusCode techRecordStatusCode) {
         this.techRecordStatusCode = techRecordStatusCode;
@@ -165,7 +177,6 @@ public class TechRecordCarComplete extends TechRecordV3 {
         this.techRecordManufactureYear = techRecordManufactureYear;
     }
 
-
     public Integer getTechRecordNoOfAxles() {
         return techRecordNoOfAxles;
     }
@@ -182,11 +193,9 @@ public class TechRecordCarComplete extends TechRecordV3 {
         this.techRecordNotes = techRecordNotes;
     }
 
-
     public List<TechRecordVehicleSubclass> getTechRecordVehicleSubclass() {
         return techRecordVehicleSubclass;
     }
-
 
     public void setTechRecordVehicleSubclass(List<TechRecordVehicleSubclass> techRecordVehicleSubclass) {
         this.techRecordVehicleSubclass = techRecordVehicleSubclass;
@@ -216,13 +225,12 @@ public class TechRecordCarComplete extends TechRecordV3 {
         this.secondaryVrms = secondaryVrms;
     }
 
-
     public TechRecordCarComplete.TechRecordVehicleConfiguration getTechRecordVehicleConfiguration() {
         return techRecordVehicleConfiguration;
     }
 
-
-    public void setTechRecordVehicleConfiguration(TechRecordCarComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
+    public void setTechRecordVehicleConfiguration(
+            TechRecordCarComplete.TechRecordVehicleConfiguration techRecordVehicleConfiguration) {
         this.techRecordVehicleConfiguration = techRecordVehicleConfiguration;
     }
 
@@ -307,6 +315,7 @@ public class TechRecordCarComplete extends TechRecordV3 {
         CURRENT("current"),
         @SerializedName("archived")
         ARCHIVED("archived");
+
         private final static Map<String, TechRecordCarComplete.TechRecordStatusCode> CONSTANTS = new HashMap<String, TechRecordCarComplete.TechRecordStatusCode>();
 
         static {
@@ -368,6 +377,7 @@ public class TechRecordCarComplete extends TechRecordV3 {
         DOLLY("dolly"),
         @SerializedName("full drawbar")
         FULL_DRAWBAR("full drawbar");
+
         private final static Map<String, TechRecordCarComplete.TechRecordVehicleConfiguration> CONSTANTS = new HashMap<String, TechRecordCarComplete.TechRecordVehicleConfiguration>();
 
         static {
