@@ -31,12 +31,12 @@ public class VehicleClassRepository extends AbstractRepository<VehicleClass>{
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, VehicleClass entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override

@@ -48,4 +48,15 @@ public class ProductListUnNoRepository extends AbstractRepository<ProductListUnN
 
         return productListUnNo;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, ProductListUnNo entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }

@@ -29,12 +29,12 @@ public class FuelEmissionRepository extends AbstractRepository<FuelEmission> {
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, FuelEmission entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override

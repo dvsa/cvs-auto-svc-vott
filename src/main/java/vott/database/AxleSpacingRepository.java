@@ -28,12 +28,12 @@ public class AxleSpacingRepository extends AbstractRepository<AxleSpacing> {
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, AxleSpacing entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override
@@ -60,7 +60,6 @@ public class AxleSpacingRepository extends AbstractRepository<AxleSpacing> {
         as.setTechnicalRecordID(rs.getString("system_number"));
         as.setAxles(rs.getString("vin"));
         as.setValue(rs.getString("vrm_trm"));
-
         return as;
     }
 }

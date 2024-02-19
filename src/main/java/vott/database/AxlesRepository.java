@@ -38,12 +38,12 @@ public class AxlesRepository extends AbstractRepository<Axles> {
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, Axles entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override

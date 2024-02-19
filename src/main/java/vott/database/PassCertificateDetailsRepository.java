@@ -60,4 +60,15 @@ public class PassCertificateDetailsRepository extends AbstractRepository<PassCer
 
         return passCertificateDetails;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, PassCertificateDetails entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }

@@ -1,11 +1,8 @@
 package vott.database;
 
 import vott.database.connection.ConnectionFactory;
-import vott.models.dao.Defect;
 import vott.models.dao.EVLView;
 import vott.database.sqlgeneration.TableDetails;
-import vott.models.dao.TestResult;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,12 +23,12 @@ public class EVLViewRepository extends AbstractRepository<EVLView> {
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, EVLView entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override

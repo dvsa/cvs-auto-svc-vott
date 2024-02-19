@@ -48,4 +48,15 @@ public class PermittedDangerousGoodsRepository extends AbstractRepository<Permit
 
         return permittedDangerousGoods;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, PermittedDangerousGoods entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }

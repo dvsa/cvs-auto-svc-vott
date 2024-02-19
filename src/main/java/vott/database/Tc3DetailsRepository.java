@@ -56,4 +56,15 @@ public class Tc3DetailsRepository extends AbstractRepository<Tc3Details> {
 
         return tc3Details;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Tc3Details entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }

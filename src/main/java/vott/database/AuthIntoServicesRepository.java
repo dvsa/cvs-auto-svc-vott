@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import vott.models.dao.AuthIntoServices;
-import vott.models.dao.EVLView;
 
 
 public class AuthIntoServicesRepository extends AbstractRepository<AuthIntoServices> {
@@ -29,12 +28,12 @@ public class AuthIntoServicesRepository extends AbstractRepository<AuthIntoServi
 
         @Override
         protected TableDetails getFingerPrintTableDetails() {
-                return null;
+                throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
         }
 
         @Override
         protected void setFingerprintParameters(PreparedStatement preparedStatement, AuthIntoServices entity) throws SQLException {
-
+                throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
         }
 
         @Override

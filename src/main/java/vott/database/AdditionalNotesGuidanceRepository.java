@@ -48,4 +48,15 @@ public class AdditionalNotesGuidanceRepository extends AbstractRepository<Additi
 
         return additionalNotesGuidance;
     }
+
+    @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, AdditionalNotesGuidance entity)
+            throws SQLException {
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
+    }
 }
