@@ -10,7 +10,8 @@ import org.junit.runner.RunWith;
 import vott.config.VottConfiguration;
 import vott.database.connection.ConnectionFactory;
 import vott.database.seeddata.SeedData;
-import vott.models.dao.*;
+import vott.models.dao.TestResult;
+import vott.models.dao.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,6 @@ public class TestResultRepositoryTest {
     private Integer testerPK;
     private Integer vehicleClassPK;
     private Integer testTypePK;
-    private Integer testType2PK;
     private Integer preparerPK;
     private Integer identityPK;
 
@@ -74,7 +74,7 @@ public class TestResultRepositoryTest {
 
         identityRepository = new IdentityRepository(connectionFactory);
         identityPK = identityRepository.partialUpsert(SeedData.newTestIdentity());
-      
+
         deleteOnExit = new ArrayList<>();
     }
 
@@ -85,7 +85,7 @@ public class TestResultRepositoryTest {
         }
 
         vehicleRepository.delete(vehiclePK);
-        if (vehicle2PK != null){
+        if (vehicle2PK != null) {
             vehicleRepository.delete(vehicle2PK);
         }
         fuelEmissionRepository.delete(fuelEmissionPK);
@@ -93,9 +93,6 @@ public class TestResultRepositoryTest {
         testerRepository.delete(testerPK);
         vehicleClassRepository.delete(vehicleClassPK);
         testTypeRepository.delete(testTypePK);
-        if (testType2PK != null){
-            testTypeRepository.delete(testType2PK);
-        }
         preparerRepository.delete(preparerPK);
         identityRepository.delete(identityPK);
     }
@@ -104,8 +101,9 @@ public class TestResultRepositoryTest {
     @Title("VOTT-8 - AC1 - TC49 - Testing test result unique index compound key")
     @Test
     public void upsertingIdenticalTestResultReturnsSamePk() {
-        int primaryKey1 = testResultRepository.fullUpsert(SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK));
-        int primaryKey2 = testResultRepository.fullUpsert(SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK));
+
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK));
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK));
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -121,11 +119,11 @@ public class TestResultRepositoryTest {
         vehicle2.setVin("Vin Updated");
         vehicle2PK = vehicleRepository.fullUpsert(vehicle2);
 
-        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehicle2PK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehicle2PK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
 
-        int primaryKey1 = testResultRepository.fullUpsert(tr1);
-        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(tr1);
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -137,12 +135,12 @@ public class TestResultRepositoryTest {
     @Title("VOTT-8 - AC1 - TC51 - Testing test result unique index compound key")
     @Test
     public void upsertingNewTestNumberReturnsDifferentPk() {
-        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
         tr2.setTestNumber("B222A111");
 
-        int primaryKey1 = testResultRepository.fullUpsert(tr1);
-        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(tr1);
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -154,12 +152,12 @@ public class TestResultRepositoryTest {
     @Title("VOTT-8 - AC1 - TC52 - Testing test result unique index compound key")
     @Test
     public void upsertingNewTestResultIdReturnsDifferentPk() {
-        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
         tr2.setTestResultId("2222-2222-2222-2222");
 
-        int primaryKey1 = testResultRepository.fullUpsert(tr1);
-        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(tr1);
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -171,12 +169,12 @@ public class TestResultRepositoryTest {
     @Title("VOTT-8 - AC1 - TC53 - Testing test result unique index compound key")
     @Test
     public void upsertingNewTestTypeEndTimestampReturnsDifferentPk() {
-        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
         tr2.setTestTypeEndTimestamp("2022-01-02 00:00:00");
 
-        int primaryKey1 = testResultRepository.fullUpsert(tr1);
-        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(tr1);
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);
@@ -188,12 +186,12 @@ public class TestResultRepositoryTest {
     @Title("VOTT-8 - AC1 - TC54 - Testing test result unique index compound key")
     @Test
     public void upsertingIdenticalIndexValuesReturnsSamePk() {
-        TestResult tr1 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
-        TestResult tr2 = SeedData.newTestTestResult(vehiclePK,fuelEmissionPK, testStationPK, testerPK,preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr1 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
+        TestResult tr2 = SeedData.newTestTestResult(vehiclePK, fuelEmissionPK, testStationPK, testerPK, preparerPK, vehicleClassPK, testTypePK, identityPK);
         tr2.setTestResult("Test Fail");
 
-        int primaryKey1 = testResultRepository.fullUpsert(tr1);
-        int primaryKey2 = testResultRepository.fullUpsert(tr2);
+        int primaryKey1 = testResultRepository.fullUpsertIfNotExists(tr1);
+        int primaryKey2 = testResultRepository.fullUpsertIfNotExists(tr2);
 
         deleteOnExit.add(primaryKey1);
         deleteOnExit.add(primaryKey2);

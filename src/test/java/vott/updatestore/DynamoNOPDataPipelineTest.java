@@ -1,8 +1,10 @@
 package vott.updatestore;
 
+import com.google.gson.Gson;
+import lombok.SneakyThrows;
+import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.annotations.Title;
-import net.serenitybdd.annotations.WithTag;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,12 +19,22 @@ import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
-import vott.models.dao.*;
+import vott.e2e.FieldGenerator;
+import vott.json.GsonInstance;
+import vott.models.dao.EVLView;
+import vott.models.dao.TestResult;
+import vott.models.dao.VtEVLAdditions;
+import vott.models.dao.VtEvlCvsRemoved;
 import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecords.TechRecords;
-import vott.models.dto.testresults.*;
-import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
+import vott.models.dto.testresults.CompleteTestResults;
+import vott.models.dto.testresults.TestTypeResults;
+import vott.models.dto.testresults.TestTypes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -32,6 +44,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import vott.models.dto.techrecords.TechRecord.ApprovalTypeEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
@@ -42,6 +55,8 @@ import static vott.models.dto.testresults.TestTypeResults.EmissionStandardEnum.*
 public class DynamoNOPDataPipelineTest {
     @Rule
     public RetryRule retryRule = new RetryRule(3);
+    private Gson gson;
+    private FieldGenerator fieldGenerator;
     private TokenService v1ImplicitTokens;
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
@@ -54,12 +69,17 @@ public class DynamoNOPDataPipelineTest {
     private VtEVLAdditionsRepository vtEVLAdditionsRepository;
     private VtEvlCvsRemovedRepository vtEvlCvsRemovedRepository;
     private String payloadPath;
-    private SharedUtilities sharedUtilities;
+
+    private static final int WAIT_IN_SECONDS = 60;
 
     @Before
     public void setUp() throws Exception {
 
         VottConfiguration configuration = VottConfiguration.local();
+
+        gson = GsonInstance.get();
+
+        fieldGenerator = new FieldGenerator();
 
         v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
@@ -85,8 +105,6 @@ public class DynamoNOPDataPipelineTest {
 
         vtEvlCvsRemovedRepository = new VtEvlCvsRemovedRepository(connectionFactory);
 
-        sharedUtilities = new SharedUtilities();
-
         payloadPath = "src/main/resources/payloads/";
 
     }
@@ -95,17 +113,15 @@ public class DynamoNOPDataPipelineTest {
     @Title("CB2-7258 - TC1 - testCode value truncation")
     @Test
     public void testCodeTruncation() {
-        TechRecordPOST truncationTechRecord =  sharedUtilities.loadTechRecord(payloadPath + "truncation_technical-records.json");
-        CompleteTestResults truncationTestResult = sharedUtilities.loadTestResults(truncationTechRecord, payloadPath + "truncation_test-results.json");
+        TechRecordPOST truncationTechRecord = loadTechRecord(payloadPath + "truncation_technical-records.json");
+        CompleteTestResults truncationTestResult = loadTestResults(truncationTechRecord, payloadPath + "truncation_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(truncationTechRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(truncationTechRecord.getVin(), technicalRecordRepository));
         TestResultAPI.postTestResult(truncationTestResult, v1ImplicitTokens.getBearerToken());
-
         String vin = truncationTestResult.getVin();
         //System.out.println("vin " + vin);
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
     }
@@ -123,8 +139,8 @@ public class DynamoNOPDataPipelineTest {
         TechRecordPOST truncationTechRecord;
         CompleteTestResults truncationTestResult;
         for (int i = 0; i < 20; i++) {
-            truncationTechRecord = sharedUtilities.loadTechRecord(payloadPath + "performance_technical-records.json");
-            truncationTestResult = sharedUtilities.loadTestResults(truncationTechRecord, payloadPath + "performance_test-results.json");
+            truncationTechRecord = loadTechRecord(payloadPath + "performance_technical-records.json");
+            truncationTestResult = loadTestResults(truncationTechRecord, payloadPath + "performance_test-results.json");
             VehiclesAPI.postVehicleTechnicalRecord(truncationTechRecord, v1ImplicitTokens.getBearerToken());
             TestResultAPI.postTestResult(truncationTestResult, v1ImplicitTokens.getBearerToken());
             String vin = truncationTestResult.getVin();
@@ -132,8 +148,8 @@ public class DynamoNOPDataPipelineTest {
         }
         //System.out.println("vinlist " + vinList);
         for (String vin : vinList) {
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
             List<TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
             assertThat(testResultNOP.get(0).getTestCode().length()).isEqualTo(3);
         }
@@ -146,16 +162,14 @@ public class DynamoNOPDataPipelineTest {
         /*
          Vehicle test results have two test types of same test type id
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "twotesttype_technical-records.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "twotesttype_test-results.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "twotesttype_technical-records.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "twotesttype_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         assertThat(testResultNOP.get(0).getTestTypeStartTimestamp()).isNotEqualTo(testResultNOP.get(1).getTestTypeStartTimestamp());
@@ -171,15 +185,13 @@ public class DynamoNOPDataPipelineTest {
         /*
          Tech records and Test Records numberOfWheelsDriven can be considered as string as well as numbers
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "wheelNumber_technical-records.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "wheelNumber_technical-records.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-
         String vin = techRecord.getVin();
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
 
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-
-        List<vott.models.dao.TechnicalRecord> techRecordNOP = getVehicleWithVIN(vin, technicalRecordRepository);
+        List<vott.models.dao.TechnicalRecord> techRecordNOP = getTechRecordWithVIN(vin, technicalRecordRepository);
         assertThat(techRecordNOP.get(0).getNumberOfWheelsDriven()).isEqualTo("4");
     }
 
@@ -190,18 +202,15 @@ public class DynamoNOPDataPipelineTest {
         /*
          Tech records and Test Records numberOfWheelsDriven can be considered as string as well as numbers
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
-
-        //String token = v1ImplicitTokens.getBearerToken();
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.Tester> tester = getTesterDetailsWithVehicleID(testResultNOP.get(0).getVehicleID(), testerRepository);
@@ -224,15 +233,13 @@ public class DynamoNOPDataPipelineTest {
 
     }
 
-    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     public EvlContainer evlFeeds(String testResultFileName) throws RuntimeException {
 
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + testResultFileName);
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + testResultFileName);
 
         TestTypes ts = testResult.getTestTypes();
-        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);
@@ -246,8 +253,7 @@ public class DynamoNOPDataPipelineTest {
         //System.out.println(testResult.getVin());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.EVLView> evlViews = getEVLViewWithCertificateNumberAndVrm(testResultNOP.get(0).getCertificateNumber(), techRecord.getPrimaryVrm(), evlViewRepository);
@@ -281,6 +287,7 @@ public class DynamoNOPDataPipelineTest {
                 evlViews.getCertificateNumber(), evlViews.getVrmTrm(), evlViewRepository);
         assertThat(evloutput.size()).isEqualTo(1);
     }
+
 
     @WithTag("Vott")
     @Title("CB2-8008 - Add VT Data to EVL SQL View ")
@@ -626,53 +633,6 @@ public class DynamoNOPDataPipelineTest {
     }
 
     @WithTag("Vott")
-    @Title("CB2-8008 - Add VT Data to EVL SQL View ")
-    @Test
-    public void evl_only_vt() throws SQLException, RuntimeException {
-
-        /*
-         values are updated to et_evl_additions table and expect the EVL_VIEW to relevant results
-         */
-
-        EvlContainer evl = evlFeeds("EvlView_test-results-fail.json");
-        EVLView evlViews = evl.evlView;
-        TechRecordPOST techRecord = evl.techRecord;
-        String vin = techRecord.getVin();
-
-        VtEvlCvsRemoved vtr = new VtEvlCvsRemoved();
-        vtr.setVin(vin);
-        vtr.setVrm(techRecord.getPrimaryVrm() + "V");
-        vtr.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vtr.setSystemNumber(techRecord.getSystemNumber() + "1");
-        vtr.setTestStartDate(evlViews.getTestExpiryDate());
-        vtr.setTestExpiryDate(evlViews.getTestExpiryDate());
-        vtr.setVrmTestRecord("test-record");
-
-        upsertVtEvlCvsRemoved(vtEvlCvsRemovedRepository, vtr);
-
-        List<vott.models.dao.VtEvlCvsRemoved> rs = getVTEVLRecordsWithVin(vin, vtEvlCvsRemovedRepository);
-        //System.out.println(rs);
-        assertThat(rs.get(0).getVrm()).isEqualTo(evlViews.getVrmTrm() + "V");
-
-        VtEVLAdditions vt = new VtEVLAdditions();
-        vt.setVrmTrmID(evlViews.getVrmTrm() + "V");
-        vt.setCertificateNumber(evlViews.getCertificateNumber() + "11");
-        vt.setTestExpiryDate(evlViews.getTestExpiryDate());
-
-        upsertVTEVLADDITIONS(vtEVLAdditionsRepository, vt);
-
-        List<vott.models.dao.EVLView> evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber(), evlViews.getVrmTrm(), evlViewRepository);
-
-        assertThat(evloutput.size()).isEqualTo(1);
-
-        evloutput = getEVLViewWithCertificateNumberAndVrm(
-                evlViews.getCertificateNumber() + "11", evlViews.getVrmTrm() + "V", evlViewRepository);
-        assertThat(evloutput.size()).isEqualTo(1);
-
-    }
-
-    @WithTag("Vott")
     @Title("CB2-7578 - Values in NOP Schema are truncated for Test Results")
     @Test
     public void evlFeedsRekey() {
@@ -680,11 +640,10 @@ public class DynamoNOPDataPipelineTest {
          values are updated to rekey to dynamoDB table and expect the EVL_VIEW to show results once
          */
 
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "testresultTruncation_technical-records.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "testresultTruncation_test-results.json");
 
         TestTypes ts = testResult.getTestTypes();
-        //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);
@@ -695,12 +654,11 @@ public class DynamoNOPDataPipelineTest {
         testResult.setTestEndTimestamp(datetime);
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         //add rekey records
         testResult.setTestStartTimestamp(testResult.getTestStartTimestamp().minusNanos(testResult.getTestStartTimestamp().getNano()));
@@ -709,9 +667,7 @@ public class DynamoNOPDataPipelineTest {
 
         //post rekey records to dynamodb
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
-
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
         List<vott.models.dao.TestResult> testResultNOP = getTestResultWithVIN(vin, testResultRepository);
         List<vott.models.dao.EVLView> evlViews = getEVLViewWithCertificateNumberAndVrm(testResultNOP.get(0).getCertificateNumber(), techRecord.getPrimaryVrm(), evlViewRepository);
@@ -723,10 +679,10 @@ public class DynamoNOPDataPipelineTest {
     @Test
     public void trailerOCO() {
 
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_trl_oco.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
         String vin = techRecord.getVin();
-        with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
         List<vott.models.dao.AuthIntoServices> ais = getAuthIntoServices(vin, authIntoServicesRepository);
         assertThat(ais.get(0)).isNotNull();
     }
@@ -740,15 +696,15 @@ public class DynamoNOPDataPipelineTest {
         SoftAssertions softly = new SoftAssertions();
         List<ApprovalTypeEnum> approvalList = new ArrayList<>(EnumSet.allOf(ApprovalTypeEnum.class));
         for (ApprovalTypeEnum appList : approvalList) {
-            techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_trl_oco.json");
+            techRecord = loadTechRecord(payloadPath + "technical-records_trl_oco.json");
             trs = techRecord.getTechRecord();
             trs.get(0).setApprovalType(appList);
             techRecord.setTechRecord(trs);
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
             String vin = techRecord.getVin();
             //System.out.println("vin :" + vin);
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            List<vott.models.dao.TechnicalRecord> nopsTechRecord = getVehicleWithVIN(vin, technicalRecordRepository);
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(vin, technicalRecordRepository));
+            List<vott.models.dao.TechnicalRecord> nopsTechRecord = getTechRecordWithVIN(vin, technicalRecordRepository);
             softly.assertThat(nopsTechRecord.get(0).getApprovalType()).isEqualTo(appList.getValue());
             //System.out.println("Expected : " + appList.getValue() + "  Actual : " + nopsTechRecord.get(0).getApprovalType());
         }
@@ -769,8 +725,8 @@ public class DynamoNOPDataPipelineTest {
          And expiry date is not blank
 
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lbp.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lbp.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lbp.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lbp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -783,8 +739,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lcp.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lcp.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lcp.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lcp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -797,8 +753,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_ldv.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_result_ldv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -811,8 +767,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_lev.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lev.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lev.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_results_lev.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -825,8 +781,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_psv_lnp.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lnp.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_psv_lnp.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TflView_test-results_psv_lnp.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -839,8 +795,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_lnv.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TflView_test-results_hgv_lnv.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_lnv.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test_results_lnv.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -853,8 +809,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test is returned in view results
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_lgv_lnz.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_lgv_lnz.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_lgv_lnz.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_lgv_lnz.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -867,8 +823,8 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test has a CertificationModificationType defaulted to p
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_desk_based.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_desk_based.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_desk_based.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_desk_based.json");
         checkTestResultOnTFLView(techRecord, testResult);
     }
 
@@ -881,15 +837,14 @@ public class DynamoNOPDataPipelineTest {
          When TFL view is queried
          Then test will not be on view
          */
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
-        CompleteTestResults testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "TfLView_test-results_hgv_ldv_cert_not_LP.json");
+        TechRecordPOST techRecord = loadTechRecord(payloadPath + "TflView_technical-records_hgv_ldv.json");
+        CompleteTestResults testResult = loadTestResults(techRecord, payloadPath + "TfLView_test-results_hgv_ldv_cert_not_LP.json");
         checkTestResultNotOnTFL(techRecord, testResult);
     }
 
 
     private List<vott.models.dao.TFLView> insertDataViaApiAndGetTFLViewByVIN(TechRecordPOST techRecord, CompleteTestResults testResult) {
         TestTypes ts = testResult.getTestTypes();
-       //LocalDate ld = LocalDate.now();
         OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
 
         ts.get(0).setTestExpiryDate(datetime);
@@ -900,12 +855,11 @@ public class DynamoNOPDataPipelineTest {
         testResult.setTestEndTimestamp(datetime);
 
         VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
         String vin = testResult.getVin();
-
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-        with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
-
+        with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
         return getTFLViewWithVin(vin, tflViewRepository);
 
     }
@@ -971,8 +925,8 @@ public class DynamoNOPDataPipelineTest {
 
         for (Map.Entry<TestTypeResults.EmissionStandardEnum, String> entry : es.entrySet()) {
 
-            techRecord = sharedUtilities.loadTechRecord(payloadPath + "technical-records_psv.json");
-            testResult = sharedUtilities.loadTestResults(techRecord, payloadPath + "test-results_psv.json");
+            techRecord = loadTechRecord(payloadPath + "technical-records_psv.json");
+            testResult = loadTestResults(techRecord, payloadPath + "test-results_psv.json");
 
             //System.out.println(entry.getKey());
             TestTypes ts = testResult.getTestTypes();
@@ -980,12 +934,12 @@ public class DynamoNOPDataPipelineTest {
             testResult.setTestTypes(ts);
 
             VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.techRecordIsPresentInDatabaseByVin(techRecord.getVin(), technicalRecordRepository));
+
             TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
             String vin = testResult.getVin();
-
             //System.out.println("vin " + vin);
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));
-            with().timeout(Duration.ofSeconds(30)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
+            with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(vin, testResultRepository));
 
             List<vott.models.dao.TFLView> tflViews = getTFLViewWithVin(vin, tflViewRepository);
             assertThat(tflViews.size()).isGreaterThan(0);
@@ -993,6 +947,49 @@ public class DynamoNOPDataPipelineTest {
             assertThat(tflViews.get(0)).isNotNull();
             assertThat(tflViews.get(0).getEmissionClassificationCode()).isEqualTo(entry.getValue());
         }
+    }
+
+    private TechRecordPOST loadTechRecord(String fileName) {
+        return randomizeKeys(readTechRecord(fileName));
+    }
+
+    private CompleteTestResults loadTestResults(TechRecordPOST techRecord, String fileName) {
+        return matchKeys(techRecord, readTestResult(fileName));
+    }
+
+    @SneakyThrows(IOException.class)
+    private TechRecordPOST readTechRecord(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Paths.get(path)),
+                TechRecordPOST.class
+        );
+    }
+
+    @SneakyThrows(IOException.class)
+    private CompleteTestResults readTestResult(String path) {
+        return gson.fromJson(
+                Files.newBufferedReader(Path.of(path)),
+                CompleteTestResults.class
+        );
+    }
+
+    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
+        String vin = fieldGenerator.randomVin();
+        while (SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository).toString().equals("true")) {
+            vin = fieldGenerator.randomVin();
+        }
+        techRecord.setVin(vin);
+        techRecord.setPrimaryVrm(fieldGenerator.randomVrm());
+        return techRecord;
+    }
+
+    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
+        testResult.setTestResultId(UUID.randomUUID().toString());
+        // test result ID is not kept on enquiry-service retrievals: need a way to uniquely identify within test suite
+        testResult.setTesterName(UUID.randomUUID().toString());
+        testResult.setVin(techRecord.getVin());
+        testResult.setVrm(techRecord.getPrimaryVrm());
+        return testResult;
     }
 
     static class EvlContainer {

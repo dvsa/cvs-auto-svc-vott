@@ -28,6 +28,16 @@ public class MicrofilmRepository extends AbstractRepository<Microfilm> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Microfilm entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Microfilm entity) throws SQLException {
         preparedStatement.setString(1, entity.getTechnicalRecordID());
         preparedStatement.setString(2, entity.getMicrofilmDocumentType());

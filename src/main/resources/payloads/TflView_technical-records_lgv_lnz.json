@@ -93,9 +93,6 @@
       "roadFriendly": false,
       "drawbarCouplingFitted": true,
       "euroStandard": "6",
-      "vehicleClass": {
-        "description": "large goods vehicle"
-      },
       "vehicleConfiguration": "rigid",
       "euVehicleCategory": "n2",
       "alterationMarker": false,

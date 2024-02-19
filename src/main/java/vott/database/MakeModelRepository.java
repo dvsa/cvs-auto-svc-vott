@@ -34,6 +34,16 @@ public class MakeModelRepository extends AbstractRepository<MakeModel>{
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, MakeModel entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, MakeModel entity) throws SQLException {
         preparedStatement.setString(1, entity.getMake());
         preparedStatement.setString(2, entity.getModel());

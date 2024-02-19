@@ -29,6 +29,16 @@ public class PlateRepository extends AbstractRepository<Plate> {
     }
 
     @Override
+    protected TableDetails getFingerPrintTableDetails() {
+        return null;
+    }
+
+    @Override
+    protected void setFingerprintParameters(PreparedStatement preparedStatement, Plate entity) throws SQLException {
+
+    }
+
+    @Override
     protected void setParameters(PreparedStatement preparedStatement, Plate entity) throws SQLException {
 
         // 1-indexed
