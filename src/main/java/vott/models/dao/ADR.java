@@ -72,5 +72,6 @@ public class ADR {
     private String statement;
     private String productListRefNo;
     private String productList;
+    private String m145Statement;
 
 }

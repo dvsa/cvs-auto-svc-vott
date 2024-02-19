@@ -37,13 +37,11 @@ public abstract class AbstractRepository<T> {
     }
 
 
+    //Only implemented for test result table to fix failing tests following RDS upgrade to v8.x
+    //Further development parked pending any changes to NOP fingerprint/unique indexing stratergy
     public int fullUpsertIfNotExists(T entity) {
 
         int idReturned = -1;
-
-        //TODO change the sql to use select statement based on if the table has a fingerprint or not
-        //TODO implement the finger print columns into each concrete repository class
-        //TODO add a definition of the fingerprint column name for each table to TableDetails object
 
         try (Connection connection = connectionFactory.getConnection()) {
 
@@ -187,8 +185,9 @@ public abstract class AbstractRepository<T> {
 
     protected abstract TableDetails getTableDetails();
 
+    //Only created concrete implementation for test result table to fix failing tests following RDS upgrade to v8.x
+    //Further development parked pending any changes to NOP fingerprint/unique indexing stratergy
     protected abstract TableDetails getFingerPrintTableDetails();
-
     protected abstract void setFingerprintParameters(PreparedStatement preparedStatement, T entity) throws SQLException;
 
     protected abstract void setParameters(PreparedStatement preparedStatement, T entity) throws SQLException;
@@ -229,7 +228,7 @@ public abstract class AbstractRepository<T> {
             return generatedKeys.get(0);
 
         } catch (SQLException e) {
-            return -1;
+            throw new RuntimeException(e);
         }
     }
 }

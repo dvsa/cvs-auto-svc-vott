@@ -2,9 +2,7 @@ package vott.database;
 
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.TableDetails;
-import vott.models.dao.VtEVLAdditions;
 import vott.models.dao.VtEvlCvsRemoved;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,12 +28,12 @@ public class VtEvlCvsRemovedRepository extends AbstractRepository<VtEvlCvsRemove
 
     @Override
     protected TableDetails getFingerPrintTableDetails() {
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getFingerPrintTableDetails'");
     }
 
     @Override
     protected void setFingerprintParameters(PreparedStatement preparedStatement, VtEvlCvsRemoved entity) throws SQLException {
-
+        throw new UnsupportedOperationException("Unimplemented method 'setFingerprintParameters'");
     }
 
     @Override
