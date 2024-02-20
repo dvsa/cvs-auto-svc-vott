@@ -61,7 +61,8 @@ public class DownloadMotCertificateClientCredentialsTest {
         this.token = new TokenService(OAuthVersion.V2, GrantType.CLIENT_CREDENTIALS).getBearerToken();
 
         TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
-        TechRecordHgvComplete techRecord = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
         TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
         validVIN = techRecord.getVin();
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));

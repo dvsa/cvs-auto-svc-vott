@@ -62,12 +62,13 @@ public class DownloadMotCertificateImplicitTest {
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
         TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
-        TechRecordHgvComplete techRecord = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
         TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
         validVIN = techRecord.getVin();
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
         Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
-        techRecord.setSystemNumber(vehicle.getSystemNumber()); 
+        techRecord.setSystemNumber(vehicle.getSystemNumber());
 
         CompleteTestResults testResult = testResult(techRecord);
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
