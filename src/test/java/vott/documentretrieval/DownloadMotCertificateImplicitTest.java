@@ -9,10 +9,7 @@ import net.serenitybdd.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import vott.api.DocRetrievalAPI;
-import vott.api.TestResultAPI;
-import vott.api.VehicleDataAPI;
-import vott.api.VehiclesAPI;
+import vott.api.*;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -20,10 +17,10 @@ import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
-import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
 import vott.models.dto.enquiry.Vehicle;
-import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
+import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
 import vott.models.dto.testresults.CompleteTestResults;
 
 import java.awt.*;
@@ -51,7 +48,6 @@ public class DownloadMotCertificateImplicitTest {
     private String validTestNumber = "";
 
     private final Gson gson = GsonInstance.get();
-    private final FieldGenerator fieldGenerator = new FieldGenerator();
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
@@ -65,8 +61,9 @@ public class DownloadMotCertificateImplicitTest {
 
         this.token = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT).getBearerToken();
 
-        TechRecordPOST techRecord = techRecord();
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+        TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
+        TechRecordHgvComplete techRecord = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
         validVIN = techRecord.getVin();
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
         Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
@@ -265,23 +262,11 @@ public class DownloadMotCertificateImplicitTest {
         assertEquals(405, response.statusCode());
     }
 
-    private CompleteTestResults testResult(TechRecordPOST techRecord) {
+    private CompleteTestResults testResult(TechRecordHgvComplete techRecord) {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results-user-auth-doc-retrieval.json"));
     }
 
-    private TechRecordPOST techRecord() {
-        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-record-user-auth-doc-retrieval.json"));
-    }
-
-    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
-        String vin = fieldGenerator.randomVin();
-
-        techRecord.setVin(vin);
-
-        return techRecord;
-    }
-
-    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
+    private CompleteTestResults matchKeys(TechRecordHgvComplete techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
         testResult.setTesterName(UUID.randomUUID().toString());
         testResult.setVin(techRecord.getVin());
@@ -295,14 +280,6 @@ public class DownloadMotCertificateImplicitTest {
         return gson.fromJson(
                 Files.newBufferedReader(Paths.get(path)),
                 CompleteTestResults.class
-        );
-    }
-
-    @SneakyThrows(IOException.class)
-    private TechRecordPOST readTechRecord(String path) {
-        return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
-                TechRecordPOST.class
         );
     }
 

@@ -17,13 +17,10 @@ import vott.config.VottConfiguration;
 import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
-import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
 import vott.models.dto.enquiry.Vehicle;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
-import vott.models.dto.techrecords.TechRecordPOST;
 import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
-import vott.models.dto.techrecordsv3.TechRecordV3;
 import vott.models.dto.testresults.CompleteTestResults;
 
 import java.awt.*;
@@ -49,9 +46,7 @@ public class DownloadMotCertificateClientCredentialsTest {
 
     private String validVIN = "";
     private String validTestNumber = "";
-
     private final Gson gson = GsonInstance.get();
-    private final FieldGenerator fieldGenerator = new FieldGenerator();
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
@@ -271,18 +266,6 @@ public class DownloadMotCertificateClientCredentialsTest {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results-user-auth-doc-retrieval.json"));
     }
 
-    private TechRecordHgvComplete techRecord() {
-        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-record-user-auth-doc-retrieval.json"));
-    }
-
-    private TechRecordHgvComplete randomizeKeys(TechRecordHgvComplete techRecord) {
-        String vin = fieldGenerator.randomVin();
-
-        techRecord.setVin(vin);
-
-        return techRecord;
-    }
-
     private CompleteTestResults matchKeys(TechRecordHgvComplete techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
         testResult.setTesterName(UUID.randomUUID().toString());
@@ -297,14 +280,6 @@ public class DownloadMotCertificateClientCredentialsTest {
         return gson.fromJson(
                 Files.newBufferedReader(Paths.get(path)),
                 CompleteTestResults.class
-        );
-    }
-
-    @SneakyThrows(IOException.class)
-    private TechRecordHgvComplete readTechRecord(String path) {
-        return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
-                TechRecordHgvComplete.class
         );
     }
 
