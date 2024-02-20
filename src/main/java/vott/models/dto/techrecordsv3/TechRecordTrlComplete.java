@@ -465,9 +465,7 @@ public class TechRecordTrlComplete extends TechRecordV3 {
     @Expose
     private String trailerId;
 
-    @SerializedName("vin")
-    @Expose
-    private String vin;
+
     @SerializedName("techRecord_axles")
     @Expose
     private List<TechRecordAxle> techRecordAxles;
@@ -1593,15 +1591,6 @@ public class TechRecordTrlComplete extends TechRecordV3 {
         this.trailerId = trailerId;
     }
 
-
-    public String getVin() {
-        return vin;
-    }
-
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
 
     public List<TechRecordAxle> getTechRecordAxles() {
         return techRecordAxles;

@@ -48,9 +48,6 @@ public class TechRecordPsvComplete extends TechRecordV3{
      * techRecord_brakes_brakeForceWheelsUpToHalfLocked_secondaryBrakeForceB
      * techRecord_brakes_brakeForceWheelsUpToHalfLocked_serviceBrakeForceB
      */
-    @SerializedName("vin")
-    @Expose
-    private String vin;
     @SerializedName("partialVin")
     @Expose
     private String partialVin;
@@ -385,14 +382,6 @@ public class TechRecordPsvComplete extends TechRecordV3{
     private String techRecordApplicationId;
 
 
-    public String getVin() {
-        return vin;
-    }
-
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
 
     public String getPartialVin() {
         return partialVin;

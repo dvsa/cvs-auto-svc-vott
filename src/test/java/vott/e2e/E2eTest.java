@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
+import vott.api.TechnicalRecordsV3;
 import vott.api.TestResultAPI;
-import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -23,7 +23,13 @@ import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.json.GsonInstance;
 import vott.models.dto.enquiry.TestResult;
-import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
+import vott.models.dto.seeddata.TechRecordPsvCompleteGenerator;
+import vott.models.dto.seeddata.TechRecordTrlCompleteGenerator;
+import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
+import vott.models.dto.techrecordsv3.TechRecordPsvComplete;
+import vott.models.dto.techrecordsv3.TechRecordTrlComplete;
+import vott.models.dto.techrecordsv3.TechRecordV3;
 import vott.models.dto.testresults.CompleteTestResults;
 
 import java.io.IOException;
@@ -46,8 +52,6 @@ public class E2eTest {
 
     private Gson gson;
 
-    private FieldGenerator fieldGenerator;
-
     private TokenService v1ImplicitTokens;
 
     private VehicleRepository vehicleRepository;
@@ -60,8 +64,6 @@ public class E2eTest {
         configuration = VottConfiguration.local();
 
         gson = GsonInstance.get();
-
-        fieldGenerator = new FieldGenerator();
 
         v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
@@ -76,34 +78,41 @@ public class E2eTest {
     @Title("VOTT-10 - AC1 - TC1 - End to End for HGV")
     @Test
     public void e2eTestHgv() {
-        TechRecordPOST hgvTechRecord = hgvTechRecord();
-        CompleteTestResults hgvTestResult = hgvTestResult(hgvTechRecord);
+        TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
+        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
+        CompleteTestResults hgvTestResult = hgvTestResult(techRecord);
 
-        e2eTest(hgvTechRecord, hgvTestResult);
+        e2eTest(techRecord, hgvTestResult);
     }
 
     @WithTag("Vott")
     @Title("VOTT-10 - AC1 - TC2 - End to End Test for PSV")
     @Test
     public void e2eTestPsv() {
-        TechRecordPOST psvTechRecord = psvTechRecord();
-        CompleteTestResults psvTestResult = psvTestResult(psvTechRecord);
+        TechRecordPsvCompleteGenerator psv_trg = new TechRecordPsvCompleteGenerator(new TechRecordPsvComplete());
+        TechRecordPsvComplete techRecordNotRandomised = psv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordPsvComplete techRecord = psv_trg.randomizePsvUniqueValues(techRecordNotRandomised);
+        CompleteTestResults psvTestResult = psvTestResult(techRecord);
 
-        e2eTest(psvTechRecord, psvTestResult);
+        e2eTest(techRecord, psvTestResult);
     }
 
     @WithTag("Vott")
     @Title("VOTT-10 - AC1 - TC3 - End to End Test for Trailers ")
     @Test
     public void e2eTestTrl() {
-        TechRecordPOST trlTechRecord = trlTechRecord();
-        CompleteTestResults trlTestResult = trlTestResult(trlTechRecord);
+        TechRecordTrlCompleteGenerator trl_trg = new TechRecordTrlCompleteGenerator(new TechRecordTrlComplete());
+        //TODO Make psv tech record to use
+        TechRecordTrlComplete techRecordNotRandomised = trl_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordTrlComplete techRecord = trl_trg.randomizeTrlUniqueValues(techRecordNotRandomised);
+        CompleteTestResults trlTestResult = trlTestResult(techRecord);
 
-        e2eTest(trlTechRecord, trlTestResult);
+        e2eTest(techRecord, trlTestResult);
     }
 
-    private void e2eTest(TechRecordPOST techRecord, CompleteTestResults testResult) {
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
+    private void e2eTest(TechRecordV3 techRecord, CompleteTestResults testResult) {
+        TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
         TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();
@@ -124,36 +133,16 @@ public class E2eTest {
         assertEquals(testResult.getTesterName(), actualTestResults.get(0).getTester().getName());
     }
 
-    private TechRecordPOST hgvTechRecord() {
-        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_hgv.json"));
-    }
-
-    private TechRecordPOST psvTechRecord() {
-        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_psv.json"));
-    }
-
-    private TechRecordPOST trlTechRecord() {
-        return randomizeKeys(readTechRecord("src/main/resources/payloads/technical-records_trl.json"));
-    }
-
-    private CompleteTestResults hgvTestResult(TechRecordPOST techRecord) {
+    private CompleteTestResults hgvTestResult(TechRecordHgvComplete techRecord) {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_hgv.json"));
     }
 
-    private CompleteTestResults psvTestResult(TechRecordPOST techRecord) {
+    private CompleteTestResults psvTestResult(TechRecordPsvComplete techRecord) {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_psv.json"));
     }
 
-    private CompleteTestResults trlTestResult(TechRecordPOST techRecord) {
+    private CompleteTestResults trlTestResult(TechRecordTrlComplete techRecord) {
         return matchKeys(techRecord, readTestResult("src/main/resources/payloads/test-results_trl.json"));
-    }
-
-    @SneakyThrows(IOException.class)
-    private TechRecordPOST readTechRecord(String path) {
-        return gson.fromJson(
-                Files.newBufferedReader(Paths.get(path)),
-                TechRecordPOST.class
-        );
     }
 
     @SneakyThrows(IOException.class)
@@ -164,15 +153,7 @@ public class E2eTest {
         );
     }
 
-    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
-        String vin = fieldGenerator.randomVin();
-
-        techRecord.setVin(vin);
-
-        return techRecord;
-    }
-
-    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
+    private CompleteTestResults matchKeys(TechRecordV3 techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
 
         // test result ID is not kept on enquiry-service retrievals: need a way to uniquely identify within test suite

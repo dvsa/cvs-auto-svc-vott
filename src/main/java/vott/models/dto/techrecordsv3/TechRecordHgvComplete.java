@@ -441,9 +441,6 @@ public class TechRecordHgvComplete extends TechRecordV3 {
     @Expose
     private String primaryVrm;
 
-    @SerializedName("vin")
-    @Expose
-    private String vin;
     @SerializedName("techRecord_hiddenInVta")
     @Expose
     private Boolean techRecordHiddenInVta;
@@ -1368,13 +1365,6 @@ public class TechRecordHgvComplete extends TechRecordV3 {
         this.primaryVrm = primaryVrm;
     }
 
-    public String getVin() {
-        return vin;
-    }
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
 
     public Boolean getTechRecordHiddenInVta() {
         return techRecordHiddenInVta;
