@@ -11,6 +11,9 @@ import vott.models.dto.testresults.CompleteTestResults;
 
 import static io.restassured.RestAssured.given;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TestResultAPI {
     private static final VottConfiguration configuration = VottConfiguration.local();
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
@@ -34,6 +37,33 @@ public class TestResultAPI {
             //System.out.print(response.getBody().toString());
             tries++;
         } while (statusCode >= 500 && tries < maxRetries);
+    }
+
+    public static Map<String,String> postTestResultReturnResult(CompleteTestResults testResult, String token) {
+        RESTAssuredBaseURI();
+
+        String testResultJson = gson.toJson(testResult);
+
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(token, apiKey)
+                    .body(testResultJson)
+                    .post().thenReturn();
+            statusCode = response.statusCode();
+          
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+
+        Map<String,String> outcome = new HashMap<>();
+        outcome.put(TechnicalRecordsV3.STATUS_CODE_KEY, Integer.toString(statusCode));
+        outcome.put(TechnicalRecordsV3.RESPONSE_BODY_KEY, response != null ? response.getBody().asString() : null);
+        return outcome;
+
+
     }
 
     private static void RESTAssuredBaseURI(){

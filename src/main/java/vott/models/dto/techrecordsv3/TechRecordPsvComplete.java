@@ -1425,4 +1425,13 @@ public class TechRecordPsvComplete extends TechRecordV3{
 
     }
 
+
+    public TechRecordPsvComplete setToSystemGeneratedValues(TechRecordPsvComplete returnedTechRecord)
+    {
+                this.setSystemNumber(returnedTechRecord.getSystemNumber());
+                this.setCreatedTimestamp(returnedTechRecord.getCreatedTimestamp());
+                this.setPartialVin(returnedTechRecord.getPartialVin());
+                return this;
+    }
+
 }

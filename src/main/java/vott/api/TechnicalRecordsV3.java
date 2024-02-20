@@ -18,6 +18,8 @@ public class TechnicalRecordsV3 {
     private static final VottConfiguration configuration = VottConfiguration.local();
     private static final String apiKey = configuration.getApiKeys().getEnquiryServiceApiKey();
     private static final Gson gson = GsonInstance.get();
+    public static final String STATUS_CODE_KEY = "statusCode";
+    public static final String RESPONSE_BODY_KEY = "responseBody";
 
     public static Map<String,String> postTechnicalRecordV3ObjectResponse(TechRecordV3 techRecord, String token){
         RESTAssuredBasePostURI();
@@ -38,8 +40,8 @@ public class TechnicalRecordsV3 {
         } while (statusCode >= 500 && tries < maxRetries);
         
         Map<String,String> outcome = new HashMap<>();
-        outcome.put("statusCode", Integer.toString(statusCode));
-        outcome.put("responseBody", response != null ? response.getBody().asString() : null);
+        outcome.put(STATUS_CODE_KEY, Integer.toString(statusCode));
+        outcome.put(RESPONSE_BODY_KEY, response != null ? response.getBody().asString() : null);
         return outcome;
     }
 
