@@ -79,7 +79,7 @@ public class E2eTest {
     @Test
     public void e2eTestHgv() {
         TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
-        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axle_Tech_Record_ADR.json");
         TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
         CompleteTestResults hgvTestResult = hgvTestResult(techRecord);
 
@@ -91,7 +91,7 @@ public class E2eTest {
     @Test
     public void e2eTestPsv() {
         TechRecordPsvCompleteGenerator psv_trg = new TechRecordPsvCompleteGenerator(new TechRecordPsvComplete());
-        TechRecordPsvComplete techRecordNotRandomised = psv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordPsvComplete techRecordNotRandomised = psv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axle_Tech_Record_ADR.json");
         TechRecordPsvComplete techRecord = psv_trg.randomizePsvUniqueValues(techRecordNotRandomised);
         CompleteTestResults psvTestResult = psvTestResult(techRecord);
 
@@ -104,7 +104,7 @@ public class E2eTest {
     public void e2eTestTrl() {
         TechRecordTrlCompleteGenerator trl_trg = new TechRecordTrlCompleteGenerator(new TechRecordTrlComplete());
         //TODO Make psv tech record to use
-        TechRecordTrlComplete techRecordNotRandomised = trl_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
+        TechRecordTrlComplete techRecordNotRandomised = trl_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axle_Tech_Record_ADR.json");
         TechRecordTrlComplete techRecord = trl_trg.randomizeTrlUniqueValues(techRecordNotRandomised);
         CompleteTestResults trlTestResult = trlTestResult(techRecord);
 
