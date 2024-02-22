@@ -4,11 +4,6 @@ import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import vott.api.TechnicalRecordsV3;
 import vott.api.TestResultAPI;
-import vott.config.VottConfiguration;
-import vott.database.VehicleRepository;
-import vott.database.connection.ConnectionFactory;
-import vott.database.sqlgeneration.SqlGenerator;
-import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.models.dto.techrecords.TechRecordPOST;
@@ -27,11 +22,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SharedUtilities {
-    VottConfiguration configuration = VottConfiguration.local();
-    ConnectionFactory connectionFactory = new ConnectionFactory(configuration);
-    private FieldGenerator fieldGenerator = new FieldGenerator();
-    private VehicleRepository vehicleRepository = new VehicleRepository(connectionFactory);
-    private Gson gson = GsonInstance.get();
+
+    private final Gson gson = GsonInstance.get();
 
     @SneakyThrows(IOException.class)
     public CompleteTestResults readTestResult(String path) {
@@ -61,18 +53,11 @@ public class SharedUtilities {
 
     public String convertBooleanToStringNumericBoolean(Boolean bool) {
         String stringBoolean = bool.toString();
-        String numericStringBoolean;
-        switch (stringBoolean) {
-            case "true":
-                numericStringBoolean = "1";
-                break;
-            case "false":
-                numericStringBoolean = "0";
-                break;
-            default:
-                numericStringBoolean = "null";
-                break;
-        }
+        String numericStringBoolean = switch (stringBoolean) {
+            case "true" -> "1";
+            case "false" -> "0";
+            default -> "null";
+        };
         return numericStringBoolean;
     }
 
