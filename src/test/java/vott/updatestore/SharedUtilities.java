@@ -86,7 +86,7 @@ public class SharedUtilities {
 
     }
 
-    //implemented seperatly in case test result API is different to tech record
+    //implemented separately in case test result API is different to tech record
     public void checkTestResultPostOutcome(Map<String, String> response) {
 
         String responseCode = response.get(TechnicalRecordsV3.STATUS_CODE_KEY);
