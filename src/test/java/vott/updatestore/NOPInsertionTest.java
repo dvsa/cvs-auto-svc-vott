@@ -301,6 +301,7 @@ public class NOPInsertionTest {
         //set timestamps to today's date
         testResultDateSynchronisation(expectedTestResult);
 
+        //post both tech record and test result, and assert a 201 response
         sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, expectedTestResult, v1ImplicitTokens.getBearerToken());
 
         String vin = expectedTestResult.getVin();

@@ -113,6 +113,7 @@ public class E2eTest {
     }
 
     private void e2eTest(TechRecordV3 techRecord, CompleteTestResults testResult) {
+        //post both tech record and test result, and assert a 201 response
         sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();

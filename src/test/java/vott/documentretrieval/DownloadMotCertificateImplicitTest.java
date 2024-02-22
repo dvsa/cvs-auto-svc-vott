@@ -69,6 +69,7 @@ public class DownloadMotCertificateImplicitTest {
         TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
         CompleteTestResults testResult = testResult(techRecord);
 
+        //post both tech record and test result, and assert a 201 response
         sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, testResult, v1ImplicitTokens.getBearerToken());
 
         validVIN = techRecord.getVin();
