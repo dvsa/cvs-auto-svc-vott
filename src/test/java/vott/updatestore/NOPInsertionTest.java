@@ -6,8 +6,6 @@ import net.serenitybdd.annotations.WithTag;
 import net.thucydides.junit.annotations.TestData;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import vott.api.TestResultAPI;
-import vott.api.VehiclesAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -16,17 +14,14 @@ import vott.database.*;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.models.dao.*;
-import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
 import vott.models.dto.testresults.CompleteTestResults;
 import vott.models.dto.testresults.TestTypeResults;
 import vott.models.dto.testresults.TestTypes;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.awaitility.Awaitility.with;
 
@@ -84,7 +79,7 @@ public class NOPInsertionTest {
     @WithTag("Remediation")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                {"technical-records_hgv_annual_2_axles.json", "test-results_hgv_annual_2_axles.json"}
+                {"TestInsertionTimeRecords/TechRecords/HGV_2_Axel_Tech_Record_Annual_Test_1.json", "test-results_hgv.json"}
         });
     }
     private final String techRecordFileName;
@@ -300,15 +295,14 @@ public class NOPInsertionTest {
     private void testSetup() {
         //TODO consider tests with multiple test types
         //create tech record from JSON
-        TechRecordPOST techRecord = sharedUtilities.loadTechRecord(payloadPath + techRecordFileName);
+        TechRecordHgvComplete techRecord = sharedUtilities.loadTechRecord(payloadPath + techRecordFileName);
         //create test result from JSON
         CompleteTestResults expectedTestResult = sharedUtilities.loadTestResults(techRecord, payloadPath + testResultFileName);
         //set timestamps to today's date
         testResultDateSynchronisation(expectedTestResult);
-        //post technical record
-        VehiclesAPI.postVehicleTechnicalRecord(techRecord, v1ImplicitTokens.getBearerToken());
-        //post test result
-        TestResultAPI.postTestResult(expectedTestResult, v1ImplicitTokens.getBearerToken());
+
+        sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, expectedTestResult, v1ImplicitTokens.getBearerToken());
+
         String vin = expectedTestResult.getVin();
         //wait for data to be streamed to NOP
         with().timeout(Duration.ofSeconds(60)).await().until(SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository));

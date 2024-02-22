@@ -22,6 +22,7 @@ import vott.models.dto.enquiry.Vehicle;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
 import vott.models.dto.testresults.CompleteTestResults;
+import vott.updatestore.SharedUtilities;
 
 import java.awt.*;
 import java.io.File;
@@ -47,6 +48,7 @@ public class DownloadMotCertificateClientCredentialsTest {
     private String validVIN = "";
     private String validTestNumber = "";
     private final Gson gson = GsonInstance.get();
+    private final SharedUtilities sharedUtilities = new SharedUtilities();
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory(VottConfiguration.local());
@@ -63,14 +65,14 @@ public class DownloadMotCertificateClientCredentialsTest {
         TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
         TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile("src/main/resources/payloads/TechRecordsV3/HGV_2_Axel_Tech_Record_Annual_Test.json");
         TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
-        TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
+        CompleteTestResults testResult = testResult(techRecord);
+
+        sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, testResult, v1ImplicitTokens.getBearerToken());
+
         validVIN = techRecord.getVin();
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.vehicleIsPresentInDatabase(validVIN, vehicleRepository));
         Vehicle vehicle = VehicleDataAPI.getVehicleByVIN(validVIN, v1ImplicitTokens.getBearerToken());
         techRecord.setSystemNumber(vehicle.getSystemNumber()); 
-
-        CompleteTestResults testResult = testResult(techRecord);
-        TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
 
         with().timeout(Duration.ofSeconds(WAIT_IN_SECONDS)).await().until(SqlGenerator.testResultIsPresentInDatabase(validVIN, testResultRepository));
         validTestNumber = getTestNumber(validVIN);

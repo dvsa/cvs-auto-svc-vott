@@ -91,7 +91,7 @@ public class TechRecordPsvComplete extends TechRecordV3{
 
     @SerializedName("techRecord_vehicleClass_description")
     @Expose
-    private TechRecordPsvComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription;
+    private String techRecordVehicleClassDescription;
     @SerializedName("techRecord_hiddenInVta")
     @Expose
     private Boolean techRecordHiddenInVta;
@@ -485,12 +485,12 @@ public class TechRecordPsvComplete extends TechRecordV3{
     }
 
 
-    public TechRecordPsvComplete.TechRecordVehicleClassDescription getTechRecordVehicleClassDescription() {
+    public String getTechRecordVehicleClassDescription() {
         return techRecordVehicleClassDescription;
     }
 
 
-    public void setTechRecordVehicleClassDescription(TechRecordPsvComplete.TechRecordVehicleClassDescription techRecordVehicleClassDescription) {
+    public void setTechRecordVehicleClassDescription(String techRecordVehicleClassDescription) {
         this.techRecordVehicleClassDescription = techRecordVehicleClassDescription;
     }
 

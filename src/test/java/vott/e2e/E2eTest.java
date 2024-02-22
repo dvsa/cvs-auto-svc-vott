@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.shaded.com.google.common.reflect.TypeToken;
-import vott.api.TechnicalRecordsV3;
-import vott.api.TestResultAPI;
 import vott.auth.GrantType;
 import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
@@ -31,6 +29,7 @@ import vott.models.dto.techrecordsv3.TechRecordPsvComplete;
 import vott.models.dto.techrecordsv3.TechRecordTrlComplete;
 import vott.models.dto.techrecordsv3.TechRecordV3;
 import vott.models.dto.testresults.CompleteTestResults;
+import vott.updatestore.SharedUtilities;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,6 +55,7 @@ public class E2eTest {
 
     private VehicleRepository vehicleRepository;
     private TestResultRepository testResultRepository;
+    private SharedUtilities sharedUtilities;
 
     private static final int WAIT_IN_SECONDS = 60;
 
@@ -72,6 +72,7 @@ public class E2eTest {
         vehicleRepository = new VehicleRepository(connectionFactory);
 
         testResultRepository = new TestResultRepository(connectionFactory);
+        sharedUtilities = new SharedUtilities();
     }
 
     @WithTag("Vott")
@@ -112,8 +113,7 @@ public class E2eTest {
     }
 
     private void e2eTest(TechRecordV3 techRecord, CompleteTestResults testResult) {
-        TechnicalRecordsV3.postTechnicalRecordV3Object(techRecord, v1ImplicitTokens.getBearerToken());
-        TestResultAPI.postTestResult(testResult, v1ImplicitTokens.getBearerToken());
+        sharedUtilities.postAndValidateTechRecordTestResultResponse(techRecord, testResult, v1ImplicitTokens.getBearerToken());
 
         String vin = testResult.getVin();
 

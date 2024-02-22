@@ -16,7 +16,7 @@ public abstract class AbstractTechRecordGenerator<T extends TechRecordV3> {
     protected static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     protected static final SecureRandom rnd = new SecureRandom();
     protected static final int MAX_VIN_LENGTH = 21;
-    protected static final int MAX_VRM_LENGTH = 9;
+    protected static final int MAX_VRM_LENGTH = 8;
     protected static final int MAX_TRAILER_ID_LENGTH = 8;
 
 
@@ -58,8 +58,6 @@ public abstract class AbstractTechRecordGenerator<T extends TechRecordV3> {
             sb.append(ALLOWED_CHARACTERS.charAt(rnd.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
     }
-
-
 }
 
 

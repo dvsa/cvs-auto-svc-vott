@@ -3,13 +3,17 @@ package vott.updatestore;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import vott.api.TechnicalRecordsV3;
+import vott.api.TestResultAPI;
 import vott.config.VottConfiguration;
 import vott.database.VehicleRepository;
 import vott.database.connection.ConnectionFactory;
 import vott.database.sqlgeneration.SqlGenerator;
 import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
+import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
+import vott.models.dto.techrecordsv3.TechRecordV3;
 import vott.models.dto.testresults.CompleteTestResults;
 import vott.models.dto.testresults.TestTypes;
 
@@ -43,11 +47,15 @@ public class SharedUtilities {
                 TechRecordPOST.class);
     }
 
-    public TechRecordPOST loadTechRecord(String fileName) {
-        return randomizeKeys(readTechRecord(fileName));
+    public TechRecordHgvComplete loadTechRecord(String fileName) {
+        TechRecordHgvCompleteGenerator hgv_trg = new TechRecordHgvCompleteGenerator(new TechRecordHgvComplete());
+        TechRecordHgvComplete techRecordNotRandomised = hgv_trg.createTechRecordFromJsonFile(fileName);
+        TechRecordHgvComplete techRecord = hgv_trg.randomizeHgvUniqueValues(techRecordNotRandomised);
+
+        return techRecord;
     }
 
-    public CompleteTestResults loadTestResults(TechRecordPOST techRecord, String fileName) {
+    public CompleteTestResults loadTestResults(TechRecordHgvComplete techRecord, String fileName) {
         return matchKeys(techRecord, readTestResult(fileName));
     }
 
@@ -69,17 +77,7 @@ public class SharedUtilities {
     }
 
     // --------------------------------------
-    private TechRecordPOST randomizeKeys(TechRecordPOST techRecord) {
-        String vin = fieldGenerator.randomVin();
-        while (SqlGenerator.vehicleIsPresentInDatabase(vin, vehicleRepository).toString().equals("true")) {
-            vin = fieldGenerator.randomVin();
-        }
-        techRecord.setVin(vin);
-        techRecord.setPrimaryVrm(fieldGenerator.randomVrm());
-        return techRecord;
-    }
-
-    private CompleteTestResults matchKeys(TechRecordPOST techRecord, CompleteTestResults testResult) {
+    private CompleteTestResults matchKeys(TechRecordHgvComplete techRecord, CompleteTestResults testResult) {
         testResult.setTestResultId(UUID.randomUUID().toString());
         // test result ID is not kept on enquiry-service retrievals: need a way to
         // uniquely identify within test suite
@@ -116,6 +114,16 @@ public class SharedUtilities {
                             "%n responseBody: " + responseBody));
         }
 
+    }
+
+    public void postAndValidateTechRecordTestResultResponse(TechRecordV3 techRecord, CompleteTestResults testResult, String token) {
+        Map<String, String> techRecordResponse;
+        techRecordResponse = TechnicalRecordsV3.postTechnicalRecordV3ObjectResponse(techRecord, token);
+        checkTechRecordPostOutcome(techRecordResponse);
+
+        Map<String, String> testResultResponse;
+        testResultResponse = TestResultAPI.postTestResultReturnResult(testResult, token);
+        checkTestResultPostOutcome(testResultResponse);
     }
 
     public CompleteTestResults createTestResultBasedOnTechRecord(CompleteTestResults testResult, String systemNumber, String vin, String vrm)
