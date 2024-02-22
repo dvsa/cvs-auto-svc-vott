@@ -102,6 +102,8 @@ public class SharedUtilities {
     }
 
     public void postAndValidateTechRecordTestResultResponse(TechRecordV3 techRecord, CompleteTestResults testResult, String token) {
+        // This method posts both a tech record and a test result, and then checks that they return a 201 response
+        // If they do not return a 201 response, the status code and the response body will be returned for debugging
         Map<String, String> techRecordResponse;
         techRecordResponse = TechnicalRecordsV3.postTechnicalRecordV3ObjectResponse(techRecord, token);
         checkTechRecordPostOutcome(techRecordResponse);
