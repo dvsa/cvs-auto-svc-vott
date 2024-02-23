@@ -70,6 +70,27 @@ public class TechnicalRecordsV3 {
         return outcome;
     }
 
+    public static Map<String,String> getTechnicalRecord(String token, String systemNumber, String createdTimestamp){
+        
+        RESTAssuredBasePutURI(systemNumber,createdTimestamp);
+        Response response;
+        int statusCode;
+
+        int tries = 0;
+        int maxRetries = 3;
+        do {
+            response = givenAuth(token, apiKey)
+                    .get().thenReturn();
+            statusCode = response.statusCode();
+            tries++;
+        } while (statusCode >= 500 && tries < maxRetries);
+        
+        Map<String,String> outcome = new HashMap<>();
+        outcome.put("statusCode", Integer.toString(statusCode));
+        outcome.put("responseBody", response != null ? response.getBody().asString() : null);
+        return outcome;
+    }
+
 
     public static int postTechnicalRecordV3Object(TechRecordV3 techRecord, String token){
         RESTAssuredBasePostURI();
