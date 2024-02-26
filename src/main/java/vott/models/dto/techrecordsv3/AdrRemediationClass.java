@@ -17,21 +17,7 @@ public class AdrRemediationClass extends TechRecordV3 {
     @Expose
     @SerializedName("created_timestamp")
     private String created_Timestamp;
-    @SerializedName("techRecord_vehicleType")
-    @Expose
-    private String techRecordVehicleType;
-    @SerializedName("techRecord_vehicleClass_description")
-    @Expose
-    private String techRecordVehicleClassDescription;
-    @SerializedName("techRecord_bodyType_description")
-    @Expose
-    private String techRecordBodyTypeDescription;
-    @SerializedName("techRecord_reasonForCreation")
-    @Expose
-    private String techRecordReasonForCreation;
-    @SerializedName("techRecord_statusCode")
-    @Expose
-    private TechRecordHgvComplete.TechRecordStatusCode techRecordStatusCode;
+
     @SerializedName("techRecord_adrDetails_dangerousGoods")
     @Expose
     private Boolean techRecordAdrDetailsDangerousGoods;
@@ -175,27 +161,7 @@ public class AdrRemediationClass extends TechRecordV3 {
     public void setCreated_Timestamp(String created_Timestamp) {
         this.created_Timestamp = created_Timestamp;
     }
-    public String getTechRecordVehicleType() {
-        return techRecordVehicleType;
-    }
 
-    public void setTechRecordVehicleType(String techRecordVehicleType) {
-        this.techRecordVehicleType = techRecordVehicleType;
-    }
-    public String getTechRecordReasonForCreation() {
-        return techRecordReasonForCreation;
-    }
-
-    public void setTechRecordReasonForCreation(String techRecordReasonForCreation) {
-        this.techRecordReasonForCreation = techRecordReasonForCreation;
-    }
-    public TechRecordHgvComplete.TechRecordStatusCode getTechRecordStatusCode() {
-        return techRecordStatusCode;
-    }
-
-    public void setTechRecordStatusCode(TechRecordHgvComplete.TechRecordStatusCode techRecordStatusCode) {
-        this.techRecordStatusCode = techRecordStatusCode;
-    }
     public Boolean getTechRecordAdrDetailsDangerousGoods() {
         return techRecordAdrDetailsDangerousGoods;
     }
@@ -601,11 +567,6 @@ public class AdrRemediationClass extends TechRecordV3 {
         return Objects.equals(
                 getSystem_Number(), that.getSystem_Number())
                 && Objects.equals(getCreated_Timestamp(), that.getCreated_Timestamp())
-                && Objects.equals(getTechRecordVehicleType(), that.getTechRecordVehicleType())
-                && Objects.equals(techRecordVehicleClassDescription, that.techRecordVehicleClassDescription)
-                && Objects.equals(techRecordBodyTypeDescription, that.techRecordBodyTypeDescription)
-                && Objects.equals(getTechRecordReasonForCreation(), that.getTechRecordReasonForCreation())
-                && getTechRecordStatusCode() == that.getTechRecordStatusCode()
                 && Objects.equals(getTechRecordAdrDetailsDangerousGoods(), that.getTechRecordAdrDetailsDangerousGoods())
                 && Objects.equals(getTechRecordAdrDetailsVehicleDetailsType(), that.getTechRecordAdrDetailsVehicleDetailsType())
                 && Objects.equals(getTechRecordAdrDetailsVehicleDetailsApprovalDate(), that.getTechRecordAdrDetailsVehicleDetailsApprovalDate())
@@ -655,11 +616,6 @@ public class AdrRemediationClass extends TechRecordV3 {
         return Objects.hash(
                 getSystem_Number(),
                 getCreated_Timestamp(),
-                getTechRecordVehicleType(),
-                techRecordVehicleClassDescription,
-                techRecordBodyTypeDescription,
-                getTechRecordReasonForCreation(),
-                getTechRecordStatusCode(),
                 getTechRecordAdrDetailsDangerousGoods(),
                 getTechRecordAdrDetailsVehicleDetailsType(),
                 getTechRecordAdrDetailsVehicleDetailsApprovalDate(),

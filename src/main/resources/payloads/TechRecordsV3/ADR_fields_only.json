@@ -15,8 +15,7 @@
     }
   ],
   "techRecord_adrDetails_additionalNotes_number": [
-    "1",
-    "T1B"
+    "1"
   ],
   "techRecord_adrDetails_adrCertificateNotes": "adrCertificateNotes_1",
   "techRecord_adrDetails_adrTypeApprovalNo": "adrTypeApprovalNo_1",
@@ -41,9 +40,7 @@
   "techRecord_adrDetails_m145Statement": true,
   "techRecord_adrDetails_newCertificateRequested": false,
   "techRecord_adrDetails_memosApply": ["07/09 3mth leak ext"],"techRecord_adrDetails_permittedDangerousGoods": [
-    "FP <61 (FL)",
-    "Carbon Disulphide",
-    "Hydrogen"
+    "FP <61 (FL)"
   ],
   "techRecord_adrDetails_tank_tankDetails_tankManufacturer": "tankManufacturer_1",
   "techRecord_adrDetails_tank_tankDetails_yearOfManufacture": 2012,

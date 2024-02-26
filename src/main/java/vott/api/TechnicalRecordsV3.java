@@ -70,7 +70,7 @@ public class TechnicalRecordsV3 {
         return outcome;
     }
 
-    public static Map<String,String> getTechnicalRecord(String token, String systemNumber, String createdTimestamp){
+    public static Map<String,String> getTechnicalRecord(String token, String systemNumber, String createdTimestamp) {
         
         RESTAssuredBasePutURI(systemNumber,createdTimestamp);
         Response response;
