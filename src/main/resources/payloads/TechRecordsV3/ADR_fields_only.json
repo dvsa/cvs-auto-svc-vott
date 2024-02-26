@@ -63,9 +63,7 @@
   "techRecord_adrDetails_tank_tankDetails_tankStatement_statement": "statement_1",
   "techRecord_adrDetails_tank_tankDetails_tankStatement_productListRefNo": "123456",
   "techRecord_adrDetails_tank_tankDetails_tankStatement_productListUnNo": [
-    "123123",
-    "987987",
-    "135790"
+    "123123"
   ],
   "techRecord_adrDetails_tank_tankDetails_tankStatement_productList": "productList_1",
   "techRecord_adrDetails_vehicleDetails_type": "Artic tractor",

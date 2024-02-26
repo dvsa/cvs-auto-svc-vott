@@ -14,6 +14,7 @@ import vott.auth.OAuthVersion;
 import vott.auth.TokenService;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.api.TechnicalRecordsV3;
+import vott.models.dto.techrecordsv3.TechRecordAdrDetailsTankTankDetailsTc3Detail;
 import vott.models.dto.techrecordsv3.TechRecordHgvComplete;
 import vott.updatestore.SharedUtilities;
 
@@ -78,6 +79,7 @@ public class SeedTechRecordDataTest {
     public void adrReturnedPayloadTechRecordChecks() {
         //Assert base tech record is the same as what we get back
         baseSetup();
+
         Assert.assertEquals(techRecord.getSystemNumber(), adrPatchedData.getSystemNumber());
         //TODO Should we have to convert this to uppercase?
         Assert.assertEquals(techRecord.getVin().toUpperCase(), adrPatchedData.getVin());
@@ -88,6 +90,7 @@ public class SeedTechRecordDataTest {
     public void adrReturnedPayloadApplicantDetailsChecks() {
         //Applicant details completed
         baseSetup();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsCity(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsCity());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsName(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsName());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsPostcode(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsPostcode());
@@ -117,6 +120,7 @@ public class SeedTechRecordDataTest {
         //One permitted dangerous goods (not explosives type 2 or 3)
 
         baseSetup();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
     }
 
@@ -128,6 +132,7 @@ public class SeedTechRecordDataTest {
         List<String> permittedDangerousGoodsList = Arrays.asList("FP <61 (FL)", "AT");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
     }
 
@@ -148,6 +153,7 @@ public class SeedTechRecordDataTest {
         );
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
     }
 
@@ -184,6 +190,7 @@ public class SeedTechRecordDataTest {
     public void adrOneAdditionalNotesNumber() {
         //One guidance notes
         baseSetup();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
     }
 
@@ -194,6 +201,7 @@ public class SeedTechRecordDataTest {
         List<String> additionalNotesNumberList = List.of("1", "1A");
         adrDataToPatch.setTechRecordAdrDetailsAdditionalNotesNumber(additionalNotesNumberList);
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
     }
 
@@ -211,6 +219,7 @@ public class SeedTechRecordDataTest {
         );
         adrDataToPatch.setTechRecordAdrDetailsAdditionalNotesNumber(additionalNotesNumberList);
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
     }
 
@@ -218,6 +227,7 @@ public class SeedTechRecordDataTest {
     public void adrTypeApprovalNumber() {
         //ADR Type Approval Number completed
         baseSetup();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrTypeApprovalNo(), adrPatchedData.getTechRecordAdrDetailsAdrTypeApprovalNo());
     }
 
@@ -227,6 +237,7 @@ public class SeedTechRecordDataTest {
         createBaseRecordAndAdrData();
         adrDataToPatch.setTechRecordAdrDetailsAdrTypeApprovalNo(null);
         postPatchGetAdrRecord();
+
         Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsAdrTypeApprovalNo());
     }
 
@@ -234,6 +245,7 @@ public class SeedTechRecordDataTest {
     public void adrSubstancesPermittedTankCode() {
         //Substances permitted is "Substances permitted under the tank code and any special provisions specified in 9 may be carried"
         baseSetup();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
     }
 
@@ -243,6 +255,7 @@ public class SeedTechRecordDataTest {
         createBaseRecordAndAdrData();
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted("Substances (Class UN number and if necessary packing group and proper shipping name) may be carried");
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
     }
 
@@ -252,6 +265,7 @@ public class SeedTechRecordDataTest {
         createBaseRecordAndAdrData();
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementSelect("Statement");
         postPatchGetAdrRecord();
+
         Assert.assertEquals("Statement", adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSelect());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement());
     }
@@ -262,8 +276,102 @@ public class SeedTechRecordDataTest {
         createBaseRecordAndAdrData();
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(null);
         postPatchGetAdrRecord();
+
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+    }
+
+    @Test
+    public void adr_oneProductListUnNo_noProductListRefNo_productListCompleted_specialProvisionsCompleted() {
+        //One productListUnNo, no productListRefNo, additionalDetailsProductList completed, specialProvisionsCompleted
+        createBaseRecordAndAdrData();
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(null);
+        postPatchGetAdrRecord();
+
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+    }
+
+    @Test
+    public void adr_twoProductListUnNo_noProductListRefNo_noProductList_noSpecialProvisions() {
+        //Two productListUnNo, no productListRefNo, additionalDetailsProductList completed, specialProvisionsCompleted
+        createBaseRecordAndAdrData();
+        List<String> productListUnNoList = List.of(
+                "123123",
+                "456456"
+                );
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(productListUnNoList);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(null);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(null);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(null);
+        postPatchGetAdrRecord();
+
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+    }
+
+    @Test
+    public void adrTc2Details_noTc3Details_noMemosApply() {
+        createBaseRecordAndAdrData();
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(null);
+        adrDataToPatch.setTechRecordAdrDetailsMemosApply(null);
+        postPatchGetAdrRecord();
+
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+    }
+
+    @Test
+    public void adrTc2Details_oneTc3Details_typeIntermediate() {
+        baseSetup();
+
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+    }
+
+    @Test
+    public void adrTc2Details_twoTc3Details_typePeriodicExceptional() {
+        createBaseRecordAndAdrData();
+        TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsPeriodic = new TechRecordAdrDetailsTankTankDetailsTc3Detail("periodic","12345","2024-01-01");
+        TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsExceptional = new TechRecordAdrDetailsTankTankDetailsTc3Detail("exceptional","67890","2024-02-02");
+        List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
+        tc3DetailList.add(tc3DetailsPeriodic);
+        tc3DetailList.add(tc3DetailsExceptional);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(tc3DetailList);
+        postPatchGetAdrRecord();
+
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
     }
 
     // print contents of to be remediation file, could write to file ready to be
