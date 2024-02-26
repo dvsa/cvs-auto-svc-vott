@@ -10,6 +10,7 @@ import vott.database.sqlgeneration.SqlGenerator;
 import vott.e2e.FieldGenerator;
 import vott.json.GsonInstance;
 import vott.models.dto.techrecords.TechRecordPOST;
+import vott.models.dto.techrecordsv3.TechRecordSearchResponse;
 import vott.models.dto.testresults.CompleteTestResults;
 import vott.models.dto.testresults.TestTypes;
 
@@ -19,8 +20,13 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class SharedUtilities {
     VottConfiguration configuration = VottConfiguration.local();
@@ -103,7 +109,7 @@ public class SharedUtilities {
 
     }
 
-    //implemented seperatly in case test result API is different to tech record
+    // implemented seperatly in case test result API is different to tech record
     public void checkTestResultPostOutcome(Map<String, String> response) {
 
         String responseCode = response.get(TechnicalRecordsV3.STATUS_CODE_KEY);
@@ -118,26 +124,43 @@ public class SharedUtilities {
 
     }
 
-    public CompleteTestResults createTestResultBasedOnTechRecord(CompleteTestResults testResult, String systemNumber, String vin, String vrm)
-    {
-       
+    public CompleteTestResults createTestResultBasedOnTechRecord(CompleteTestResults testResult, String systemNumber,
+            String vin, String vrm) {
+
         testResult.setTestResultId(UUID.randomUUID().toString());
         testResult.setSystemNumber(systemNumber);
         testResult.setVin(vin);
         testResult.setVrm(vrm);
         TestTypes ts = testResult.getTestTypes();
-        if(ts.size()>0)
-        {
-        OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
-        ts.get(0).setTestTypeStartTimestamp(datetime);
-        ts.get(0).setTestTypeEndTimestamp(datetime.plusMinutes(30));
-        ts.get(0).setTestExpiryDate(datetime.plusYears(1));
-        testResult.setTestTypes(ts);
-        testResult.setTestStartTimestamp(datetime);
-        testResult.setTestEndTimestamp(datetime);
-    }
+        if (ts.size() > 0) {
+            OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+            ts.get(0).setTestTypeStartTimestamp(datetime);
+            ts.get(0).setTestTypeEndTimestamp(datetime.plusMinutes(30));
+            ts.get(0).setTestExpiryDate(datetime.plusYears(1));
+            testResult.setTestTypes(ts);
+            testResult.setTestStartTimestamp(datetime);
+            testResult.setTestEndTimestamp(datetime);
+        }
         return testResult;
 
+    }
+
+    public static List<TechRecordSearchResponse> createSearchResponseFromString(String response) {
+
+        List<TechRecordSearchResponse> searchResponses = new ArrayList<>();
+
+        try {
+            JSONArray exampleArray = new JSONArray(response);
+            Gson gson = GsonInstance.get();
+            for (int i = 0; i < exampleArray.length(); i++) {
+                searchResponses.add(gson.fromJson(exampleArray.getString(i), TechRecordSearchResponse.class));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return searchResponses;
     }
 
 }
