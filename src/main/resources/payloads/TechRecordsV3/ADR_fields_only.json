@@ -29,7 +29,7 @@
   "techRecord_adrDetails_brakeDeclarationsSeen": true,
   "techRecord_adrDetails_brakeEndurance": false,
   "techRecord_adrDetails_compatibilityGroupJ": "I",
-  "techRecord_adrDetails_dangerousGoods": false,
+  "techRecord_adrDetails_dangerousGoods": true,
   "techRecord_adrDetails_declarationsSeen": false,
   "techRecord_adrDetails_documents": [
     "documents_1",
