@@ -26,7 +26,7 @@ public class TechRecordAdrPassCertificateDetail {
     private String createdByName;
     @SerializedName("certificateType")
     @Expose
-    private CertificateType certificateType;
+    private String certificateType;
 
     @SerializedName("generatedTimestamp")
     @Expose
@@ -36,6 +36,13 @@ public class TechRecordAdrPassCertificateDetail {
     @Expose
     private String certificateId;
 
+    public TechRecordAdrPassCertificateDetail(String createdByName, String certificateType, String generatedTimestamp, String certificateId) {
+        this.createdByName = createdByName;
+        this.certificateType = certificateType;
+        this.generatedTimestamp = generatedTimestamp;
+        this.certificateId = certificateId;
+    }
+
     public String getCreatedByName() {
         return createdByName;
     }
@@ -44,11 +51,11 @@ public class TechRecordAdrPassCertificateDetail {
         this.createdByName = createdByName;
     }
 
-    public CertificateType getCertificateType() {
+    public String getCertificateType() {
         return certificateType;
     }
 
-    public void setCertificateType(CertificateType certificateType) {
+    public void setCertificateType(String certificateType) {
         this.certificateType = certificateType;
     }
 

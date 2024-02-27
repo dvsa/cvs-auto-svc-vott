@@ -13,7 +13,7 @@ public abstract class AbstractTechRecordGenerator<T extends TechRecordV3> {
 
     private final T content;
     private static final Gson gson = GsonInstance.get();
-    protected static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    protected static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     protected static final SecureRandom rnd = new SecureRandom();
     protected static final int MAX_VIN_LENGTH = 21;
     protected static final int MAX_VRM_LENGTH = 9;

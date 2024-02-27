@@ -39,7 +39,8 @@
   "techRecord_adrDetails_listStatementApplicable": true,
   "techRecord_adrDetails_m145Statement": true,
   "techRecord_adrDetails_newCertificateRequested": false,
-  "techRecord_adrDetails_memosApply": ["07/09 3mth leak ext"],"techRecord_adrDetails_permittedDangerousGoods": [
+  "techRecord_adrDetails_memosApply": ["07/09 3mth leak ext"],
+  "techRecord_adrDetails_permittedDangerousGoods": [
     "FP <61 (FL)"
   ],
   "techRecord_adrDetails_tank_tankDetails_tankManufacturer": "tankManufacturer_1",
