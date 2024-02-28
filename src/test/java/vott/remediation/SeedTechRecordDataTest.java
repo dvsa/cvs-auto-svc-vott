@@ -16,6 +16,7 @@ import vott.auth.TokenService;
 import vott.models.dto.seeddata.AdrRemediationClassGenerator;
 import vott.models.dto.seeddata.TechRecordHgvCompleteGenerator;
 import vott.api.TechnicalRecordsV3;
+import vott.models.dto.seeddata.TechRecordTrlCompleteGenerator;
 import vott.models.dto.techrecordsv3.*;
 import vott.updatestore.SharedUtilities;
 
@@ -25,13 +26,17 @@ public class SeedTechRecordDataTest {
     private final List<String> remediationFileContents = new ArrayList<>();
     private final TechRecordHgvCompleteGenerator hgvTechRecordGen = new TechRecordHgvCompleteGenerator(
                     new TechRecordHgvComplete());
+
+    private final TechRecordTrlCompleteGenerator trlTechRecordGen = new TechRecordTrlCompleteGenerator(new TechRecordTrlComplete());
     private final AdrRemediationClassGenerator adrRemediationClassGen = new AdrRemediationClassGenerator(new AdrRemediationClass());
     private final TokenService v1ImplicitTokens = new TokenService(OAuthVersion.V1, GrantType.IMPLICIT);
     private final SharedUtilities sharedUtils = new SharedUtilities();
     private String payloadPath;
-    private TechRecordHgvComplete techRecord;
+    private TechRecordHgvComplete techRecordHgv;
+    private TechRecordTrlComplete techRecordTrl;
     private AdrRemediationClass adrDataToPatch;
-    private TechRecordHgvComplete adrPatchedData;
+    private TechRecordHgvComplete adrPatchedDataHgv;
+    private TechRecordTrlComplete adrPatchedDataTrl;
 
     @Before
     public void baseSetup() {
@@ -45,21 +50,38 @@ public class SeedTechRecordDataTest {
     public void createBaseRecordAndAdrData() {
         //Part 1, use when you need to alter the tech record and/or adr details
         this.payloadPath = "src/main/resources/payloads/";
-        this.techRecord = createHgvTechRecord(payloadPath + "TechRecordsV3/HGV_Tech_record_No_ADR.json");
+        this.techRecordHgv = createHgvTechRecord(payloadPath + "TechRecordsV3/HGV_Tech_record_No_ADR.json");
         this.adrDataToPatch = adrRemediationClassGen.createTechRecordFromJsonFile(payloadPath + "TechRecordsV3/ADR_fields_only.json");
     }
 
-    public void postPatchGetAdrRecord(){
+    public void postPatchGetAdrRecordHgv(){
         //Part 2, use when you need to alter the tech record and/or adr details
-        Map<String,String> outcomeUpdate = TechnicalRecordsV3.updateTechnicalRecord(adrDataToPatch, v1ImplicitTokens.getBearerToken(), techRecord.getSystemNumber(), techRecord.getCreatedTimestamp());
+        Map<String,String> outcomeUpdate = TechnicalRecordsV3.updateTechnicalRecord(adrDataToPatch, v1ImplicitTokens.getBearerToken(), techRecordHgv.getSystemNumber(), techRecordHgv.getCreatedTimestamp());
+        sharedUtils.checkTechRecordPostOutcome(outcomeUpdate);
         TechRecordHgvComplete techRecordPostOutcome = hgvTechRecordGen
                 .createTechRecordFromJsonString(outcomeUpdate.get("responseBody"));
         String outcomeSystemNumber = techRecordPostOutcome.getSystemNumber();
         String outcomeCreatedTimestamp = techRecordPostOutcome.getCreatedTimestamp();
 
         Map<String,String> outcomeGet = TechnicalRecordsV3.getTechnicalRecord(v1ImplicitTokens.getBearerToken(), outcomeSystemNumber, outcomeCreatedTimestamp);
+        sharedUtils.checkTechRecordPostOutcome(outcomeGet);
         String outcomeResponseBody = outcomeGet.get("responseBody");
-        this.adrPatchedData = hgvTechRecordGen.createTechRecordFromJsonString(outcomeResponseBody);
+        this.adrPatchedDataHgv = hgvTechRecordGen.createTechRecordFromJsonString(outcomeResponseBody);
+    }
+
+    public void postPatchGetAdrRecordTrl(){
+        //Part 2, use when you need to alter the tech record and/or adr details
+        Map<String,String> outcomeUpdate = TechnicalRecordsV3.updateTechnicalRecord(adrDataToPatch, v1ImplicitTokens.getBearerToken(), techRecordTrl.getSystemNumber(), techRecordTrl.getCreatedTimestamp());
+        sharedUtils.checkTechRecordPostOutcome(outcomeUpdate);
+        TechRecordTrlComplete techRecordPostOutcome = trlTechRecordGen
+                .createTechRecordFromJsonString(outcomeUpdate.get("responseBody"));
+        String outcomeSystemNumber = techRecordPostOutcome.getSystemNumber();
+        String outcomeCreatedTimestamp = techRecordPostOutcome.getCreatedTimestamp();
+
+        Map<String,String> outcomeGet = TechnicalRecordsV3.getTechnicalRecord(v1ImplicitTokens.getBearerToken(), outcomeSystemNumber, outcomeCreatedTimestamp);
+        sharedUtils.checkTechRecordPostOutcome(outcomeGet);
+        String outcomeResponseBody = outcomeGet.get("responseBody");
+        this.adrPatchedDataTrl = trlTechRecordGen.createTechRecordFromJsonString(outcomeResponseBody);
     }
 
     private TechRecordHgvComplete createHgvTechRecord(String filePath) {
@@ -78,17 +100,34 @@ public class SeedTechRecordDataTest {
         return techRecordReturned;
     }
 
+    private TechRecordTrlComplete createTrlTechRecord(String filePath) {
+
+        TechRecordTrlComplete techRecord = trlTechRecordGen.createTechRecordFromJsonFile(filePath);
+        trlTechRecordGen.randomizeTrlUniqueValues(techRecord);
+        techRecord.setTechRecordVehicleType("trl");
+        techRecord.setTechRecordVehicleClassDescription("trailer");
+        Map<String, String> response = TechnicalRecordsV3.postTechnicalRecordV3ObjectResponse(techRecord,
+                v1ImplicitTokens.getBearerToken());
+        sharedUtils.checkTechRecordPostOutcome(response);
+        String techRecordResponseBody = response.get(TechnicalRecordsV3.RESPONSE_BODY_KEY);
+        TechRecordTrlComplete techRecordReturned = trlTechRecordGen
+                .createTechRecordFromJsonString(techRecordResponseBody);
+        System.out.println("created tech record: " + techRecordReturned.getSystemNumber() + " "
+                + techRecordReturned.getCreatedTimestamp());
+        return techRecordReturned;
+    }
+
     // Tests
     @Test
     public void techRecordBaseFields() {
         //Assert base tech record is the same as what we get back
         //Fields aren't changed here because they are randomised within the @Before method
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(techRecord.getSystemNumber(), adrPatchedData.getSystemNumber());
+        Assert.assertEquals(techRecordHgv.getSystemNumber(), adrPatchedDataHgv.getSystemNumber());
         //TODO Should we have to convert this to uppercase?
-        Assert.assertEquals(techRecord.getVin(), adrPatchedData.getVin());
-        Assert.assertEquals(techRecord.getPrimaryVrm(), adrPatchedData.getPrimaryVrm());
+        Assert.assertEquals(techRecordHgv.getVin(), adrPatchedDataHgv.getVin());
+        Assert.assertEquals(techRecordHgv.getPrimaryVrm(), adrPatchedDataHgv.getPrimaryVrm());
     }
 
     @Test
@@ -99,13 +138,17 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsPostcode("POST-CODE1");
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsStreet("applicantDetailsSTREET");
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsTown("applicantDetailsTOWN_1");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsCity(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsCity());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsName(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsName());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsPostcode(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsPostcode());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsStreet(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsStreet());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsTown(), adrPatchedData.getTechRecordAdrDetailsApplicantDetailsTown());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Rigid skeletal");
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsCity(), adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsCity());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsName(), adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsName());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsPostcode(), adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsPostcode());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsStreet(), adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsStreet());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsTown(), adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsTown());
+
+        Assert.assertEquals("Rigid skeletal", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -116,12 +159,17 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsPostcode(null);
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsStreet(null);
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsTown(null);
-        postPatchGetAdrRecord();
 
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsApplicantDetailsCity());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsApplicantDetailsName());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsApplicantDetailsPostcode());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsApplicantDetailsStreet());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Full drawbar box body");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsCity());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsName());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsPostcode());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsApplicantDetailsStreet());
+
+        Assert.assertEquals("Full drawbar box body", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -129,9 +177,14 @@ public class SeedTechRecordDataTest {
         //One permitted dangerous goods (not explosives type 2 or 3)
         List<String> permittedDangerousGoodsList = List.of("FP <61 (FL)");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Full drawbar sheeted load");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedDataHgv.getTechRecordAdrDetailsPermittedDangerousGoods());
+
+        Assert.assertEquals("Full drawbar sheeted load", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -139,9 +192,14 @@ public class SeedTechRecordDataTest {
         //Two permitted dangerous goods (not explosives type 2 or 3)
         List<String> permittedDangerousGoodsList = Arrays.asList("FP <61 (FL)", "AT");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Full drawbar skeletal");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedDataHgv.getTechRecordAdrDetailsPermittedDangerousGoods());
+
+        Assert.assertEquals("Full drawbar skeletal", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -158,9 +216,14 @@ public class SeedTechRecordDataTest {
                 "Explosives (type 3)"
         );
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle box body");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedDataHgv.getTechRecordAdrDetailsPermittedDangerousGoods());
+
+        Assert.assertEquals("Centre axle box body", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -169,11 +232,16 @@ public class SeedTechRecordDataTest {
         List<String> permittedDangerousGoodsList = List.of("Explosives (type 2)");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
         adrDataToPatch.setTechRecordAdrDetailsCompatibilityGroupJ("I");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle sheeted load");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedDataHgv.getTechRecordAdrDetailsPermittedDangerousGoods());
         Assert.assertNotNull(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ(), adrPatchedData.getTechRecordAdrDetailsCompatibilityGroupJ());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ(), adrPatchedDataHgv.getTechRecordAdrDetailsCompatibilityGroupJ());
+
+        Assert.assertEquals("Centre axle sheeted load", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -182,11 +250,16 @@ public class SeedTechRecordDataTest {
         List<String> permittedDangerousGoodsList = List.of("Explosives (type 3)");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
         adrDataToPatch.setTechRecordAdrDetailsCompatibilityGroupJ("E");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedData.getTechRecordAdrDetailsPermittedDangerousGoods());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle skeletal");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsPermittedDangerousGoods(), adrPatchedDataHgv.getTechRecordAdrDetailsPermittedDangerousGoods());
         Assert.assertNotNull(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ(), adrPatchedData.getTechRecordAdrDetailsCompatibilityGroupJ());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsCompatibilityGroupJ(), adrPatchedDataHgv.getTechRecordAdrDetailsCompatibilityGroupJ());
+
+        Assert.assertEquals("Centre axle skeletal", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -194,9 +267,14 @@ public class SeedTechRecordDataTest {
         //One guidance notes
         List<String> additionalNotesNumberList = List.of("1");
         adrDataToPatch.setTechRecordAdrDetailsAdditionalNotesNumber(additionalNotesNumberList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Semi trailer box body");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalNotesNumber());
+
+        Assert.assertEquals("Semi trailer box body", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -204,9 +282,14 @@ public class SeedTechRecordDataTest {
         //Two guidance notes
         List<String> additionalNotesNumberList = List.of("1", "1A");
         adrDataToPatch.setTechRecordAdrDetailsAdditionalNotesNumber(additionalNotesNumberList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Semi trailer sheeted load");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalNotesNumber());
+
+        Assert.assertEquals("Semi trailer sheeted load", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -221,45 +304,71 @@ public class SeedTechRecordDataTest {
                 "T1B"
         );
         adrDataToPatch.setTechRecordAdrDetailsAdditionalNotesNumber(additionalNotesNumberList);
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedData.getTechRecordAdrDetailsAdditionalNotesNumber());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Semi trailer skeletal");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalNotesNumber(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalNotesNumber());
+
+        Assert.assertEquals("Semi trailer skeletal", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrTypeApprovalNumber() {
         //ADR Type Approval Number completed
         adrDataToPatch.setTechRecordAdrDetailsAdrTypeApprovalNo("adrTypeApprovalNo_1");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrTypeApprovalNo(), adrPatchedData.getTechRecordAdrDetailsAdrTypeApprovalNo());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Rigid box body");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrTypeApprovalNo(), adrPatchedDataHgv.getTechRecordAdrDetailsAdrTypeApprovalNo());
+
+        Assert.assertEquals("Rigid box body", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrNoTypeApprovalNumber() {
         //No ADR Type Approval Number
         adrDataToPatch.setTechRecordAdrDetailsAdrTypeApprovalNo(null);
-        postPatchGetAdrRecord();
 
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsAdrTypeApprovalNo());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Rigid sheeted load");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsAdrTypeApprovalNo());
+
+        Assert.assertEquals("Rigid sheeted load", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
+
     }
 
     @Test
     public void adrSubstancesPermittedTankCode() {
         //Substances permitted is "Substances permitted under the tank code and any special provisions specified in 9 may be carried"
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted("Substances permitted under the tank code and any special provisions specified in 9 may be carried");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
+
+        Assert.assertEquals("Rigid tank", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrSubstancesPermittedUnNumber() {
         //Substances permitted is "Substances (Class UN number and if necessary packing group and proper shipping name) may be carried"
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted("Substances (Class UN number and if necessary packing group and proper shipping name) may be carried");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Full drawbar tank");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted());
+
+        Assert.assertEquals("Full drawbar tank", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -267,21 +376,36 @@ public class SeedTechRecordDataTest {
         //TankStatement.Statement is selected and provided
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementSelect("Statement");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementStatement("statement_1");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals("Statement", adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementSelect());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle tank");
+
+        postPatchGetAdrRecordHgv();
+
+        Assert.assertEquals("Statement", adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementSelect());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement());
+
+        Assert.assertEquals("Centre axle tank", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrProductListRefNoCompleteNoListUnNo() {
         //productListRefNo is completed, and there is no productListUnNo
+        this.techRecordTrl = createTrlTechRecord(payloadPath + "TechRecordsV3/HGV_Tech_record_No_ADR.json");
+        //Makes a trl record, TODO currently uses HGV attributes, change to TRL attributes
+
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(null);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo("123456");
-        postPatchGetAdrRecord();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Semi trailer tank");
+
+        postPatchGetAdrRecordTrl();
+
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedDataTrl.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedDataTrl.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+
+        Assert.assertEquals("trl", adrPatchedDataTrl.getTechRecordVehicleType());
+        Assert.assertEquals("trailer", adrPatchedDataTrl.getTechRecordVehicleClassDescription());
+        Assert.assertEquals("Semi trailer tank", adrPatchedDataTrl.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -292,16 +416,16 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(productListUnNoList);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductList("productList_1");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsSpecialProvisions("specialProvisions_1");
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
     }
 
     @Test
@@ -315,16 +439,16 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(null);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(null);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(null);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions());
     }
 
     @Test
@@ -334,16 +458,16 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type("initial");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(null);
         adrDataToPatch.setTechRecordAdrDetailsMemosApply(null);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNull(adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
     }
 
     @Test
@@ -355,16 +479,16 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo("12345");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate("2024-06-01");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type("initial");
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
     }
 
     @Test
@@ -375,41 +499,41 @@ public class SeedTechRecordDataTest {
         tc3DetailList.add(tc3DetailsPeriodic);
         tc3DetailList.add(tc3DetailsExceptional);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(tc3DetailList);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertNotNull(adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedData.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
     }
 
     @Test
     public void adrOneMemosApply() {
         List<String> memosApplyList = List.of("07/09 3mth leak ext");
         adrDataToPatch.setTechRecordAdrDetailsMemosApply(memosApplyList);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedData.getTechRecordAdrDetailsMemosApply());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
     }
 
     @Test
     public void adrM145StatementTrue() {
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(true);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsM145Statement(), adrPatchedData.getTechRecordAdrDetailsM145Statement());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsM145Statement(), adrPatchedDataHgv.getTechRecordAdrDetailsM145Statement());
     }
 
     @Test
     public void adrM145StatementFalse() {
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(false);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsM145Statement(), adrPatchedData.getTechRecordAdrDetailsM145Statement());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsM145Statement(), adrPatchedDataHgv.getTechRecordAdrDetailsM145Statement());
     }
 
     @Test
@@ -417,19 +541,23 @@ public class SeedTechRecordDataTest {
         //listStatementApplicable true, batteryListNumber completed
         adrDataToPatch.setTechRecordAdrDetailsListStatementApplicable(true);
         adrDataToPatch.setTechRecordAdrDetailsBatteryListNumber("BATTERY1");
-        postPatchGetAdrRecord();
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Rigid battery");
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsListStatementApplicable(), adrPatchedData.getTechRecordAdrDetailsListStatementApplicable());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBatteryListNumber(), adrPatchedData.getTechRecordAdrDetailsBatteryListNumber());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsListStatementApplicable(), adrPatchedDataHgv.getTechRecordAdrDetailsListStatementApplicable());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBatteryListNumber(), adrPatchedDataHgv.getTechRecordAdrDetailsBatteryListNumber());
+        Assert.assertEquals("Rigid battery", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrListStatementApplicableFalse() {
         //listStatementApplicable false
         adrDataToPatch.setTechRecordAdrDetailsListStatementApplicable(false);
-        postPatchGetAdrRecord();
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Full drawbar battery");
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsListStatementApplicable(), adrPatchedData.getTechRecordAdrDetailsListStatementApplicable());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsListStatementApplicable(), adrPatchedDataHgv.getTechRecordAdrDetailsListStatementApplicable());
+        Assert.assertEquals("Full drawbar battery", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -439,12 +567,14 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsBrakeEndurance(true);
         adrDataToPatch.setTechRecordAdrDetailsDeclarationsSeen(true);
         adrDataToPatch.setTechRecordAdrDetailsNewCertificateRequested(false);
-        postPatchGetAdrRecord();
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle battery");
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeDeclarationsSeen(), adrPatchedData.getTechRecordAdrDetailsBrakeDeclarationsSeen());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeEndurance(), adrPatchedData.getTechRecordAdrDetailsBrakeEndurance());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsDeclarationsSeen(), adrPatchedData.getTechRecordAdrDetailsDeclarationsSeen());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsNewCertificateRequested(), adrPatchedData.getTechRecordAdrDetailsNewCertificateRequested());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeDeclarationsSeen(), adrPatchedDataHgv.getTechRecordAdrDetailsBrakeDeclarationsSeen());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeEndurance(), adrPatchedDataHgv.getTechRecordAdrDetailsBrakeEndurance());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsDeclarationsSeen(), adrPatchedDataHgv.getTechRecordAdrDetailsDeclarationsSeen());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsNewCertificateRequested(), adrPatchedDataHgv.getTechRecordAdrDetailsNewCertificateRequested());
+        Assert.assertEquals("Centre axle battery", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -454,22 +584,28 @@ public class SeedTechRecordDataTest {
         adrDataToPatch.setTechRecordAdrDetailsBrakeEndurance(false);
         adrDataToPatch.setTechRecordAdrDetailsDeclarationsSeen(false);
         adrDataToPatch.setTechRecordAdrDetailsNewCertificateRequested(true);
-        techRecord.setTechRecordVehicleType("trl");
-        postPatchGetAdrRecord();
+        techRecordHgv.setTechRecordVehicleType("trl");
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Semi trailer battery");
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeDeclarationsSeen(), adrPatchedData.getTechRecordAdrDetailsBrakeDeclarationsSeen());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeEndurance(), adrPatchedData.getTechRecordAdrDetailsBrakeEndurance());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsDeclarationsSeen(), adrPatchedData.getTechRecordAdrDetailsDeclarationsSeen());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsNewCertificateRequested(), adrPatchedData.getTechRecordAdrDetailsNewCertificateRequested());
-        Assert.assertEquals("trl", techRecord.getTechRecordVehicleType());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeDeclarationsSeen(), adrPatchedDataHgv.getTechRecordAdrDetailsBrakeDeclarationsSeen());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeEndurance(), adrPatchedDataHgv.getTechRecordAdrDetailsBrakeEndurance());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsDeclarationsSeen(), adrPatchedDataHgv.getTechRecordAdrDetailsDeclarationsSeen());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsNewCertificateRequested(), adrPatchedDataHgv.getTechRecordAdrDetailsNewCertificateRequested());
+        Assert.assertEquals("trl", techRecordHgv.getTechRecordVehicleType());
+        Assert.assertEquals("Semi trailer battery", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
     public void adrNoAdditionalExaminerNotes() {
         adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(null);
-        postPatchGetAdrRecord();
+        techRecordHgv.setTechRecordVehicleType("hgv");
+        adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Artic tractor");
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedData.getTechRecordAdrDetailsAdditionalExaminerNotes());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalExaminerNotes());
+        Assert.assertEquals("hgv", techRecordHgv.getTechRecordVehicleType());
+        Assert.assertEquals("Artic tractor", adrPatchedDataHgv.getTechRecordAdrDetailsVehicleDetailsType());
     }
 
     @Test
@@ -479,10 +615,10 @@ public class SeedTechRecordDataTest {
         additionalExaminerNoteList.add(adrDetailsAdditionalExaminerNote);
         adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(additionalExaminerNoteList);
         adrDataToPatch.setTechRecordAdrDetailsAdrCertificateNotes("adrCertificateNotes_1");
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedData.getTechRecordAdrDetailsAdditionalExaminerNotes());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrCertificateNotes(), adrPatchedData.getTechRecordAdrDetailsAdrCertificateNotes());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalExaminerNotes());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrCertificateNotes(), adrPatchedDataHgv.getTechRecordAdrDetailsAdrCertificateNotes());
     }
 
     @Test
@@ -494,10 +630,10 @@ public class SeedTechRecordDataTest {
         additionalExaminerNoteList.add(adrDetailsAdditionalExaminerNote2);
         adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(additionalExaminerNoteList);
         adrDataToPatch.setTechRecordAdrDetailsAdrCertificateNotes(null);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedData.getTechRecordAdrDetailsAdditionalExaminerNotes());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrCertificateNotes(), adrPatchedData.getTechRecordAdrDetailsAdrCertificateNotes());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes(), adrPatchedDataHgv.getTechRecordAdrDetailsAdditionalExaminerNotes());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrCertificateNotes(), adrPatchedDataHgv.getTechRecordAdrDetailsAdrCertificateNotes());
     }
 
     @Test
@@ -506,9 +642,9 @@ public class SeedTechRecordDataTest {
         TechRecordAdrPassCertificateDetail passCertificateDetail = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-01", "PASS", "2023-04-01T01:49:00.055Z", "CERTIFICATE-ID-1");
         passCertificateDetailList.add(passCertificateDetail);
         adrDataToPatch.setTechRecordAdrPassCertificateDetails(passCertificateDetailList);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrPassCertificateDetails(), adrPatchedData.getTechRecordAdrPassCertificateDetails());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrPassCertificateDetails(), adrPatchedDataHgv.getTechRecordAdrPassCertificateDetails());
     }
 
     @Test
@@ -519,9 +655,9 @@ public class SeedTechRecordDataTest {
         passCertificateDetailList.add(passCertificateDetail1);
         passCertificateDetailList.add(passCertificateDetail2);
         adrDataToPatch.setTechRecordAdrPassCertificateDetails(passCertificateDetailList);
-        postPatchGetAdrRecord();
+        postPatchGetAdrRecordHgv();
 
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrPassCertificateDetails(), adrPatchedData.getTechRecordAdrPassCertificateDetails());
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrPassCertificateDetails(), adrPatchedDataHgv.getTechRecordAdrPassCertificateDetails());
     }
 
     // print contents of to be remediation file, could write to file ready to be

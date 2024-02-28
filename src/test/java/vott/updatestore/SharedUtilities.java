@@ -100,7 +100,7 @@ public class SharedUtilities {
         String responseCode = response.get(TechnicalRecordsV3.STATUS_CODE_KEY);
         String responseBody = response.get(TechnicalRecordsV3.RESPONSE_BODY_KEY);
 
-        if (Integer.parseInt(responseCode) != 201) {
+        if (Integer.parseInt(responseCode) != 201 && Integer.parseInt(responseCode) != 200) {
             throw new AssertionError(String.format(
                     "Error posting to tech record service " +
                             "%n responseCode: " + responseCode +
@@ -109,7 +109,7 @@ public class SharedUtilities {
 
     }
 
-    // implemented seperatly in case test result API is different to tech record
+    // implemented separately in case test result API is different to tech record
     public void checkTestResultPostOutcome(Map<String, String> response) {
 
         String responseCode = response.get(TechnicalRecordsV3.STATUS_CODE_KEY);
