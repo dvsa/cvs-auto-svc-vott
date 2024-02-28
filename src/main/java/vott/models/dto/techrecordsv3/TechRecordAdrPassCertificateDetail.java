@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.processing.Generated;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ADR Certificate Details
@@ -41,6 +42,22 @@ public class TechRecordAdrPassCertificateDetail {
         this.certificateType = certificateType;
         this.generatedTimestamp = generatedTimestamp;
         this.certificateId = certificateId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TechRecordAdrPassCertificateDetail)) return false;
+        TechRecordAdrPassCertificateDetail that = (TechRecordAdrPassCertificateDetail) o;
+        return Objects.equals(getCreatedByName(), that.getCreatedByName())
+                && Objects.equals(getCertificateType(), that.getCertificateType())
+                && Objects.equals(getGeneratedTimestamp(), that.getGeneratedTimestamp())
+                && Objects.equals(getCertificateId(), that.getCertificateId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCreatedByName(), getCertificateType(), getGeneratedTimestamp(), getCertificateId());
     }
 
     public String getCreatedByName() {
