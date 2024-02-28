@@ -564,10 +564,13 @@ public class AdrRemediationClass extends TechRecordV3 {
         if (this == o) return true;
         if (!(o instanceof AdrRemediationClass)) return false;
         AdrRemediationClass that = (AdrRemediationClass) o;
+
         return Objects.equals(
-                getSystem_Number(), that.getSystem_Number())
-                && Objects.equals(getCreated_Timestamp(), that.getCreated_Timestamp())
-                && Objects.equals(getTechRecordAdrDetailsDangerousGoods(), that.getTechRecordAdrDetailsDangerousGoods())
+                //these are used to define api endpoint in remediation app but are not part of the data
+                //getSystem_Number(), that.getSystem_Number())
+                //&& Objects.equals(getCreated_Timestamp(), that.getCreated_Timestamp())
+
+                getTechRecordAdrDetailsDangerousGoods(), that.getTechRecordAdrDetailsDangerousGoods())
                 && Objects.equals(getTechRecordAdrDetailsVehicleDetailsType(), that.getTechRecordAdrDetailsVehicleDetailsType())
                 && Objects.equals(getTechRecordAdrDetailsVehicleDetailsApprovalDate(), that.getTechRecordAdrDetailsVehicleDetailsApprovalDate())
                 && Objects.equals(getTechRecordAdrDetailsPermittedDangerousGoods(), that.getTechRecordAdrDetailsPermittedDangerousGoods())
@@ -614,8 +617,8 @@ public class AdrRemediationClass extends TechRecordV3 {
     @Override
     public int hashCode() {
         return Objects.hash(
-                getSystem_Number(),
-                getCreated_Timestamp(),
+                //getSystem_Number(),
+                //getCreated_Timestamp(),
                 getTechRecordAdrDetailsDangerousGoods(),
                 getTechRecordAdrDetailsVehicleDetailsType(),
                 getTechRecordAdrDetailsVehicleDetailsApprovalDate(),
