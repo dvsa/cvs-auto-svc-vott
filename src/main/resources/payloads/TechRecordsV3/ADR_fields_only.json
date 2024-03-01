@@ -1,12 +1,4 @@
 {
-  "techRecord_adrPassCertificateDetails": [
-    {
-      "certificateId": "CERTIFICATE-ID-1",
-      "createdByName": "CREATED-BY-NAME-01",
-      "certificateType": "PASS",
-      "generatedTimestamp": "2023-04-01T01:49:00.055Z"
-    }
-  ],
   "techRecord_adrDetails_additionalExaminerNotes": [
     {
       "createdAtDate": "2023-05-30",

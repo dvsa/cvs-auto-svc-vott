@@ -46,3 +46,6 @@ node_modules/
 
 ### Config ###
 src/main/resources/config.json
+/src/main/resources/config.json
+src/main/resources/not_a_cnfig.json
+/src/main/resources/not_a_cnfig.json

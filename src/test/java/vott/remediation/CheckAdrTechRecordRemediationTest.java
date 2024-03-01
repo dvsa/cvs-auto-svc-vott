@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class CheckAdrTechRecordRemediationTest {
     @Test
     public void checkAdrDataRemediated() {
 
-        Path path = Paths.get(PAYLOAD_PATH + "Remediation/AdrTechRecordUpdates/example.json");
+        Path path = Paths.get(PAYLOAD_PATH + "Remediation/AdrTechRecordUpdates/example.jsonl");
 
         try {
             List<String> contents = Files.readAllLines(path);

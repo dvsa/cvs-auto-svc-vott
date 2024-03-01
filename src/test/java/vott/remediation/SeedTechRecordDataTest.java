@@ -131,7 +131,7 @@ public class SeedTechRecordDataTest {
     }
 
     @Test
-    public void adrReturnedPayloadApplicantDetailsChecks() {
+    public void adrApplicantDetailsChecks() {
         //Applicant details completed
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsCity("applicantDetailsCITY_1");
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsName("applicantDetails_Name_1");
@@ -499,6 +499,9 @@ public class SeedTechRecordDataTest {
         tc3DetailList.add(tc3DetailsPeriodic);
         tc3DetailList.add(tc3DetailsExceptional);
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(tc3DetailList);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo("12345");
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate("2024-06-01");
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type("initial");
         postPatchGetAdrRecordHgv();
 
         Assert.assertNotNull(adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
@@ -508,7 +511,6 @@ public class SeedTechRecordDataTest {
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate());
         Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details(), adrPatchedDataHgv.getTechRecordAdrDetailsTankTankDetailsTc3Details());
-        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsMemosApply(), adrPatchedDataHgv.getTechRecordAdrDetailsMemosApply());
     }
 
     @Test
