@@ -29,6 +29,7 @@ public class AdrSeedData {
     }
 
     public AdrRemediationClass vehicleTypeTankProductListWithRefNo() {
+        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         setApplicantOperatorDetails();
         setAdrDetailsSection();
         setGenericTankDetails();
@@ -39,6 +40,7 @@ public class AdrSeedData {
     }
 
     public AdrRemediationClass vehicleTypeTankProductListWithUnNoList() {
+        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         setApplicantOperatorDetails();
         setAdrDetailsSection();
         setGenericTankDetails();
@@ -49,6 +51,7 @@ public class AdrSeedData {
     }
 
     public AdrRemediationClass vehicleTypeWithBatteryAdrDetails() {
+        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid battery");
         setApplicantOperatorDetails();
         setAdrDetailsSection();
         setGenericTankDetails();
@@ -81,7 +84,7 @@ public class AdrSeedData {
     // mandatory fields for any ADR data
     private void mandatoryAdrFieldsOnlyNotTankOrBattery() {
         adrData.setTechRecordAdrDetailsDangerousGoods(true);
-        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
+        adrData.setTechRecordAdrDetailsVehicleDetailsType("Artic tractor");
         adrData.setTechRecordAdrDetailsVehicleDetailsApprovalDate("2024-01-13");
         String[] permittedGoods = new String[] { "MEMU" };
         adrData.setTechRecordAdrDetailsPermittedDangerousGoods(Arrays.asList(permittedGoods));
@@ -92,6 +95,7 @@ public class AdrSeedData {
 
     // additional mandatory fields if vehicle type is tank or battery
     private void mandatoryAdrFieldsTankOrBatteryStatement() {
+        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         adrData.setTechRecordAdrDetailsTankTankDetailsTankManufacturer("tankManufacturer");
         adrData.setTechRecordAdrDetailsTankTankDetailsYearOfManufacture(2018);
         adrData.setTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo("serialNo9");
@@ -110,7 +114,6 @@ public class AdrSeedData {
         adrData.setTechRecordAdrDetailsApplicantDetailsCity("city");
         adrData.setTechRecordAdrDetailsApplicantDetailsPostcode("AB12CD");
         adrData.setTechRecordAdrDetailsDangerousGoods(true);
-        adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         adrData.setTechRecordAdrDetailsVehicleDetailsApprovalDate("2024-01-13");
     }
 
