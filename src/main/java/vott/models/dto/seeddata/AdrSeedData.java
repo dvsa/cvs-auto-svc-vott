@@ -18,6 +18,7 @@ public class AdrSeedData {
         adrData.setCreated_Timestamp(createdTimestamp);
     }
 
+    // create adr data for tank using statement and populating all fields
     public AdrRemediationClass vehicleTypeTankStatement() {
         setApplicantOperatorDetails();
         setAdrDetailsSection();
@@ -28,6 +29,8 @@ public class AdrSeedData {
         return adrData;
     }
 
+    // create adr data for tank using product list with ref no and populating all
+    // fields
     public AdrRemediationClass vehicleTypeTankProductListWithRefNo() {
         adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         setApplicantOperatorDetails();
@@ -39,6 +42,8 @@ public class AdrSeedData {
         return adrData;
     }
 
+    // create adr data for tank using product list with UnNo list and populating all
+    // fields
     public AdrRemediationClass vehicleTypeTankProductListWithUnNoList() {
         adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid tank");
         setApplicantOperatorDetails();
@@ -50,6 +55,8 @@ public class AdrSeedData {
         return adrData;
     }
 
+    // create adr data for battery type of tank populating battery list section and
+    // populating all fields
     public AdrRemediationClass vehicleTypeWithBatteryAdrDetails() {
         adrData.setTechRecordAdrDetailsVehicleDetailsType("Rigid battery");
         setApplicantOperatorDetails();
@@ -62,6 +69,8 @@ public class AdrSeedData {
         return adrData;
     }
 
+    // create adr data for vehicle type that does not contain tank or battery and
+    // populating all fields
     public AdrRemediationClass vehicleTypeNotTankOrBattery() {
         setApplicantOperatorDetails();
         setAdrDetailsSection();
@@ -70,11 +79,13 @@ public class AdrSeedData {
         return adrData;
     }
 
+    // minimum ADR data for a vehicle type that doesn not contain tank or battery
     public AdrRemediationClass minimumAdrDataNotTank() {
         mandatoryAdrFieldsOnlyNotTankOrBattery();
         return adrData;
     }
 
+    // minimum ADR data for a tank or battery
     public AdrRemediationClass minimumAdrDataForTankOrBattery() {
         mandatoryAdrFieldsOnlyNotTankOrBattery();
         mandatoryAdrFieldsTankOrBatteryStatement();

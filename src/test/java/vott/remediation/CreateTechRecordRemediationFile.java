@@ -95,6 +95,7 @@ public class CreateTechRecordRemediationFile {
                 "Explosives (type 2)",
                 "Explosives (type 3)");
         adrDataToPatch.setTechRecordAdrDetailsPermittedDangerousGoods(permittedDangerousGoodsList);
+        adrDataToPatch.setTechRecordAdrDetailsCompatibilityGroupJ("E");
         adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle box body");
         addAdrDataToList();
     }
@@ -332,6 +333,7 @@ public class CreateTechRecordRemediationFile {
         adrDataToPatch = adrSeedData.minimumAdrDataForTankOrBattery();
         adrDataToPatch.setTechRecordAdrDetailsBrakeDeclarationsSeen(true);
         adrDataToPatch.setTechRecordAdrDetailsBrakeEndurance(true);
+        adrDataToPatch.setTechRecordAdrDetailsWeight(75.00);
         adrDataToPatch.setTechRecordAdrDetailsDeclarationsSeen(true);
         adrDataToPatch.setTechRecordAdrDetailsNewCertificateRequested(false);
         adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Centre axle battery");
