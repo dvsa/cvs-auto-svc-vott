@@ -548,11 +548,6 @@ public class AdrRemediationClass extends TechRecordV3 {
             }
         }
 
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
         public String value() {
             return this.value;
         }
@@ -661,5 +656,66 @@ public class AdrRemediationClass extends TechRecordV3 {
                 getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(),
                 getTechRecordAdrDetailsTankTankDetailsTankStatementProductList(),
                 getTechRecordAdrPassCertificateDetails());
+    }
+
+    @Override
+    public String toString() {
+        return "AdrRemediationClass [system_Number=" + system_Number + ", created_Timestamp=" + created_Timestamp
+                + ", techRecordAdrDetailsDangerousGoods=" + techRecordAdrDetailsDangerousGoods
+                + ", techRecordAdrDetailsVehicleDetailsType=" + techRecordAdrDetailsVehicleDetailsType
+                + ", techRecordAdrDetailsVehicleDetailsApprovalDate=" + techRecordAdrDetailsVehicleDetailsApprovalDate
+                + ", techRecordAdrDetailsPermittedDangerousGoods=" + techRecordAdrDetailsPermittedDangerousGoods
+                + ", techRecordAdrDetailsCompatibilityGroupJ=" + techRecordAdrDetailsCompatibilityGroupJ
+                + ", techRecordAdrDetailsAdditionalExaminerNotes=" + techRecordAdrDetailsAdditionalExaminerNotes
+                + ", techRecordAdrDetailsApplicantDetailsName=" + techRecordAdrDetailsApplicantDetailsName
+                + ", techRecordAdrDetailsApplicantDetailsStreet=" + techRecordAdrDetailsApplicantDetailsStreet
+                + ", techRecordAdrDetailsApplicantDetailsTown=" + techRecordAdrDetailsApplicantDetailsTown
+                + ", techRecordAdrDetailsApplicantDetailsCity=" + techRecordAdrDetailsApplicantDetailsCity
+                + ", techRecordAdrDetailsApplicantDetailsPostcode=" + techRecordAdrDetailsApplicantDetailsPostcode
+                + ", techRecordAdrDetailsMemosApply=" + techRecordAdrDetailsMemosApply
+                + ", techRecordAdrDetailsDocuments=" + techRecordAdrDetailsDocuments
+                + ", techRecordAdrDetailsListStatementApplicable=" + techRecordAdrDetailsListStatementApplicable
+                + ", techRecordAdrDetailsBatteryListNumber=" + techRecordAdrDetailsBatteryListNumber
+                + ", techRecordAdrDetailsBrakeDeclarationsSeen=" + techRecordAdrDetailsBrakeDeclarationsSeen
+                + ", techRecordAdrDetailsBrakeDeclarationIssuer=" + techRecordAdrDetailsBrakeDeclarationIssuer
+                + ", techRecordAdrDetailsBrakeEndurance=" + techRecordAdrDetailsBrakeEndurance
+                + ", techRecordAdrDetailsWeight=" + techRecordAdrDetailsWeight
+                + ", techRecordAdrDetailsDeclarationsSeen=" + techRecordAdrDetailsDeclarationsSeen
+                + ", techRecordAdrDetailsM145Statement=" + techRecordAdrDetailsM145Statement
+                + ", techRecordAdrDetailsNewCertificateRequested=" + techRecordAdrDetailsNewCertificateRequested
+                + ", techRecordAdrDetailsAdditionalNotesNumber=" + techRecordAdrDetailsAdditionalNotesNumber
+                + ", techRecordAdrDetailsAdrTypeApprovalNo=" + techRecordAdrDetailsAdrTypeApprovalNo
+                + ", techRecordAdrDetailsAdrCertificateNotes=" + techRecordAdrDetailsAdrCertificateNotes
+                + ", techRecordAdrDetailsTankTankDetailsTankManufacturer="
+                + techRecordAdrDetailsTankTankDetailsTankManufacturer
+                + ", techRecordAdrDetailsTankTankDetailsYearOfManufacture="
+                + techRecordAdrDetailsTankTankDetailsYearOfManufacture
+                + ", techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo="
+                + techRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo
+                + ", techRecordAdrDetailsTankTankDetailsTankTypeAppNo="
+                + techRecordAdrDetailsTankTankDetailsTankTypeAppNo + ", techRecordAdrDetailsTankTankDetailsTankCode="
+                + techRecordAdrDetailsTankTankDetailsTankCode
+                + ", techRecordAdrDetailsTankTankDetailsSpecialProvisions="
+                + techRecordAdrDetailsTankTankDetailsSpecialProvisions
+                + ", techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type="
+                + techRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type
+                + ", techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo="
+                + techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo
+                + ", techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate="
+                + techRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate
+                + ", techRecordAdrDetailsTankTankDetailsTc3Details=" + techRecordAdrDetailsTankTankDetailsTc3Details
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted="
+                + techRecordAdrDetailsTankTankDetailsTankStatementSubstancesPermitted
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementSelect="
+                + techRecordAdrDetailsTankTankDetailsTankStatementSelect
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementStatement="
+                + techRecordAdrDetailsTankTankDetailsTankStatementStatement
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo="
+                + techRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo="
+                + techRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo
+                + ", techRecordAdrDetailsTankTankDetailsTankStatementProductList="
+                + techRecordAdrDetailsTankTankDetailsTankStatementProductList + ", techRecordAdrPassCertificateDetails="
+                + techRecordAdrPassCertificateDetails + "]";
     }
 }

@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,10 +59,12 @@ public class CheckAdrTechRecordRemediationTest {
 
                         AdrRemediationClass adrDataReturned = adrDataGen.createTechRecordFromJsonString(responseBody);
 
-                        Assert.assertEquals(adrData, adrDataReturned);
-
+                        Assert.assertEquals(
+                                String.join(
+                                        "something different: expected: " + System.lineSeparator() + adrData.toString()
+                                                + System.lineSeparator() + " actual: " + adrDataReturned.toString()),
+                                adrData, adrDataReturned);
                         break;
-
                     }
                 }
             }

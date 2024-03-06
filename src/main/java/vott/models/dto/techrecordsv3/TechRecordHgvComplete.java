@@ -57,30 +57,6 @@ public class TechRecordHgvComplete extends TechRecordV3 {
      * techRecord_applicantDetails_postTown
      */
 
-    //attribute name used in remediation app, not in tech record JSON schema
-     @Expose
-     @SerializedName("system_number")
-     private String system_Number;
-     public String getSystem_Number() {
-        return system_Number;
-    }
-
-    public void setSystem_Number(String system_Number) {
-        this.system_Number = system_Number;
-    }
-
-      //attribute name used in remediation app, not in tech record JSON schema
-    @Expose
-     @SerializedName("created_timestamp")
-     private String created_Timestamp;
-    public String getCreated_Timestamp() {
-        return created_Timestamp;
-    }
-
-    public void setCreated_Timestamp(String created_Timestamp) {
-        this.created_Timestamp = created_Timestamp;
-    }
-
     @Expose
     @SerializedName("systemNumber")
     private String systemNumber;
