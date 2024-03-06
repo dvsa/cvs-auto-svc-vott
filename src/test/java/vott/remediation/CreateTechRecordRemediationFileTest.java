@@ -1,11 +1,13 @@
 package vott.remediation;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -482,6 +484,92 @@ public class CreateTechRecordRemediationFileTest {
         addAdrDataToList();
     }
 
+    //Below tests make sure that objects can have the maximum allowed string length
+    //This is a happy path test, unhappy path tests will be in CVS-Data-Remediation model tests
+    @Test
+    public void checkMaxLengthStringConstraintsHappyPath () {
+        adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsName(randomStringGenerator(150));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsName().length(), 150);
+
+        adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsStreet(randomStringGenerator(150));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsStreet().length(), 150);
+
+        adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsTown(randomStringGenerator(100));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsTown().length(), 100);
+
+        adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsCity(randomStringGenerator(100));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsCity().length(), 100);
+
+        adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsPostcode(randomStringGenerator(25));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsApplicantDetailsPostcode().length(), 25);
+
+        adrDataToPatch.setTechRecordAdrDetailsAdrTypeApprovalNo(randomStringGenerator(40));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrTypeApprovalNo().length(), 40);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankManufacturer(randomStringGenerator(70));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankManufacturer().length(), 70);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo(randomStringGenerator(50));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankManufacturerSerialNo().length(), 50);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankTypeAppNo(randomStringGenerator(65));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankTypeAppNo().length(), 65);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankCode(randomStringGenerator(30));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankCode().length(), 30);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementStatement(randomStringGenerator(1500));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementStatement().length(), 1500);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo(randomStringGenerator(1500));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListRefNo().length(), 1500);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductList(randomStringGenerator(1500));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductList().length(), 1500);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsSpecialProvisions(randomStringGenerator(1024));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsSpecialProvisions().length(), 1024);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo(randomStringGenerator(70));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo().length(), 70);
+
+        adrDataToPatch.setTechRecordAdrDetailsBatteryListNumber(randomStringGenerator(8));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBatteryListNumber().length(), 8);
+
+        adrDataToPatch.setTechRecordAdrDetailsBrakeDeclarationIssuer(randomStringGenerator(500));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsBrakeDeclarationIssuer().length(), 500);
+
+        adrDataToPatch.setTechRecordAdrDetailsAdrCertificateNotes(randomStringGenerator(1500));
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdrCertificateNotes().length(), 1500);
+
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsYearOfManufacture(randomIntGenerator(4));
+        Assert.assertEquals((adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsYearOfManufacture()).toString().length(), 4);
+
+        adrDataToPatch.setTechRecordAdrDetailsWeight(Double.valueOf(randomIntGenerator(8)));
+        double weightDouble = adrDataToPatch.getTechRecordAdrDetailsWeight();
+        int weightInt = (int) weightDouble;
+        String weightAsString = Integer.toString(weightInt);
+        Assert.assertEquals(weightAsString.length(), 8);
+
+        List<String> productListUnNoList = new ArrayList<>();
+        String productListUnNoString = randomStringGenerator(1500);
+        productListUnNoList.add(productListUnNoString);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo(productListUnNoList);
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTankStatementProductListUnNo().get(0).length(), 1500);
+
+        List<TechRecordAdrDetailsAdditionalExaminerNote> additionalExaminersNotesList = new ArrayList<>();
+        TechRecordAdrDetailsAdditionalExaminerNote additionalExaminerNote = new TechRecordAdrDetailsAdditionalExaminerNote("2024-03-06", "examinerUpdater", randomStringGenerator(1500));
+        additionalExaminersNotesList.add(additionalExaminerNote);
+        adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(additionalExaminersNotesList);
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsAdditionalExaminerNotes().get(0).getNote().length(), 1500);
+
+        List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
+        TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailObject = new TechRecordAdrDetailsTankTankDetailsTc3Detail("intermediate", randomStringGenerator(75), "2024-06-01");
+        tc3DetailList.add(tc3DetailObject);
+        adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc3Details(tc3DetailList);
+        Assert.assertEquals(adrDataToPatch.getTechRecordAdrDetailsTankTankDetailsTc3Details().get(0).getTc3PeriodicNumber().length(), 75);
+    }
+
     private TechRecordHgvComplete createHgvTechRecord(String filePath) {
         //Create and post the HGV Tech record
         TechRecordHgvComplete techRecord = hgvTechRecordGen
@@ -496,6 +584,35 @@ public class CreateTechRecordRemediationFileTest {
         System.out.println("created tech record: " + techRecordReturned.getSystemNumber() + " "
                 + techRecordReturned.getCreatedTimestamp());
         return techRecordReturned;
+    }
+
+    private String randomStringGenerator(int len) {
+        //Generates a string of
+        String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(ALLOWED_CHARACTERS.charAt(rnd.nextInt(ALLOWED_CHARACTERS.length())));
+        }
+        return sb.toString();
+    }
+
+    private int randomIntGenerator(int len) {
+        //Generates a random int of set digit length
+        //Cannot start with a 0
+        String ALLOWED_CHARACTERS = "0123456789";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            int randomInt = rnd.nextInt(ALLOWED_CHARACTERS.length());
+            if (i == 0) {
+                while (randomInt == 0) {
+                    randomInt = rnd.nextInt(ALLOWED_CHARACTERS.length());
+                }
+            }
+            sb.append(ALLOWED_CHARACTERS.charAt(randomInt));
+        }
+        return Integer.parseInt(sb.toString());
     }
 
     private void addAdrDataToList() {
