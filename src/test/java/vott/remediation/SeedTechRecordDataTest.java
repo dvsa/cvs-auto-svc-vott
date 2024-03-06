@@ -40,7 +40,7 @@ public class SeedTechRecordDataTest {
 
     @Before
     public void baseSetup() {
-        //Used for when you have an unaltered tech record and ADR details
+        // Automatically runs before each test
         createBaseRecordAndAdrData();
     }
 
@@ -48,14 +48,15 @@ public class SeedTechRecordDataTest {
 
     // Helper functions
     public void createBaseRecordAndAdrData() {
-        //Part 1, use when you need to alter the tech record and/or adr details
+        // Part 1 - Set up the ADR and Tech Record models, post Tech Record
         this.payloadPath = "src/main/resources/payloads/";
         this.techRecordHgv = createHgvTechRecord(payloadPath + "TechRecordsV3/HGV_Tech_record_No_ADR.json");
         this.adrDataToPatch = adrRemediationClassGen.createTechRecordFromJsonFile(payloadPath + "TechRecordsV3/ADR_fields_only.json");
     }
 
     public void postPatchGetAdrRecordHgv(){
-        //Part 2, use when you need to alter the tech record and/or adr details
+        //HGV Specific
+        //Part 2 - Post ADR data, patch the tech record with the ADR data
         Map<String,String> outcomeUpdate = TechnicalRecordsV3.updateTechnicalRecord(adrDataToPatch, v1ImplicitTokens.getBearerToken(), techRecordHgv.getSystemNumber(), techRecordHgv.getCreatedTimestamp());
         sharedUtils.checkTechRecordPostOutcome(outcomeUpdate);
         TechRecordHgvComplete techRecordPostOutcome = hgvTechRecordGen
@@ -63,6 +64,7 @@ public class SeedTechRecordDataTest {
         String outcomeSystemNumber = techRecordPostOutcome.getSystemNumber();
         String outcomeCreatedTimestamp = techRecordPostOutcome.getCreatedTimestamp();
 
+        //Pull back new updated records
         Map<String,String> outcomeGet = TechnicalRecordsV3.getTechnicalRecord(v1ImplicitTokens.getBearerToken(), outcomeSystemNumber, outcomeCreatedTimestamp);
         sharedUtils.checkTechRecordPostOutcome(outcomeGet);
         String outcomeResponseBody = outcomeGet.get("responseBody");
@@ -85,7 +87,7 @@ public class SeedTechRecordDataTest {
     }
 
     private TechRecordHgvComplete createHgvTechRecord(String filePath) {
-
+        // Method to create and post an HGV tech record
         TechRecordHgvComplete techRecord = hgvTechRecordGen
                 .createTechRecordFromJsonFile(filePath);
         hgvTechRecordGen.randomizeHgvUniqueValues(techRecord);
@@ -101,6 +103,7 @@ public class SeedTechRecordDataTest {
     }
 
     private TechRecordTrlComplete createTrlTechRecord(String filePath) {
+        // Method to create and post a TRL tech record
 
         TechRecordTrlComplete techRecord = trlTechRecordGen.createTechRecordFromJsonFile(filePath);
         trlTechRecordGen.randomizeTrlUniqueValues(techRecord);
@@ -453,6 +456,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrTc2Details_noTc3Details_noMemosApply() {
+        //Tc2 Details - No Tc3 Details, no memosApply fields
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo("12345");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate("2024-06-01");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type("initial");
@@ -472,6 +476,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrTc2Details_oneTc3Details_typeIntermediate() {
+        //Tc2 Details - One Tc3 Details with tc3Type intermediate
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsIntermediate = new TechRecordAdrDetailsTankTankDetailsTc3Detail("intermediate","13579","2024-06-12");
         List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
         tc3DetailList.add(tc3DetailsIntermediate);
@@ -493,6 +498,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrTc2Details_twoTc3Details_typePeriodicExceptional() {
+        //Tc2 Details - Two Tc3 Details with tc3Type periodic and exceptional
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsPeriodic = new TechRecordAdrDetailsTankTankDetailsTc3Detail("periodic","12345","2024-01-01");
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsExceptional = new TechRecordAdrDetailsTankTankDetailsTc3Detail("exceptional","67890","2024-02-02");
         List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
@@ -515,6 +521,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrOneMemosApply() {
+        //One memosApply field
         List<String> memosApplyList = List.of("07/09 3mth leak ext");
         adrDataToPatch.setTechRecordAdrDetailsMemosApply(memosApplyList);
         postPatchGetAdrRecordHgv();
@@ -524,6 +531,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrM145StatementTrue() {
+        //M145Statement True
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(true);
         postPatchGetAdrRecordHgv();
 
@@ -532,6 +540,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrM145StatementFalse() {
+        //M145Statement False
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(false);
         postPatchGetAdrRecordHgv();
 
@@ -600,6 +609,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrNoAdditionalExaminerNotes() {
+        //no additionalExaminersNotes
         adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(null);
         techRecordHgv.setTechRecordVehicleType("hgv");
         adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Artic tractor");
@@ -612,6 +622,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrOneAdditionalExaminerNotes_adrCertificateNotesCompleted() {
+        //One additionalExaminersNotes, adrCertificateNotes completed
         List<TechRecordAdrDetailsAdditionalExaminerNote> additionalExaminerNoteList = new ArrayList<>();
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote = new TechRecordAdrDetailsAdditionalExaminerNote("2023-05-30", "additionalExaminerNotes_lastUpdatedBy_1", "additionalExaminerNotes_note_1");
         additionalExaminerNoteList.add(adrDetailsAdditionalExaminerNote);
@@ -625,6 +636,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrTwoAdditionalExaminerNotes_noAdrCertificateNotes() {
+        //two additionalExaminerNotes, no adrCertificateNotes
         List<TechRecordAdrDetailsAdditionalExaminerNote> additionalExaminerNoteList = new ArrayList<>();
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote1 = new TechRecordAdrDetailsAdditionalExaminerNote("2023-01-01", "additionalExaminerNotes_lastUpdatedBy_1", "additionalExaminerNotes_note_1");
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote2 = new TechRecordAdrDetailsAdditionalExaminerNote("2023-02-02", "additionalExaminerNotes_lastUpdatedBy_2", "additionalExaminerNotes_note_2");
@@ -640,6 +652,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrOnePassCertificateDetails_certificateTypePass() {
+        //one passCertificateDetails, certificateType PASS
         List<TechRecordAdrPassCertificateDetail> passCertificateDetailList = new ArrayList<>();
         TechRecordAdrPassCertificateDetail passCertificateDetail = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-01", "PASS", "2023-04-01T01:49:00.055Z", "CERTIFICATE-ID-1");
         passCertificateDetailList.add(passCertificateDetail);
@@ -651,6 +664,7 @@ public class SeedTechRecordDataTest {
 
     @Test
     public void adrTwoPassCertificateDetails_certificateTypePassReplacement() {
+        //two passCertificateDetails, certificateType PASS and REPLACEMENT
         List<TechRecordAdrPassCertificateDetail> passCertificateDetailList = new ArrayList<>();
         TechRecordAdrPassCertificateDetail passCertificateDetail1 = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-01", "PASS", "2023-04-01T01:49:00.055Z", "CERTIFICATE-ID-1");
         TechRecordAdrPassCertificateDetail passCertificateDetail2 = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-02", "REPLACEMENT", "2023-05-02T02:59:00.066Z", "CERTIFICATE-ID-2");

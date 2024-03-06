@@ -18,7 +18,7 @@ import vott.api.TechnicalRecordsV3;
 import vott.models.dto.techrecordsv3.*;
 import vott.updatestore.SharedUtilities;
 
-public class CreateTechRecordRemediationFile {
+public class CreateTechRecordRemediationFileTest {
 
     private static List<String> remediationFileContents = new ArrayList<>();
     private final TechRecordHgvCompleteGenerator hgvTechRecordGen = new TechRecordHgvCompleteGenerator(
@@ -31,6 +31,8 @@ public class CreateTechRecordRemediationFile {
 
     @Before
     public void setup() {
+        // Runs before each test
+        // Create and post HGV tech record, and create template ADR data
         TechRecordHgvComplete techRecord = createHgvTechRecord(
                 PAYLOAD_PATH + "TechRecordsV3/HGV_Tech_record_No_ADR.json");
         adrDataToPatch = adrDataGen.createTechRecordFromJsonFile(PAYLOAD_PATH + "TechRecordsV3/ADR_fields_only.json");
@@ -40,8 +42,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void allApplicantDetailsCompleted() {
-
-        // amend data as required
+        // All applicant details completed
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsTown("new town");
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsPostcode("POST-CODE1");
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsName("new name");
@@ -55,8 +56,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void allApplicantDetailsNull() {
-
-        // amend data as required
+        // All applicant details null
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsTown(null);
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsPostcode(null);
         adrDataToPatch.setTechRecordAdrDetailsApplicantDetailsName(null);
@@ -268,6 +268,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void tc2Details_noTc3Details_noMemosApply() {
+        //Tc2 Details - No Tc3 Details, no memosApply fields
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateApprovalNo("12345");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2IntermediateExpiryDate("2024-06-01");
         adrDataToPatch.setTechRecordAdrDetailsTankTankDetailsTc2DetailsTc2Type("initial");
@@ -279,6 +280,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void tc2Details_oneTc3Details_typeIntermediate() {
+        //Tc2 Details - One Tc3 Details with tc3Type intermediate
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsIntermediate = new TechRecordAdrDetailsTankTankDetailsTc3Detail("intermediate", "13579", "2024-06-12");
         List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
         tc3DetailList.add(tc3DetailsIntermediate);
@@ -292,6 +294,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void tc2Details_twoTc3Details_typePeriodicExceptional() {
+        //Tc2 Details - Two Tc3 Details with tc3Type periodic and exceptional
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsPeriodic = new TechRecordAdrDetailsTankTankDetailsTc3Detail("periodic", "12345", "2024-01-01");
         TechRecordAdrDetailsTankTankDetailsTc3Detail tc3DetailsExceptional = new TechRecordAdrDetailsTankTankDetailsTc3Detail("exceptional", "67890", "2024-02-02");
         List<TechRecordAdrDetailsTankTankDetailsTc3Detail> tc3DetailList = new ArrayList<>();
@@ -307,6 +310,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void oneMemosApply() {
+        //One memosApply field
         List<String> memosApplyList = List.of("07/09 3mth leak ext");
         adrDataToPatch.setTechRecordAdrDetailsMemosApply(memosApplyList);
 
@@ -315,6 +319,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void m145StatementTrue() {
+        //M145Statement True
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(true);
 
         addAdrDataToList();
@@ -322,6 +327,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void m145StatementFalse() {
+        //M145Statement False
         adrDataToPatch.setTechRecordAdrDetailsM145Statement(false);
 
         addAdrDataToList();
@@ -361,7 +367,7 @@ public class CreateTechRecordRemediationFile {
 
     //TODO - Make this a TRL record?
     //@Test
-    public void adrBrakeDeclarationsSeenTrue_brakeEnduranceFalse_declarationsSeenFalse_newCertificateRequestedTrue() {
+    public void brakeDeclarationsSeenTrue_brakeEnduranceFalse_declarationsSeenFalse_newCertificateRequestedTrue() {
         //brakeDeclarationsSeen true, brakeEndurance False, declarationsSeen False, newCertificateRequested True
         adrDataToPatch.setTechRecordAdrDetailsBrakeDeclarationsSeen(true);
         adrDataToPatch.setTechRecordAdrDetailsBrakeEndurance(false);
@@ -374,6 +380,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void noAdditionalExaminerNotes() {
+        //no additionalExaminersNotes
         adrDataToPatch.setTechRecordAdrDetailsAdditionalExaminerNotes(null);
         adrDataToPatch.setTechRecordAdrDetailsVehicleDetailsType("Artic tractor");
 
@@ -382,6 +389,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void oneAdditionalExaminerNotes_adrCertificateNotesCompleted() {
+        //One additionalExaminersNotes, adrCertificateNotes completed
         List<TechRecordAdrDetailsAdditionalExaminerNote> additionalExaminerNoteList = new ArrayList<>();
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote = new TechRecordAdrDetailsAdditionalExaminerNote("2023-05-30", "additionalExaminerNotes_lastUpdatedBy_1", "additionalExaminerNotes_note_1");
         additionalExaminerNoteList.add(adrDetailsAdditionalExaminerNote);
@@ -393,6 +401,7 @@ public class CreateTechRecordRemediationFile {
 
     @Test
     public void twoAdditionalExaminerNotes_noAdrCertificateNotes() {
+        //two additionalExaminerNotes, no adrCertificateNotes
         List<TechRecordAdrDetailsAdditionalExaminerNote> additionalExaminerNoteList = new ArrayList<>();
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote1 = new TechRecordAdrDetailsAdditionalExaminerNote("2023-01-01", "additionalExaminerNotes_lastUpdatedBy_1", "additionalExaminerNotes_note_1");
         TechRecordAdrDetailsAdditionalExaminerNote adrDetailsAdditionalExaminerNote2 = new TechRecordAdrDetailsAdditionalExaminerNote("2023-02-02", "additionalExaminerNotes_lastUpdatedBy_2", "additionalExaminerNotes_note_2");
@@ -407,6 +416,7 @@ public class CreateTechRecordRemediationFile {
 //    @Test
 //    TODO Currently disabled for testing purposes
     public void onePassCertificateDetails_certificateTypePass() {
+        //one passCertificateDetails, certificateType PASS
         List<TechRecordAdrPassCertificateDetail> passCertificateDetailList = new ArrayList<>();
         TechRecordAdrPassCertificateDetail passCertificateDetail = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-01", "PASS", "2023-04-01T01:49:00.055Z", "CERTIFICATE-ID-1");
         passCertificateDetailList.add(passCertificateDetail);
@@ -418,6 +428,7 @@ public class CreateTechRecordRemediationFile {
 //    @Test
 //    TODO Currently disabled for testing purposes
     public void twoPassCertificateDetails_certificateTypePassReplacement() {
+        //two passCertificateDetails, certificateType PASS and REPLACEMENT
         List<TechRecordAdrPassCertificateDetail> passCertificateDetailList = new ArrayList<>();
         TechRecordAdrPassCertificateDetail passCertificateDetail1 = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-01", "PASS", "2023-04-01T01:49:00.055Z", "CERTIFICATE-ID-1");
         TechRecordAdrPassCertificateDetail passCertificateDetail2 = new TechRecordAdrPassCertificateDetail("CREATED-BY-NAME-02", "REPLACEMENT", "2023-05-02T02:59:00.066Z", "CERTIFICATE-ID-2");
@@ -430,7 +441,7 @@ public class CreateTechRecordRemediationFile {
 
 
     private TechRecordHgvComplete createHgvTechRecord(String filePath) {
-
+        //Create and post the HGV Tech record
         TechRecordHgvComplete techRecord = hgvTechRecordGen
                 .createTechRecordFromJsonFile(filePath);
         hgvTechRecordGen.randomizeHgvUniqueValues(techRecord);
@@ -446,13 +457,13 @@ public class CreateTechRecordRemediationFile {
     }
 
     private void addAdrDataToList() {
+        //Adds each ADR data block to a list to be processed
         String adrDataAsJson = adrDataGen.createJsonStringFromTechRecord(adrDataToPatch);
         remediationFileContents.add(adrDataAsJson);
     }
 
     @AfterClass
     public static void teardown() {
-
         // TODO string to JSON file
         String output = String.join(System.lineSeparator(), remediationFileContents);
         System.out.println(output);
