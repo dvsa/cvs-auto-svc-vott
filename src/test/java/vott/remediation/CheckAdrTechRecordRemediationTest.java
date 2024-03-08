@@ -28,7 +28,7 @@ public class CheckAdrTechRecordRemediationTest {
     @Test
     public void checkAdrDataRemediated() {
 
-        Path path = Paths.get(PAYLOAD_PATH + "Remediation/AdrTechRecordUpdates/example.jsonl");
+        Path path = Paths.get(PAYLOAD_PATH + "Remediation/AdrTechRecordUpdates/Remediation_input_file.jsonl");
 
         try {
             List<String> contents = Files.readAllLines(path);
