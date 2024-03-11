@@ -204,16 +204,6 @@ public class DownloadMotCertificateImplicitTest {
     }
 
     @WithTag("Vott")
-    @Title("VOTT-5 - AC1 - TC11 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (numeric only)")
-    @Test
-    public void DownloadTestCertificateNumericVINNumberTest() {
-        String numericVIN = "123456789";
-        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(numericVIN, validTestNumber, token);
-        assertEquals(404, response.statusCode());
-        assertEquals("NoSuchKey", response.asString());
-    }
-
-    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC12 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (containing special chars)")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {

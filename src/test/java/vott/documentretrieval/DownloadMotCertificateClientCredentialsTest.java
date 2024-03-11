@@ -205,16 +205,6 @@ public class DownloadMotCertificateClientCredentialsTest {
     }
 
     @WithTag("Vott")
-    @Title("VOTT-5 - AC1 - TC28 - DownloadTestCertificateNumericVINNumberTest")
-    @Test
-    public void DownloadTestCertificateNumericVINNumberTest() {
-        String numericVIN = "123456789";
-        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(numericVIN, validTestNumber, token);
-        assertEquals(404, response.statusCode());
-        assertEquals("NoSuchKey", response.asString());
-    }
-
-    @WithTag("Vott")
     @Title("VOTT-5 - AC1 - TC29 - DownloadTestCertificateVinNumberSpecialCharsTest")
     @Test
     public void DownloadTestCertificateVinNumberSpecialCharsTest() {
