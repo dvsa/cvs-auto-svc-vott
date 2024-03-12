@@ -198,8 +198,8 @@ public class DownloadMotCertificateClientCredentialsTest {
     @Title("VOTT-5 - AC1 - TC27 - DownloadTestCertificateVinNumberDoesntExistTest")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
-        String invalidVIN = "T123456789";
-        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(invalidVIN, validTestNumber, token);
+        String nonExistingVIN = fieldGenerator.randomVin(); // Assuming random VIN number won't exist in db
+        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(nonExistingVIN, validTestNumber, token);
         assertEquals(404, response.statusCode());
         assertEquals("NoSuchKey", response.asString());
     }
