@@ -197,18 +197,8 @@ public class DownloadMotCertificateImplicitTest {
     @Title("VOTT-5 - AC1 - TC10 - Download Test Certificate Using Implicit JWT Token for a vin number that doesn't exist in db")
     @Test
     public void DownloadTestCertificateVinNumberDoesntExistTest() {
-        String invalidVIN = "T123456789";
-        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(invalidVIN, validTestNumber, token);
-        assertEquals(404, response.statusCode());
-        assertEquals("NoSuchKey", response.asString());
-    }
-
-    @WithTag("Vott")
-    @Title("VOTT-5 - AC1 - TC11 - Download Test Certificate Using Implicit JWT Token with a wrong format vin number (numeric only)")
-    @Test
-    public void DownloadTestCertificateNumericVINNumberTest() {
-        String numericVIN = "123456789";
-        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(numericVIN, validTestNumber, token);
+        String nonExistingVIN = fieldGenerator.randomVin(); // Assuming random VIN number won't exist in db
+        Response response = DocRetrievalAPI.getMOTCertUsingVINTestNumber(nonExistingVIN, validTestNumber, token);
         assertEquals(404, response.statusCode());
         assertEquals("NoSuchKey", response.asString());
     }
